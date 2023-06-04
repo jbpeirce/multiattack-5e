@@ -1,7 +1,7 @@
 # multiattack-5e
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This site simulates repeated identical attacks against a single target in a system like D&D 5e. This is useful when a group of enemies all
+attack a single target.
 
 ## Prerequisites
 
