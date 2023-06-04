@@ -3,7 +3,7 @@ import { setupTest } from 'ember-qunit';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 import sinon from 'sinon';
 
-module('Unit | Models | dice-group', function (hooks) {
+module('Unit | Utils | dice-group', function (hooks) {
   setupTest(hooks);
 
   test('it rejects invalid input values', async function (assert) {
@@ -27,14 +27,16 @@ module('Unit | Models | dice-group', function (hooks) {
     let group1d8 = new DiceGroup(1, 8);
     assert.equal(group1d8.numDice, 1, "group should have expected number of dice");
     assert.equal(group1d8.die.sides, 8, "group's die should have expected number of sides");
+    assert.true(group1d8.shouldAdd(), "dice group should be added by default");
 
     group1d8.die.roll = sinon.fake.returns(3);
     assert.equal(group1d8.roll(), 3, "roll of a single die should return expected sum");
 
     // Create a group with multiple dice and mock them
-    let group3d6 = new DiceGroup(3, 6);
+    let group3d6 = new DiceGroup(3, 6, false);
     assert.equal(group3d6.numDice, 3, "group should have expected number of dice");
     assert.equal(group3d6.die.sides, 6, "group's dice should have expected number of sides");
+    assert.false(group3d6.shouldAdd(), "dice group should track whether to add value to a larger total");
 
     let fakeDie = sinon.stub();
     fakeDie.onCall(0).returns(3);

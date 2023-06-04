@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Die from 'multiattack-5e/utils/die';
 
-module('Unit | Models | die', function (hooks) {
+module('Unit | Utils | die', function (hooks) {
   setupTest(hooks);
 
   test('it rejects invalid numbers of sides', async function (assert) {
