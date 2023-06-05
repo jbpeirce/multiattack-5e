@@ -1,6 +1,6 @@
 import DiceGroup from './dice-group';
 
-export interface DiceGroupsAndNumber {
+export interface DiceGroupsAndModifier {
   diceGroups: Array<DiceGroup>;
   modifier: number;
 }
@@ -30,7 +30,7 @@ export default class DiceStringParser {
    * @returns the list of described dice groups and all of the numbers added
    * together into a single modifier
    */
-  parse(diceString: string): DiceGroupsAndNumber {
+  parse(diceString: string): DiceGroupsAndModifier {
     // Check that the string matches the overall expected pattern, with no
     // additional text or missing signs
     if (!this.diceStringRegex.test(diceString)) {
@@ -40,7 +40,7 @@ export default class DiceStringParser {
     }
 
     // Extract the dice groups and/or constant modifier one term at a time
-    const described: DiceGroupsAndNumber = {
+    const described: DiceGroupsAndModifier = {
       diceGroups: [],
       modifier: 0,
     };
