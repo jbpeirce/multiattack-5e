@@ -1,9 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import DiceStringParser, {
-  DiceGroupsAndModifier,
-} from 'multiattack-5e/utils/dice-string-parser';
+import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
+import DiceGroupsAndModifier from 'multiattack-5e/utils/dice-groups-and-modifier';
 
 module('Unit | Utils | dice-string-parser', function (hooks) {
   setupTest(hooks);
@@ -32,34 +31,25 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
 
   test('it parses valid strings', async function (assert) {
     const valid: Map<string, DiceGroupsAndModifier> = new Map();
-    valid.set('1d6+4', {
-      diceGroups: [new DiceGroup(1, 6)],
-      modifier: 4,
-    });
-    valid.set('11d12-10', {
-      diceGroups: [new DiceGroup(11, 12)],
-      modifier: -10,
-    });
-    valid.set('4d8 + 1', {
-      diceGroups: [new DiceGroup(4, 8)],
-      modifier: 1,
-    });
-    valid.set('+3d5-10+1 + 2 - 1d4', {
-      diceGroups: [new DiceGroup(3, 5), new DiceGroup(1, 4, false)],
-      modifier: -7,
-    });
-    valid.set('3d5', {
-      diceGroups: [new DiceGroup(3, 5)],
-      modifier: 0,
-    });
-    valid.set('-2d6', {
-      diceGroups: [new DiceGroup(2, 6, false)],
-      modifier: 0,
-    });
-    valid.set('40', {
-      diceGroups: [],
-      modifier: 40,
-    });
+    valid.set('1d6+4', new DiceGroupsAndModifier([new DiceGroup(1, 6)], 4));
+    valid.set(
+      '11d12-10',
+      new DiceGroupsAndModifier([new DiceGroup(11, 12)], -10)
+    );
+    valid.set('4d8 + 1', new DiceGroupsAndModifier([new DiceGroup(4, 8)], 1));
+    valid.set(
+      '+3d5-10+1 + 2 - 1d4',
+      new DiceGroupsAndModifier(
+        [new DiceGroup(3, 5), new DiceGroup(1, 4, false)],
+        -7
+      )
+    );
+    valid.set('3d5', new DiceGroupsAndModifier([new DiceGroup(3, 5)], 0));
+    valid.set(
+      '-2d6',
+      new DiceGroupsAndModifier([new DiceGroup(2, 6, false)], 0)
+    );
+    valid.set('40', new DiceGroupsAndModifier([], 40));
 
     assert.expect(valid.size);
 

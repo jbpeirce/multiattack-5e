@@ -1,4 +1,4 @@
-export default class DieModel {
+export default class Die {
   sides: number;
 
   constructor(sides: number) {

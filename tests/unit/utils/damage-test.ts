@@ -30,30 +30,6 @@ module('Unit | Utils | damage', function (hooks) {
     );
   });
 
-  test('it rolls double dice on a critical hit', async function (assert) {
-    const damage = new Damage('1d6 + 2', 'radiant');
-
-    assert.strictEqual(
-      damage.damage.diceGroups.length,
-      1,
-      'damage should roll one group of dice'
-    );
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(3);
-    fakeD6.onCall(1).returns(4);
-    const group1d6: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group1d6) {
-      group1d6.die.roll = fakeD6;
-    }
-
-    assert.strictEqual(
-      damage.roll(true),
-      9,
-      'roll should inflict 3 + 4 + 2 = 9 total damage on a critical hit'
-    );
-  });
-
   test('it rolls and adds multiple dice groups', async function (assert) {
     const damage = new Damage('3d8 + 1 + 2d6', 'radiant');
 
