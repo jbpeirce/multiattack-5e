@@ -9,13 +9,13 @@ module.exports = function (defaults) {
       webpack: {
         resolve: {
           fallback: {
-            "timers": require.resolve("timers-browserify"),
-            "util": require.resolve("util/")
-          }
-        }
-      }
-    }
+            timers: require.resolve('timers-browserify'),
+            util: require.resolve('util/'),
+          },
+        },
+      },
+    },
   });
 
   return app.toTree();
-};
+}
