@@ -7,6 +7,11 @@ module.exports = {
       options: {
         singleQuote: true,
       },
+      rules: {
+        error: {
+          endOfLine: 'auto',
+        },
+      },
     },
   ],
 };
