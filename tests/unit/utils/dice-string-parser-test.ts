@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import DiceStringParser, {
-  DiceGroupsAndNumber,
+  DiceGroupsAndModifier,
 } from 'multiattack-5e/utils/dice-string-parser';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 
@@ -31,7 +31,7 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
   });
 
   test('it parses valid strings', async function (assert) {
-    const valid: Map<string, DiceGroupsAndNumber> = new Map();
+    const valid: Map<string, DiceGroupsAndModifier> = new Map();
     valid.set('1d6+4', {
       diceGroups: [new DiceGroup(1, 6)],
       modifier: 4,
