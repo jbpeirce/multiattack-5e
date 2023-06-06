@@ -75,7 +75,6 @@
     "ember-cli-htmlbars": "^6.2.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
-    "ember-cli-template-lint": "^2.0.2",
     "ember-cli-terser": "^4.0.2",
     "ember-cli-typescript": "^5.2.1",
     "ember-data": "~4.11.3",
