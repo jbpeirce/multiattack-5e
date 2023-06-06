@@ -50,6 +50,8 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
       new DiceGroupsAndModifier([new DiceGroup(2, 6, false)], 0)
     );
     valid.set('40', new DiceGroupsAndModifier([], 40));
+    valid.set('-40', new DiceGroupsAndModifier([], -40));
+    valid.set('+40', new DiceGroupsAndModifier([], 40));
 
     assert.expect(valid.size);
 

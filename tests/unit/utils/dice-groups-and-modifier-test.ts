@@ -30,7 +30,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
   test('it rolls double dice when instructed', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
       [new DiceGroup(1, 6)],
-      1
+      2
     );
 
     const fakeD6 = sinon.stub();
@@ -83,7 +83,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
   test('it doubles all dice groups on a critical hit', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
       [new DiceGroup(3, 8), new DiceGroup(2, 6)],
-      1
+      2
     );
 
     const fakeD8 = sinon.stub();

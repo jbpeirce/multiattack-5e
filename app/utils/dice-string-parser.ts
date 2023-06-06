@@ -9,7 +9,7 @@ export default class DiceStringParser {
   // cannot be marked with "g" or it will preserve state between different
   // strings and incorrectly mark some as not matching.
   diceStringRegex =
-    /^(?: *[+-]? *(?:\d+d\d+)|\d+)(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
+    /^(?: *[+-]? *(?:(?:\d+d\d+)|\d+))(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
 
   // Matches a dice group or number with an optional sign. This uses "g" to
   // enable parsing many terms out of the same expression; the code makes sure
