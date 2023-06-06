@@ -1,9 +1,5 @@
 import DiceGroup from './dice-group';
-
-export interface DiceGroupsAndModifier {
-  diceGroups: Array<DiceGroup>;
-  modifier: number;
-}
+import DiceGroupsAndModifier from './dice-groups-and-modifier';
 
 export default class DiceStringParser {
   // Matches a string containing only one or more instances of dice groups (eg
@@ -13,7 +9,7 @@ export default class DiceStringParser {
   // cannot be marked with "g" or it will preserve state between different
   // strings and incorrectly mark some as not matching.
   diceStringRegex =
-    /^(?: *[+-]? *(?:\d+d\d+)|\d+)(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
+    /^(?: *[+-]? *(?:(?:\d+d\d+)|\d+))(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
 
   // Matches a dice group or number with an optional sign. This uses "g" to
   // enable parsing many terms out of the same expression; the code makes sure
@@ -40,10 +36,8 @@ export default class DiceStringParser {
     }
 
     // Extract the dice groups and/or constant modifier one term at a time
-    const described: DiceGroupsAndModifier = {
-      diceGroups: [],
-      modifier: 0,
-    };
+    const diceGroups: DiceGroup[] = [];
+    let modifier = 0;
     let match = this.termRegex.exec(diceString);
     while (match) {
       if (!match.groups) {
@@ -57,9 +51,9 @@ export default class DiceStringParser {
 
       if (match.groups['number']) {
         const sign = add ? 1 : -1;
-        described.modifier += sign * Number(match.groups['number']);
+        modifier += sign * Number(match.groups['number']);
       } else {
-        described.diceGroups.push(
+        diceGroups.push(
           new DiceGroup(
             Number(match.groups['numDice']),
             Number(match.groups['numSides']),
@@ -71,6 +65,6 @@ export default class DiceStringParser {
       // Extract the next term from the string
       match = this.termRegex.exec(diceString);
     }
-    return described;
+    return new DiceGroupsAndModifier(diceGroups, modifier);
   }
 }

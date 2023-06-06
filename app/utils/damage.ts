@@ -1,4 +1,5 @@
-import DiceStringParser, { DiceGroupsAndModifier } from "./dice-string-parser";
+import DiceGroupsAndModifier from './dice-groups-and-modifier';
+import DiceStringParser from './dice-string-parser';
 
 export default class Damage {
   type: string;
@@ -32,20 +33,7 @@ export default class Damage {
    * @returns the damage inflicted by an attack described by this class
    */
   roll(crit: boolean) {
-    let total = 0;
-
-    // Roll all dice
-    for (const dice of this.damage.diceGroups) {
-      // debugger;
-      const sign = dice.shouldAdd() ? 1 : -1;
-      total += sign * dice.roll();
-
-      if (crit) {
-        total += sign * dice.roll();
-      }
-    }
-
-    total += this.damage.modifier;
+    let total = this.damage.rollAndGetTotal(crit);
 
     // Reset the total to 0 if it is negative (which may happen due to a
     // negative damage modifier)
