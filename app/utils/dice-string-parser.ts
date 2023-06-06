@@ -31,7 +31,7 @@ export default class DiceStringParser {
     // additional text or missing signs
     if (!this.diceStringRegex.test(diceString)) {
       throw new Error(
-        'Unable to parse dice groups or constants from input string'
+        `Unable to parse dice groups or constants from input string "${diceString}"`
       );
     }
 
