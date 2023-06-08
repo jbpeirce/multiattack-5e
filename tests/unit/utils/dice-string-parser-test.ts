@@ -17,14 +17,17 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
       'text 1d4+4',
       '2d6-1 following',
       '+2d6 5d8',
+      '',
     ];
     assert.expect(invalidStrings.length);
 
     for (const invalid of invalidStrings) {
       assert.throws(
         () => new DiceStringParser().parse(invalid),
-        new Error('Unable to parse dice groups or constants from input string'),
-        `invalid string ${invalid} should be rejected`
+        new Error(
+          `Unable to parse dice groups or constants from input string "${invalid}"`
+        ),
+        `invalid string "${invalid}" should be rejected`
       );
     }
   });
