@@ -7,9 +7,9 @@ export default class RepeatedAttackFormComponent extends Component {
   @tracked numberOfAttacks = 0;
   @tracked targetAC = 0;
 
-  @tracked toHit = '';
-  @tracked damage = '';
-  @tracked damageType = '';
+  @tracked toHit = '5 + 1d4';
+  @tracked damage = '2d6 + 7';
+  @tracked damageType = 'piercing';
 
   @tracked resistant = false;
   @tracked vulnerable = false;
@@ -18,23 +18,9 @@ export default class RepeatedAttackFormComponent extends Component {
   @tracked straightRoll = true;
   @tracked disadvantage = false;
 
-  @tracked message = 'Currently hardcoded!';
+  @tracked message = this.getAttackDetails();
 
-  resetMessage = () =>
-    (this.message = `Target AC: ${this.targetAC}
-    Number of attacks: ${this.numberOfAttacks}
-    Attack roll: 1d20 + ${this.toHit}
-    ${this.advantage && !this.disadvantage ? '(rolls with advantage)' : ''}
-    ${this.disadvantage && !this.advantage ? '(rolls with disadvantage)' : ''}
-    ${
-      this.advantage && this.disadvantage
-        ? '(rolls a straight roll, with advantage and disadvantage both set)'
-        : ''
-    }
-    Attack damage: ${this.damage} of type ${this.damageType}
-    ${this.resistant ? '(target resistant)' : ''}
-    ${this.vulnerable ? '(target vulnerable)' : ''}
-    `);
+  getAttackDetailsMessage = () => (this.message = this.getAttackDetails());
 
   getDamageMessage = () => {
     const attack = new Attack(this.toHit, [
@@ -63,9 +49,34 @@ export default class RepeatedAttackFormComponent extends Component {
       );
     }
 
-    this.message += `*** Total Damage: ${totalDmg} ***\n`;
+    this.message = this.getAttackDetails();
+    this.message += `\n*** Total Damage: ${totalDmg} ***\n`;
     for (const description of attackDescriptions) {
       this.message += '\t' + description;
     }
   };
+
+  getAttackDetails(): string {
+    return (
+      `Target AC: ${this.targetAC}\n` +
+      `Number of attacks: ${this.numberOfAttacks}\n` +
+      `Attack roll: 1d20 + ${this.toHit}\n` +
+      `${
+        this.advantage && !this.disadvantage ? '(rolls with advantage)\n' : ''
+      }` +
+      `${
+        this.disadvantage && !this.advantage
+          ? '(rolls with disadvantage)\n'
+          : ''
+      }` +
+      `${
+        this.advantage && this.disadvantage
+          ? '(rolls a straight roll, with advantage and disadvantage both set)\n'
+          : ''
+      }` +
+      `Attack damage: ${this.damage} of type ${this.damageType}` +
+      `${this.resistant ? '\n(target resistant)' : ''}` +
+      `${this.vulnerable ? '\n(target vulnerable)' : ''}`
+    );
+  }
 }

@@ -5,26 +5,26 @@
       {{!-- <div class="row row-cols-sm-auto align-items-top">
         <div class="col"> --}}
           <label for="numberOfAttacks">Number of Attacks</label>
-          <Input name="numberOfAttacks" @type="number" @value={{this.numberOfAttacks}} />
+          <Input data-test-input-numberOfAttacks name="numberOfAttacks" @type="number" @value={{this.numberOfAttacks}} />
           {{!--
         </div> --}}
 
         {{!-- <div class="col"> --}}
           <label for="targetAC">Target AC</label>
-          <Input name="targetAC" @type="number" @value={{this.targetAC}} />
+          <Input data-test-input-targetAC name="targetAC" @type="number" @value={{this.targetAC}} />
           {{!--
         </div> --}}
 
         {{!-- TODO: This does not de-set the variable when switching between the radio buttons --}}
-        <Input @type="radio" name="advState" id="adv" @value={{this.advantage}} />
+        <Input data-test-advantage @type="radio" name="advState" id="adv" @value={{this.advantage}} />
         <label class="form-check-label" for="adv">
           Advantage
         </label>
-        <Input @type="radio" name="advState" id="straight" @value={{this.straightRoll}} />
+        <Input data-test-straight @type="radio" name="advState" id="straight" @value={{this.straightRoll}} />
         <label class="form-check-label" for="straight">
           Straight roll
         </label>
-        <Input @type="radio" name="advState" id="disadv" @value={{this.disadvantage}} />
+        <Input data-test-disadvantage @type="radio" name="advState" id="disadv" @value={{this.disadvantage}} />
         <label class="form-check-label" for="disadv">
           Disadvantage
         </label>
@@ -33,7 +33,7 @@
         {{!-- <div class="row row-cols-sm-auto align-items-top">
           <div class="col"> --}}
             <label for="toHit">To Hit Modifier</label>
-            <Input @type="text" name="toHit" @value={{this.toHit}} />
+            <Input data-test-input-toHit @type="text" name="toHit" @value={{this.toHit}} />
             {{!--
           </div>
         </div> --}}
@@ -41,23 +41,23 @@
         {{!-- <div class="row row-cols-sm-auto align-items-top">
           <div class="col"> --}}
             <label for="damage">Attack Damage</label>
-            <Input @type="text" name="damage" aria-describedby="dmgDescription" @value={{this.damage}} />
+            <Input data-test-input-damage @type="text" name="damage" aria-describedby="dmgDescription" @value={{this.damage}} />
             <small id="dmgDescription" class="form-text text-muted">
               A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
             </small>
 
             {{!-- TODO: Damage type dropdown --}}
 
-            <Input @type="checkbox" name="resistant" @checked={{this.resistant}} />
+            <Input data-test-resistant @type="checkbox" name="resistant" @checked={{this.resistant}} />
             <label class="form-check-label" for="resistant}">
               Target Resistant
             </label>
-            <Input @type="checkbox" name="vulnerable" @checked={{this.vulnerable}} />
+            <Input data-test-vulnerable @type="checkbox" name="vulnerable" @checked={{this.vulnerable}} />
             <label class="form-check-label" for="vulnerable">
               Target Vulnerable
             </label>
 
-            <button type="button" {{on "click" this.getDamageMessage}}>Attack!</button>
+            <button data-test-button-getDamage type="button" id="attackBtn" {{on "click" this.getDamageMessage}}>Attack!</button>
             {{!--
           </div>
         </div>
@@ -65,9 +65,9 @@
     </div> --}}
 
     {{!-- <div class="col-lg"> --}}
-      <button type="button" {{on "click" this.resetMessage}}>Update Message</button>
+      <button data-test-button-getDetails type="button" id="detailsBtn" {{on "click" this.getAttackDetailsMessage}}>Display Attack Details</button>
 
-      <Textarea id="message" @value={{this.message}} rows="15" cols="80" />
+      <Textarea data-test-message id="message" @value={{this.message}} rows="15" cols="80" />
       {{!--
     </div>
   </div>
