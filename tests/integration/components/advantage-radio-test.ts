@@ -8,7 +8,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it initially renders as expected', async function (assert) {
-    this.set('updateState', (actual) => {
+    this.set('updateState', (actual: AdvantageState) => {
       assert.true(
         false,
         `updateState should not be called in initial render but was called with ${actual}`
@@ -20,7 +20,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
   });
 
   test('it sets advantage as expected', async function (assert) {
-    this.set('updateState', (actual) => {
+    this.set('updateState', (actual: AdvantageState) => {
       assert.deepEqual(
         actual,
         AdvantageState.ADVANTAGE,
@@ -35,7 +35,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
   });
 
   test('it sets disadvantage as expected', async function (assert) {
-    this.set('updateState', (actual) => {
+    this.set('updateState', (actual: AdvantageState) => {
       assert.deepEqual(
         actual,
         AdvantageState.DISADVANTAGE,
@@ -50,7 +50,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
   });
 
   test('it sets a straight roll as expected', async function (assert) {
-    this.set('updateState', (actual) => {
+    this.set('updateState', (actual: AdvantageState) => {
       assert.deepEqual(
         actual,
         AdvantageState.STRAIGHT,

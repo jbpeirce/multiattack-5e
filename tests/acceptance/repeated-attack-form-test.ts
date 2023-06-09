@@ -1,11 +1,13 @@
 import { module, test } from 'qunit';
 import { click, fillIn, visit, currentURL } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
+import { ElementContext } from '../types/element-context';
+// import assert from 'qunit-dom';
 
 module('Acceptance | repeated attack form', function (hooks) {
   setupApplicationTest(hooks);
 
-  let detailsRegex = /(?:Attack \d+ .* with an attack roll of -?\d+.*$)/gm;
+  const detailsRegex = /(?:Attack \d+ .* with an attack roll of -?\d+.*$)/gm;
 
   test('verifying the regex for attack details', async function (assert) {
     const text =
@@ -56,8 +58,8 @@ module('Acceptance | repeated attack form', function (hooks) {
     await visit('/');
 
     // Fill in some details for the attack
-    await fillIn('[data-test-input-numberOfAttacks]', 8);
-    await fillIn('[data-test-input-targetAC]', 15);
+    await fillIn('[data-test-input-numberOfAttacks]', '8');
+    await fillIn('[data-test-input-targetAC]', '15');
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
     await fillIn('[data-test-input-damage]', '2d6 + 3');
 
@@ -75,12 +77,12 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
   });
 
-  test('getting attack information', async function (assert) {
+  test('getting attack information', async function (this: ElementContext, assert) {
     await visit('/');
 
     // Fill in some details for the attack
-    await fillIn('[data-test-input-numberOfAttacks]', 8);
-    await fillIn('[data-test-input-targetAC]', 15);
+    await fillIn('[data-test-input-numberOfAttacks]', '8');
+    await fillIn('[data-test-input-targetAC]', '15');
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
     await fillIn('[data-test-input-damage]', '2d6 + 5');
     await click('[data-test-advantage]');
@@ -90,24 +92,28 @@ module('Acceptance | repeated attack form', function (hooks) {
     // Calculate the attack
     await click('[data-test-button-getDamage]');
 
+    const message = this.element.querySelector('[data-test-message]');
     assert.true(
-      this.element
-        .querySelector('[data-test-message]')
-        .value.includes(
-          'Target AC: 15\n' +
-            'Number of attacks: 8\n' +
-            'Attack roll: 1d20 + 3 - 1d6\n' +
-            '(rolls with disadvantage)\n' +
-            'Attack damage: 2d6 + 5 piercing damage\n' +
-            '(target resistant)'
-        ),
+      message != null,
+      '[data-test-message] selector must be present'
+    );
+
+    const messageValue = (<HTMLInputElement>message).value;
+
+    assert.true(
+      messageValue.includes(
+        'Target AC: 15\n' +
+          'Number of attacks: 8\n' +
+          'Attack roll: 1d20 + 3 - 1d6\n' +
+          '(rolls with disadvantage)\n' +
+          'Attack damage: 2d6 + 5 piercing damage\n' +
+          '(target resistant)'
+      ),
       'attack details should be displayed'
     );
 
     assert.strictEqual(
-      this.element
-        .querySelector('[data-test-message]')
-        .value.match(detailsRegex).length,
+      messageValue.match(detailsRegex)?.length,
       8,
       'eight sets of attack details should be displayed'
     );
