@@ -4,17 +4,18 @@ import { tracked } from '@glimmer/tracking';
 import Attack from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 import AdvantageState from './advantage-state';
+import { assert } from '@ember/debug';
 
 export default class RepeatedAttackFormComponent extends Component {
   @tracked numberOfAttacks = 0;
   @tracked targetAC = 0;
 
   @tracked toHit = '5 + 1d4';
-  @tracked damage = '2d6 + 7';
-  @tracked damageType = 'piercing';
+  damage = '2d6 + 3';
+  damageType = 'Piercing';
 
-  @tracked resistant = false;
-  @tracked vulnerable = false;
+  resistant = false;
+  vulnerable = false;
 
   @tracked message = this.getAttackDetails();
 
@@ -22,10 +23,48 @@ export default class RepeatedAttackFormComponent extends Component {
 
   @action
   setAdvantageState(newState: AdvantageState) {
-    if (!(newState instanceof AdvantageState)) {
-      throw new Error(`Invalid advantage state "${newState}" provided`);
-    }
+    assert(
+      'advantage state handler must receive an advantage state',
+      newState instanceof AdvantageState
+    );
     this.advantageState = newState;
+  }
+
+  @action
+  setDamageType(newType: InputEvent) {
+    assert(
+      'damage type handler must receive an event with a target that is an HTMLSelectElement',
+      newType.target instanceof HTMLSelectElement
+    );
+    this.damageType = newType.target.value.toLowerCase() || 'piercing';
+  }
+
+  @action
+  setDamage(newDamage: InputEvent) {
+    assert(
+      'damage handler must receive an event with a target that is an HTMLInputElement',
+      newDamage.target instanceof HTMLInputElement
+    );
+
+    this.damage = newDamage.target.value || '2d6 + 3';
+  }
+
+  @action
+  setResistant(newResistant: InputEvent) {
+    assert(
+      'resistance handler must receive an event with a target that is an HTMLInputElement',
+      newResistant.target instanceof HTMLInputElement
+    );
+    this.resistant = newResistant.target.checked || false;
+  }
+
+  @action
+  setVulnerable(newVulnerable: InputEvent) {
+    assert(
+      'vulnerability handler must receive an event with a target that is an HTMLInputElement',
+      newVulnerable.target instanceof HTMLInputElement
+    );
+    this.vulnerable = newVulnerable.target.checked || false;
   }
 
   getAttackDetailsMessage = () => (this.message = this.getAttackDetails());
@@ -79,7 +118,7 @@ export default class RepeatedAttackFormComponent extends Component {
           ? '(rolls with disadvantage)\n'
           : ''
       }` +
-      `Attack damage: ${this.damage} of type ${this.damageType}` +
+      `Attack damage: ${this.damage} ${this.damageType.toLowerCase()} damage` +
       `${this.resistant ? '\n(target resistant)' : ''}` +
       `${this.vulnerable ? '\n(target vulnerable)' : ''}`
     );
