@@ -1,74 +1,91 @@
-{{!-- <div class="container"> --}}
-  {{!-- <div class="row">
-    <div class="col-sm"> --}}
+<div class="container">
+  <div class="row align-items-top">
+    <div class="col-sm">
       <h2>Current Attack</h2>
-      {{!-- <div class="row row-cols-sm-auto align-items-top">
-        <div class="col"> --}}
+      <div class="row row-cols-sm-auto align-items-top">
+        <div class="col">
           <label for="numberOfAttacks">Number of Attacks</label>
-          <Input data-test-input-numberOfAttacks name="numberOfAttacks" @type="number" @value={{this.numberOfAttacks}} />
-          {{!--
-        </div> --}}
+          <Input data-test-input-numberOfAttacks class="form-control" name="numberOfAttacks" @type="number"
+            @value={{this.numberOfAttacks}} />
+        </div>
 
-        {{!-- <div class="col"> --}}
+        <div class="col">
           <label for="targetAC">Target AC</label>
-          <Input data-test-input-targetAC name="targetAC" @type="number" @value={{this.targetAC}} />
-          {{!--
-        </div> --}}
+          <Input data-test-input-targetAC class="form-control" name="targetAC" @type="number"
+            @value={{this.targetAC}} />
+        </div>
+      </div>
 
-        {{!-- TODO: This does not de-set the variable when switching between the radio buttons --}}
-        <Input data-test-advantage @type="radio" name="advState" id="adv" @value={{this.advantage}} />
+      {{!-- TODO: This does not de-set the variable when switching between the radio buttons --}}
+      <div class="form-check">
+        <Input data-test-advantage class="form-check-input" @type="radio" name="advState" id="adv"
+          @value={{this.advantage}} />
         <label class="form-check-label" for="adv">
           Advantage
         </label>
-        <Input data-test-straight @type="radio" name="advState" id="straight" @value={{this.straightRoll}} />
+      </div>
+      <div class="form-check">
+        <Input data-test-straight class="form-check-input" @type="radio" name="advState" id="straight"
+          @value={{this.straightRoll}} />
         <label class="form-check-label" for="straight">
           Straight roll
         </label>
-        <Input data-test-disadvantage @type="radio" name="advState" id="disadv" @value={{this.disadvantage}} />
+      </div>
+      <div class="form-check">
+        <Input data-test-disadvantage class="form-check-input" @type="radio" name="advState" id="disadv"
+          @value={{this.disadvantage}} />
         <label class="form-check-label" for="disadv">
           Disadvantage
         </label>
+      </div>
 
-        <h3 >Attack Details</h3>
-        {{!-- <div class="row row-cols-sm-auto align-items-top">
-          <div class="col"> --}}
-            <label for="toHit">To Hit Modifier</label>
-            <Input data-test-input-toHit @type="text" name="toHit" @value={{this.toHit}} />
-            {{!--
-          </div>
-        </div> --}}
-
-        {{!-- <div class="row row-cols-sm-auto align-items-top">
-          <div class="col"> --}}
-            <label for="damage">Attack Damage</label>
-            <Input data-test-input-damage @type="text" name="damage" aria-describedby="dmgDescription" @value={{this.damage}} />
-            <small id="dmgDescription" class="form-text text-muted">
-              A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
-            </small>
-
-            {{!-- TODO: Damage type dropdown --}}
-
-            <Input data-test-resistant @type="checkbox" name="resistant" @checked={{this.resistant}} />
-            <label class="form-check-label" for="resistant}">
-              Target Resistant
-            </label>
-            <Input data-test-vulnerable @type="checkbox" name="vulnerable" @checked={{this.vulnerable}} />
-            <label class="form-check-label" for="vulnerable">
-              Target Vulnerable
-            </label>
-
-            <button data-test-button-getDamage type="button" id="attackBtn" {{on "click" this.getDamageMessage}}>Attack!</button>
-            {{!--
-          </div>
+      <h3 class="mt-3">Attack Details</h3>
+      <div class="row row-cols-sm-auto align-items-top">
+        <div class="col">
+          <label for="toHit">To Hit Modifier</label>
+          <Input data-test-input-toHit class="form-control" @type="text" name="toHit" @value={{this.toHit}} />
         </div>
       </div>
-    </div> --}}
 
-    {{!-- <div class="col-lg"> --}}
-      <button data-test-button-getDetails type="button" id="detailsBtn" {{on "click" this.getAttackDetailsMessage}}>Display Attack Details</button>
+      <div class="row row-cols-sm-auto align-items-top">
+        <div class="col">
+          <label for="damage">Attack Damage</label>
+          <Input data-test-input-damage class="form-control" @type="text" name="damage"
+            aria-describedby="dmgDescription" @value={{this.damage}} />
+          <small id="dmgDescription" class="form-text text-muted">
+            A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
+          </small>
+        </div>
+        {{!-- TODO: Damage type dropdown --}}
+      </div>
 
+      <div class="row row-cols-sm-auto align-items-top">
+        <div class="col">
+          <Input data-test-resistant class="form-check-input" @type="checkbox" name="resistant"
+            @checked={{this.resistant}} />
+          <label class="form-check-label" for="resistant}">
+            Target Resistant
+          </label>
+          <Input data-test-vulnerable class="form-check-input" @type="checkbox" name="vulnerable"
+            @checked={{this.vulnerable}} />
+          <label class="form-check-label" for="vulnerable">
+            Target Vulnerable
+          </label>
+        </div>
+      </div>
+
+      <div class="row row-cols-sm-auto align-items-top">
+        <button data-test-button-getDamage class="btn btn-primary m-3" type="button" id="attackBtn" {{on "click"
+          this.getDamageMessage}}>Attack!</button>
+
+        <button data-test-button-getDetails class="btn btn-info m-3" type="button" id="detailsBtn" {{on "click"
+          this.getAttackDetailsMessage}}>Display
+          Attack Details</button>
+      </div>
+    </div>
+
+    <div class="col-lg">
       <Textarea data-test-message id="message" @value={{this.message}} rows="15" cols="80" />
-      {{!--
     </div>
   </div>
-</div> --}}
+</div>

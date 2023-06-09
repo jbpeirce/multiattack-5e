@@ -5,6 +5,36 @@ import { setupApplicationTest } from 'ember-qunit';
 module('Acceptance | repeated attack form', function (hooks) {
   setupApplicationTest(hooks);
 
+  let detailsRegex = /(?:Attack \d+ .* with an attack roll of -?\d+.*$)/gm;
+
+  test('verifying the regex for attack details', async function (assert) {
+    const text =
+      'Target AC: 15\n' +
+      'Number of attacks: 5\n' +
+      'Attack roll: 1d20 + 3 - 1d6\n' +
+      '(rolls a straight roll, with advantage and disadvantage both set)\n' +
+      'Attack damage: 2d6 + 5 of type piercing\n' +
+      '(target resistant)\n' +
+      '*** Total Damage: 4 ***\n' +
+      '\tAttack 1 inflicted 4 damage with an attack roll of 25 (CRIT!)\n' +
+      '\tAttack 2 missed with an attack roll of -4\n' +
+      '\tAttack 3 missed with an attack roll of 13\n' +
+      '\tAttack 4 missed with an attack roll of 0 (NAT 1!)\n' +
+      '\tAttack 5 missed with an attack roll of 6\n';
+
+    assert.deepEqual(
+      text.match(detailsRegex),
+      [
+        'Attack 1 inflicted 4 damage with an attack roll of 25 (CRIT!)',
+        'Attack 2 missed with an attack roll of -4',
+        'Attack 3 missed with an attack roll of 13',
+        'Attack 4 missed with an attack roll of 0 (NAT 1!)',
+        'Attack 5 missed with an attack roll of 6',
+      ],
+      'the regular expression for the test should match expectations'
+    );
+  });
+
   test('visiting /', async function (assert) {
     await visit('/');
 
@@ -74,13 +104,25 @@ module('Acceptance | repeated attack form', function (hooks) {
       'attack details should be displayed'
     );
 
-    let detailsRegex = /(?:\tAttack \d+ .* with an attack roll of \d+.)/g;
-    assert.equal(
+    assert.strictEqual(
       this.element
         .querySelector('[data-test-message]')
         .value.match(detailsRegex).length,
       8,
       'eight sets of attack details should be displayed'
     );
+
+    // assert.equal(
+    //   this.element.querySelector('[data-test-message]').value,
+    //   'test',
+    //   'printing detailed message'
+    // );
+    // assert.equal(
+    //   this.element
+    //     .querySelector('[data-test-message]')
+    //     .value.match(detailsRegex),
+    //   [],
+    //   'printing matches for the attack details'
+    // );
   });
 });
