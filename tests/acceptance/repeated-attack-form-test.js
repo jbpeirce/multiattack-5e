@@ -13,7 +13,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       'Number of attacks: 5\n' +
       'Attack roll: 1d20 + 3 - 1d6\n' +
       '(rolls a straight roll, with advantage and disadvantage both set)\n' +
-      'Attack damage: 2d6 + 5 of type piercing\n' +
+      'Attack damage: 2d6 + 5 piercing damage\n' +
       '(target resistant)\n' +
       '*** Total Damage: 4 ***\n' +
       '\tAttack 1 inflicted 4 damage with an attack roll of 25 (CRIT!)\n' +
@@ -70,7 +70,7 @@ module('Acceptance | repeated attack form', function (hooks) {
         'Target AC: 15\n' +
           'Number of attacks: 8\n' +
           'Attack roll: 1d20 + 3 - 1d6\n' +
-          'Attack damage: 2d6 + 3 of type piercing',
+          'Attack damage: 2d6 + 3 piercing damage',
         'the details string for the input damage should be displayed'
       );
   });
@@ -98,7 +98,7 @@ module('Acceptance | repeated attack form', function (hooks) {
             'Number of attacks: 8\n' +
             'Attack roll: 1d20 + 3 - 1d6\n' +
             '(rolls with disadvantage)\n' +
-            'Attack damage: 2d6 + 5 of type piercing\n' +
+            'Attack damage: 2d6 + 5 piercing damage\n' +
             '(target resistant)'
         ),
       'attack details should be displayed'

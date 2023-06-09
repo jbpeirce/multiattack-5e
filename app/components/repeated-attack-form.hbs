@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <AdvantageRadio @updateState={{this.setAdvantageState}}/>
+      <AdvantageRadio @updateState={{this.setAdvantageState}} />
 
       <h3 class="mt-3">Attack Details</h3>
       <div class="row row-cols-sm-auto align-items-top">
@@ -26,32 +26,7 @@
         </div>
       </div>
 
-      <div class="row row-cols-sm-auto align-items-top">
-        <div class="col">
-          <label for="damage">Attack Damage</label>
-          <Input data-test-input-damage class="form-control" @type="text" name="damage"
-            aria-describedby="dmgDescription" @value={{this.damage}} />
-          <small id="dmgDescription" class="form-text text-muted">
-            A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
-          </small>
-        </div>
-        {{!-- TODO: Damage type dropdown --}}
-      </div>
-
-      <div class="row row-cols-sm-auto align-items-top">
-        <div class="col">
-          <Input data-test-resistant class="form-check-input" @type="checkbox" name="resistant"
-            @checked={{this.resistant}} />
-          <label class="form-check-label" for="resistant}">
-            Target Resistant
-          </label>
-          <Input data-test-vulnerable class="form-check-input" @type="checkbox" name="vulnerable"
-            @checked={{this.vulnerable}} />
-          <label class="form-check-label" for="vulnerable">
-            Target Vulnerable
-          </label>
-        </div>
-      </div>
+      <DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}} @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} />
 
       <div class="row row-cols-sm-auto align-items-top">
         <button data-test-button-getDamage class="btn btn-primary m-3" type="button" id="attackBtn" {{on "click"
