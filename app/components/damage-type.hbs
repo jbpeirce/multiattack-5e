@@ -2,7 +2,7 @@
   <div class="col">
     <label for="damage">Attack Damage</label>
     <Input data-test-input-damage class="form-control" @type="text" name="damage" aria-describedby="dmgDescription"
-      @value={{this.damage}} {{on "input" (fn @setDamage)}} />
+      @value={{@initialDamage}} {{on "input" (fn @setDamage)}} />
     <small id="dmgDescription" class="form-text text-muted">
       A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
     </small>
@@ -14,19 +14,19 @@
   <select name="damageDropdown" data-test-damage-dropdown {{on "change" @setDamageType}}>
     Damage Type
     {{#each this.damageTypes as |damageType|}}
-    <option data-test-damage-{{damageType}} selected={{(eq this.damageType damageType)}}>{{damageType}}</option>
+    <option data-test-damage-{{damageType}} selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
     {{/each}}
   </select>
 </div>
 
 <div class="row row-cols-sm-auto align-items-top">
   <div class="col">
-    <Input data-test-resistant class="form-check-input" @type="checkbox" name="resistant" @checked={{this.resistant}} {{on "input" (fn @setResistant)}} />
+    <Input data-test-resistant class="form-check-input" @type="checkbox" name="resistant" @checked={{@initialResistant}} {{on "input" (fn @setResistant)}} />
     <label class="form-check-label" for="resistant">
       Target Resistant
     </label>
     <Input data-test-vulnerable class="form-check-input" @type="checkbox" name="vulnerable"
-      @checked={{this.vulnerable}} {{on "input" (fn @setVulnerable)}} />
+      @checked={{@initialVulnerable}} {{on "input" (fn @setVulnerable)}} />
     <label class="form-check-label" for="vulnerable">
       Target Vulnerable
     </label>

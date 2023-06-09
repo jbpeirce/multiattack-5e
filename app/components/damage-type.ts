@@ -1,5 +1,4 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 
 export default class DamageTypeComponent extends Component {
   damageTypes = [
@@ -18,10 +17,4 @@ export default class DamageTypeComponent extends Component {
     'Thunder',
     'Other',
   ];
-
-  @tracked damage = '2d6 + 7';
-  @tracked damageType = 'Piercing';
-
-  @tracked resistant = false;
-  @tracked vulnerable = false;
 }

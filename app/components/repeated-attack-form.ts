@@ -12,7 +12,7 @@ export default class RepeatedAttackFormComponent extends Component {
 
   @tracked toHit = '5 + 1d4';
   damage = '2d6 + 3';
-  damageType = 'piercing';
+  damageType = 'Piercing';
 
   resistant = false;
   vulnerable = false;
@@ -118,7 +118,7 @@ export default class RepeatedAttackFormComponent extends Component {
           ? '(rolls with disadvantage)\n'
           : ''
       }` +
-      `Attack damage: ${this.damage} ${this.damageType} damage` +
+      `Attack damage: ${this.damage} ${this.damageType.toLowerCase()} damage` +
       `${this.resistant ? '\n(target resistant)' : ''}` +
       `${this.vulnerable ? '\n(target vulnerable)' : ''}`
     );

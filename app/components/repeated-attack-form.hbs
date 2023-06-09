@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}} @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} />
+      <DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}} @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} @initialDamage={{this.damage}} @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}} @initialVulnerable={{this.vulnerable}} />
 
       <div class="row row-cols-sm-auto align-items-top">
         <button data-test-button-getDamage class="btn btn-primary m-3" type="button" id="attackBtn" {{on "click"
