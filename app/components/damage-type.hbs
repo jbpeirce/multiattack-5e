@@ -21,11 +21,11 @@
 
 <div class="row row-cols-sm-auto align-items-top">
   <div class="col">
-    <Input data-test-resistant class="form-check-input" @type="checkbox" name="resistant" @checked={{@initialResistant}} {{on "input" (fn @setResistant)}} />
+    <Input data-test-input-resistant class="form-check-input" @type="checkbox" name="resistant" @checked={{@initialResistant}} {{on "input" (fn @setResistant)}} />
     <label class="form-check-label" for="resistant">
       Target Resistant
     </label>
-    <Input data-test-vulnerable class="form-check-input" @type="checkbox" name="vulnerable"
+    <Input data-test-input-vulnerable class="form-check-input" @type="checkbox" name="vulnerable"
       @checked={{@initialVulnerable}} {{on "input" (fn @setVulnerable)}} />
     <label class="form-check-label" for="vulnerable">
       Target Vulnerable
