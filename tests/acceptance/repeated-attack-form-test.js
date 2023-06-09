@@ -97,7 +97,7 @@ module('Acceptance | repeated attack form', function (hooks) {
           'Target AC: 15\n' +
             'Number of attacks: 8\n' +
             'Attack roll: 1d20 + 3 - 1d6\n' +
-            '(rolls a straight roll, with advantage and disadvantage both set)\n' +
+            '(rolls with disadvantage)\n' +
             'Attack damage: 2d6 + 5 of type piercing\n' +
             '(target resistant)'
         ),
