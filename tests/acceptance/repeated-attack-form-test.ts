@@ -131,4 +131,41 @@ module('Acceptance | repeated attack form', function (hooks) {
     //   'printing matches for the attack details'
     // );
   });
+
+  test('it invalidates malformatted fields', async function (this: ElementContext, assert) {
+    await visit('/');
+
+    // numberOfAttacks
+    await fillIn('[data-test-input-numberOfAttacks]', '8');
+    assert
+      .dom('[data-test-input-numberOfAttacks]')
+      .isValid('initial number of attacks should be valid');
+
+    await fillIn('[data-test-input-numberOfAttacks]', '-2');
+    assert
+      .dom('[data-test-input-numberOfAttacks]')
+      .isNotValid('invalid input number of attacks should be flagged');
+
+    // toHit
+    await fillIn('[data-test-input-toHit]', '3 - 1d6');
+    assert
+      .dom('[data-test-input-toHit]')
+      .isValid('initial toHit should be valid');
+
+    await fillIn('[data-test-input-toHit]', 'invalid');
+    assert
+      .dom('[data-test-input-toHit]')
+      .isNotValid('invalid input toHit should be flagged');
+
+    // damage
+    await fillIn('[data-test-input-damage]', '2d6 + 3');
+    assert
+      .dom('[data-test-input-damage]')
+      .isValid('initial damage should be valid');
+
+    await fillIn('[data-test-input-damage]', 'invalid');
+    assert
+      .dom('[data-test-input-damage]')
+      .isNotValid('invalid input damage should be flagged');
+  });
 });

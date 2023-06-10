@@ -8,14 +8,31 @@ export default class DiceStringParser {
   // except for the first term, where the sign is optional. Note that this regex
   // cannot be marked with "g" or it will preserve state between different
   // strings and incorrectly mark some as not matching.
-  static diceStringRegex =
-    /^(?: *[+-]? *(?:(?:\d+d\d+)|\d+))(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
+  static diceStringRegexAsString =
+    '(?: *[\\+\\-]? *(?:(?:\\d+d\\d+)|\\d+))(?: *[\\+\\-] *(?:(?:\\d+d\\d+)|\\d+))*';
+  static diceStringRegex = new RegExp(
+    '^' + this.diceStringRegexAsString + '$',
+    'i'
+  );
+  // /^(?: *[+-]? *(?:(?:\d+d\d+)|\d+))(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
 
   // Matches a dice group or number with an optional sign. This uses "g" to
   // enable parsing many terms out of the same expression; the code makes sure
   // to consume all possible matches each time it is used.
   static termRegex =
     /(?: *(?<sign>[+-]?) *(?:(?:(?<numDice>\d+)d(?<numSides>\d+))|(?<number>\d+)))/gi;
+
+  /**
+   * Check whether the input string can be parsed as a series of dice groups
+   * and/or numbers added to or subtracted from each other, such as is used to
+   * describe damage in systems like D&D 5e.
+   * @param potentialDiceString a string which might be a series of dice groups
+   * and/or numbers added to or subtracted from each other
+   * @returns whether this string matches the expected format
+   */
+  static validateDiceString(potentialDiceString: string): boolean {
+    return this.diceStringRegex.test(potentialDiceString);
+  }
 
   /**
    * Parses a combination of dice groups and numbers, such as the string used to
@@ -29,7 +46,7 @@ export default class DiceStringParser {
   static parse(diceString: string): DiceGroupsAndModifier {
     // Check that the string matches the overall expected pattern, with no
     // additional text or missing signs
-    if (!this.diceStringRegex.test(diceString)) {
+    if (!this.validateDiceString(diceString)) {
       throw new Error(
         `Unable to parse dice groups or constants from input string "${diceString}"`
       );

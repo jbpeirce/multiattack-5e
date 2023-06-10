@@ -5,21 +5,35 @@ import Attack from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 import AdvantageState from './advantage-state';
 import { assert } from '@ember/debug';
+import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
 
 export default class RepeatedAttackFormComponent extends Component {
   @tracked numberOfAttacks = 0;
   @tracked targetAC = 0;
 
   @tracked toHit = '5 + 1d4';
-  damage = '2d6 + 3';
-  damageType = 'Piercing';
+  @tracked damage = '2d6 + 3';
+  @tracked damageType = 'Piercing';
 
-  resistant = false;
-  vulnerable = false;
+  @tracked resistant = false;
+  @tracked vulnerable = false;
 
   @tracked message = this.getAttackDetails();
 
+  diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
+
   advantageState = AdvantageState.STRAIGHT;
+
+  /**
+   * This function is used to stop the repeated-attack-form handlebars from
+   * refreshing the page whenever the form is submitted. Without this, the tests
+   * which use form submission enter an infinite loop.
+   * @returns false
+   */
+  @action
+  suppressPageRefresh() {
+    return false;
+  }
 
   @action
   setAdvantageState(newState: AdvantageState) {
@@ -46,7 +60,7 @@ export default class RepeatedAttackFormComponent extends Component {
       newDamage.target instanceof HTMLInputElement
     );
 
-    this.damage = newDamage.target.value || '2d6 + 3';
+    this.damage = newDamage.target.value || '0';
   }
 
   @action
