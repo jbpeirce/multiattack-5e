@@ -23,7 +23,7 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
 
     for (const invalid of invalidStrings) {
       assert.throws(
-        () => new DiceStringParser().parse(invalid),
+        () => DiceStringParser.parse(invalid),
         new Error(
           `Unable to parse dice groups or constants from input string "${invalid}"`
         ),
@@ -58,11 +58,10 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
 
     assert.expect(valid.size);
 
-    const parser = new DiceStringParser();
     for (const [dmgStr, expected] of valid) {
       try {
         assert.deepEqual(
-          parser.parse(dmgStr),
+          DiceStringParser.parse(dmgStr),
           expected,
           `${dmgStr} should parse to expected value`
         );
