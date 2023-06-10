@@ -8,13 +8,13 @@ export default class DiceStringParser {
   // except for the first term, where the sign is optional. Note that this regex
   // cannot be marked with "g" or it will preserve state between different
   // strings and incorrectly mark some as not matching.
-  diceStringRegex =
+  static diceStringRegex =
     /^(?: *[+-]? *(?:(?:\d+d\d+)|\d+))(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
 
   // Matches a dice group or number with an optional sign. This uses "g" to
   // enable parsing many terms out of the same expression; the code makes sure
   // to consume all possible matches each time it is used.
-  termRegex =
+  static termRegex =
     /(?: *(?<sign>[+-]?) *(?:(?:(?<numDice>\d+)d(?<numSides>\d+))|(?<number>\d+)))/gi;
 
   /**
@@ -26,7 +26,7 @@ export default class DiceStringParser {
    * @returns the list of described dice groups and all of the numbers added
    * together into a single modifier
    */
-  parse(diceString: string): DiceGroupsAndModifier {
+  static parse(diceString: string): DiceGroupsAndModifier {
     // Check that the string matches the overall expected pattern, with no
     // additional text or missing signs
     if (!this.diceStringRegex.test(diceString)) {

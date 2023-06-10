@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { click, fillIn, visit, currentURL, select } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { ElementContext } from '../types/element-context';
-// import assert from 'qunit-dom';
 
 module('Acceptance | repeated attack form', function (hooks) {
   setupApplicationTest(hooks);

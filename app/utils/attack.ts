@@ -28,7 +28,7 @@ export default class Attack {
    * with details for each
    */
   constructor(toHit: string, damageTypes: Damage[]) {
-    this.toHitModifier = new DiceStringParser().parse(toHit);
+    this.toHitModifier = DiceStringParser.parse(toHit);
     this.damageTypes = damageTypes;
   }
 

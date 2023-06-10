@@ -16,7 +16,7 @@ export default class Damage {
     targetResistant = false,
     targetVulnerable = false
   ) {
-    this.damage = new DiceStringParser().parse(damageString);
+    this.damage = DiceStringParser.parse(damageString);
     this.damageString = damageString;
     this.type = type;
     this.targetResistant = targetResistant;
