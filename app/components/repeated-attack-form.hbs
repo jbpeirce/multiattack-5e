@@ -1,52 +1,50 @@
-<div class="container">
-  <div class="row align-items-top">
-    <div class="col-sm">
-      <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
-        <h2>Current Attack</h2>
-        <div class="row row-cols-sm-auto align-items-top">
-          <div class="col">
-            <label for="numberOfAttacks">Number of Attacks</label>
-            <Input data-test-input-numberOfAttacks class="form-control" name="numberOfAttacks" @type="number"
-              @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative" />
-          </div>
-
-          <div class="col">
-            <label for="targetAC">Target AC</label>
-            <Input data-test-input-targetAC class="form-control" name="targetAC" @type="number"
-              @value={{this.targetAC}} />
-          </div>
+<div class="row align-items-top">
+  <div class="col-sm">
+    <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
+      <h2>Current Attack</h2>
+      <div class="row row-cols-sm-auto align-items-top">
+        <div class="col">
+          <label for="numberOfAttacks">Number of Attacks</label>
+          <Input data-test-input-numberOfAttacks class="form-control" name="numberOfAttacks" @type="number"
+            @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative" />
         </div>
 
-        <AdvantageRadio @updateState={{this.setAdvantageState}} />
-
-        <h3 class="mt-3">Attack Details</h3>
-        <div class="row row-cols-sm-auto align-items-top">
-          <div class="col">
-            <label for="toHit">To Hit Modifier</label>
-            <Input data-test-input-toHit class="form-control" @type="text" name="toHit" @value={{this.toHit}}
-              pattern={{this.diceGroupsRegex}}
-              title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '+1d4 - 1d6 + 2'" />
-          </div>
+        <div class="col">
+          <label for="targetAC">Target AC</label>
+          <Input data-test-input-targetAC class="form-control" name="targetAC" @type="number"
+            @value={{this.targetAC}} />
         </div>
+      </div>
 
-        <DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
-          @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} @initialDamage={{this.damage}}
-          @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
-          @initialVulnerable={{this.vulnerable}} />
+      <AdvantageRadio @updateState={{this.setAdvantageState}} />
 
-        <div class="row row-cols-sm-auto align-items-top">
-          <button data-test-button-getDamage class="btn btn-primary m-3" type="submit" id="attackBtn" {{on "click"
-            this.getDamageMessage}}>Attack!</button>
-
-          <button data-test-button-getDetails class="btn btn-info m-3" type="submit" id="detailsBtn" {{on "click"
-            this.getAttackDetailsMessage}}>Display
-            Attack Details</button>
+      <h3 class="mt-3">Attack Details</h3>
+      <div class="row row-cols-sm-auto align-items-top">
+        <div class="col">
+          <label for="toHit">To Hit Modifier</label>
+          <Input data-test-input-toHit class="form-control" @type="text" name="toHit" @value={{this.toHit}}
+            pattern={{this.diceGroupsRegex}}
+            title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '+1d4 - 1d6 + 2'" />
         </div>
-      </form>
-    </div>
+      </div>
 
-    <div class="col-lg">
-      <Textarea data-test-message id="message" @value={{this.message}} rows="15" cols="80" />
-    </div>
+      <DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
+        @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} @initialDamage={{this.damage}}
+        @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
+        @initialVulnerable={{this.vulnerable}} />
+
+      <div class="row row-cols-sm-auto align-items-top">
+        <button data-test-button-getDamage class="btn btn-primary m-3" type="submit" id="attackBtn" {{on "click"
+          this.getDamageMessage}}>Attack!</button>
+
+        <button data-test-button-getDetails class="btn btn-info m-3" type="submit" id="detailsBtn" {{on "click"
+          this.getAttackDetailsMessage}}>Display
+          Attack Details</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-lg">
+    <Textarea data-test-message id="message" @value={{this.message}} rows="15" cols="80" />
   </div>
 </div>
