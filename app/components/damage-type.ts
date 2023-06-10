@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
 
 export default class DamageTypeComponent extends Component {
   damageTypes = [
@@ -17,4 +18,6 @@ export default class DamageTypeComponent extends Component {
     'Thunder',
     'Other',
   ];
+
+  diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
 }

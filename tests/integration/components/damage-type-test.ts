@@ -8,10 +8,10 @@ module('Integration | Component | damage-type', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders expected initial values', async function (this: ElementContext, assert) {
-    this.set('setAny', (actual: InputEvent) => {
+    this.set('doNotCall', (actual: InputEvent) => {
       assert.true(
         false,
-        `the damage setters should not be called in the rendering test but were called with ${actual}`
+        `this setter should not have been called but was called with ${actual}`
       );
     });
 
@@ -20,8 +20,8 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @setDamage={{this.setAny}} @setDamageType={{this.setAny}}
-    @setResistant={{this.setAny}} @setVulnerable={{this.setAny}} @initialDamage={{this.damage}}
+    await render(hbs`<DamageType @setDamage={{this.doNotCall}} @setDamageType={{this.doNotCall}}
+    @setResistant={{this.doNotCall}} @setVulnerable={{this.doNotCall}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
 
@@ -43,13 +43,6 @@ module('Integration | Component | damage-type', function (hooks) {
   });
 
   test('it updates fields as expected', async function (this: ElementContext, assert) {
-    this.set('setAny', (actual: InputEvent) => {
-      assert.true(
-        false,
-        `the damage setters should not be called in the rendering test but were called with ${actual}`
-      );
-    });
-
     this.set('setDamage', (actual: InputEvent) => {
       assert.true(
         actual.target instanceof HTMLInputElement,
@@ -125,5 +118,45 @@ module('Integration | Component | damage-type', function (hooks) {
     assert
       .dom('[data-test-input-vulnerable]')
       .isChecked('previously-unchecked vulnerability field should be checked');
+  });
+
+  test('it invalidates malformatted fields', async function (this: ElementContext, assert) {
+    this.set('setDamage', (actual: InputEvent) => {
+      assert.true(
+        actual.target instanceof HTMLInputElement,
+        'damage handler must receive an event with a target that is an HTMLInputElement'
+      );
+      assert.equal(
+        (<HTMLInputElement>actual.target).value,
+        'invalid',
+        'damage setter should be called with the expected value'
+      );
+    });
+
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`
+      );
+    });
+
+    this.set('damage', '1d6 + 3');
+    this.set('damageType', 'Fire');
+    this.set('resistant', true);
+    this.set('vulnerable', false);
+
+    await render(hbs`<DamageType @setDamage={{this.setDamage}} @setDamageType={{this.doNotCall}}
+    @setResistant={{this.doNotCall}} @setVulnerable={{this.doNotCall}} @initialDamage={{this.damage}}
+    @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
+    @initialVulnerable={{this.vulnerable}} />`);
+
+    assert
+      .dom('[data-test-input-damage]')
+      .isValid('initial damage should be valid');
+
+    await fillIn('[data-test-input-damage]', 'invalid');
+    assert
+      .dom('[data-test-input-damage]')
+      .isNotValid('invalid input should be flagged');
   });
 });
