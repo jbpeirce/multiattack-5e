@@ -85,8 +85,8 @@ module('Acceptance | repeated attack form', function (hooks) {
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
     await fillIn('[data-test-input-damage]', '2d6 + 5');
     await select('[data-test-damage-dropdown]', '[data-test-damage-Acid]');
-    await click('[data-test-advantage]');
-    await click('[data-test-disadvantage]');
+    await click('[data-test-value="advantage"]');
+    await click('[data-test-value="disadvantage"]');
     await click('[data-test-input-resistant]');
 
     // Calculate the attack

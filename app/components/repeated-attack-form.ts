@@ -20,9 +20,9 @@ export default class RepeatedAttackFormComponent extends Component {
 
   @tracked message = this.getAttackDetails();
 
-  diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
+  @tracked advantageState = AdvantageState.STRAIGHT;
 
-  advantageState = AdvantageState.STRAIGHT;
+  diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
 
   /**
    * This function is used to stop the repeated-attack-form handlebars from
