@@ -31,7 +31,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
     await render(hbs`<AdvantageRadio @updateState={{this.updateState}} />`);
 
     assert.expect(1);
-    await click('[data-test-advantage]');
+    await click('[data-test-value="advantage"]');
   });
 
   test('it sets disadvantage as expected', async function (assert) {
@@ -46,7 +46,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
     await render(hbs`<AdvantageRadio @updateState={{this.updateState}} />`);
 
     assert.expect(1);
-    await click('[data-test-disadvantage]');
+    await click('[data-test-value="disadvantage"]');
   });
 
   test('it sets a straight roll as expected', async function (assert) {
@@ -61,6 +61,6 @@ module('Integration | Component | advantage-radio', function (hooks) {
     await render(hbs`<AdvantageRadio @updateState={{this.updateState}} />`);
 
     assert.expect(1);
-    await click('[data-test-straight]');
+    await click('[data-test-value="straight"]');
   });
 });
