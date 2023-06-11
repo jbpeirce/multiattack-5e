@@ -1,7 +1,7 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import Attack from 'multiattack-5e/utils/attack';
+import Attack, { AttackDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 import AdvantageState from './advantage-state';
 import { assert } from '@ember/debug';
@@ -21,6 +21,10 @@ export default class RepeatedAttackFormComponent extends Component {
   @tracked message = this.getAttackDetails();
 
   @tracked advantageState = AdvantageState.STRAIGHT;
+
+  @tracked attackTriggered = false;
+  @tracked totalDmg = 0;
+  @tracked attackDetailsList: AttackDetails[] = [];
 
   diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
 
@@ -84,12 +88,33 @@ export default class RepeatedAttackFormComponent extends Component {
   getAttackDetailsMessage = () => (this.message = this.getAttackDetails());
 
   getDamageMessage = () => {
+    // Update the attack data by simulating repeated attacks
+    this.simulateRepeatedAttacks();
+
+    this.message = this.getAttackDetails();
+    this.message += `\n*** Total Damage: ${this.totalDmg} ***\n`;
+    for (let i = 0; i < this.attackDetailsList.length; i++) {
+      const details = this.attackDetailsList[i];
+      assert('attack details must be present', details);
+      this.message +=
+        '\t' +
+        `Attack ${i + 1} ${
+          details.hit ? `inflicted ${details.damage} damage` : 'missed'
+        } with an attack roll of ${details.roll}${
+          details.crit ? ' (CRIT!)' : ''
+        }${details.nat1 ? ' (NAT 1!)' : ''}\n`;
+    }
+  };
+
+  simulateRepeatedAttacks = () => {
+    this.attackTriggered = true;
+    this.totalDmg = 0;
+    this.attackDetailsList = [];
+
     const attack = new Attack(this.toHit, [
       new Damage(this.damage, this.damageType, this.resistant, this.vulnerable),
     ]);
 
-    let totalDmg = 0;
-    const attackDescriptions: string[] = [];
     for (let i = 0; i < this.numberOfAttacks; i++) {
       const attackDetails = attack.makeAttack(
         this.targetAC,
@@ -97,23 +122,8 @@ export default class RepeatedAttackFormComponent extends Component {
         this.advantageState == AdvantageState.DISADVANTAGE
       );
 
-      totalDmg += attackDetails.damage;
-
-      attackDescriptions.push(
-        `Attack ${i + 1} ${
-          attackDetails.hit
-            ? `inflicted ${attackDetails.damage} damage`
-            : 'missed'
-        } with an attack roll of ${attackDetails.roll}${
-          attackDetails.crit ? ' (CRIT!)' : ''
-        }${attackDetails.nat1 ? ' (NAT 1!)' : ''}\n`
-      );
-    }
-
-    this.message = this.getAttackDetails();
-    this.message += `\n*** Total Damage: ${totalDmg} ***\n`;
-    for (const description of attackDescriptions) {
-      this.message += '\t' + description;
+      this.totalDmg += attackDetails.damage;
+      this.attackDetailsList.push(attackDetails);
     }
   };
 

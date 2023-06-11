@@ -1,0 +1,40 @@
+<h4>
+  Attack Details
+</h4>
+<ul>
+<li>Target AC: {{@targetAC}}</li>
+<li>Number of attacks: {{@numberOfAttacks}}</li>
+<li>Attack roll: 1d20 + {{@toHit}}
+  {{#if (eq @advantageState.name "advantage") }}
+  (rolls with advantage)
+  {{/if}}
+  {{#if (eq @advantageState.name "disadvantage") }}
+  (rolls with disadvantage)
+  {{/if}}
+</li>
+<li>Attack damage: {{@damage}} {{@damageType}} damage
+  {{#if @resistant}} (target resistant){{/if}}
+  {{#if @vulnerable}} (target vulnerable){{/if}}
+</li>
+</ul>
+{{#if @attackTriggered}}
+<h4>
+  <strong>*** Total Damage: {{@totalDmg}} ***</strong>
+</h4>
+<ol>
+  {{#each @attackDetailsList as |attackDetails|}}
+  <li>
+    Attack {{@index}}
+    {{#if attackDetails.hit }}
+    inflicted {{attackDetails.damage}} damage
+    {{/if}}
+    {{#unless attackDetails.hit}}
+    missed
+    {{/unless}}
+    with an attack roll of {{attackDetails.roll}}
+    {{#if attackDetails.crit}} (CRIT!){{/if}}
+    {{#if attackDetails.nat1}} (NAT 1!){{/if}}
+  </li>
+  {{/each}}
+</ol>
+{{/if}}
