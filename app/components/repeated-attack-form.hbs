@@ -1,7 +1,7 @@
 <div class="row align-items-top">
   <div class="col-sm">
     <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
-      <h2>Current Attack</h2>
+      <h2>Set Up Current Attacks</h2>
       <div class="row row-cols-sm-auto align-items-top">
         <div class="col">
           <label for="numberOfAttacks">Number of Attacks</label>
@@ -18,7 +18,7 @@
 
       <AdvantageRadio @updateState={{this.setAdvantageState}} />
 
-      <h3 class="mt-3">Attack Details</h3>
+      <h3 class="mt-3">Enter Attack Details</h3>
       <div class="row row-cols-sm-auto align-items-top">
         <div class="col">
           <label for="toHit">To Hit Modifier</label>
@@ -35,16 +35,15 @@
 
       <div class="row row-cols-sm-auto align-items-top">
         <button data-test-button-getDamage class="btn btn-primary m-3" type="submit" id="attackBtn" {{on "click"
-          this.getDamageMessage}}>Attack!</button>
-
-        <button data-test-button-getDetails class="btn btn-info m-3" type="submit" id="detailsBtn" {{on "click"
-          this.getAttackDetailsMessage}}>Display
-          Attack Details</button>
+          this.simulateRepeatedAttacks}}>Attack!</button>
       </div>
     </form>
   </div>
 
   <div class="col-lg">
-    <Textarea data-test-message id="message" @value={{this.message}} rows="15" cols="80" />
+    <DetailDisplay @targetAC={{this.targetAC}} @numberOfAttacks={{this.numberOfAttacks}} @toHit={{this.toHit}}
+      @advantageState={{this.advantageState}} @damage={{this.damage}} @damageType={{this.damageType}}
+      @resistant={{this.resistant}} @vulnerable={{this.vulnerable}} @attackTriggered={{this.attackTriggered}}
+      @totalDmg={{this.totalDmg}} @attackDetailsList={{this.attackDetailsList}} />
   </div>
 </div>

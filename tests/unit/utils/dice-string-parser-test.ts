@@ -49,7 +49,7 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
     );
     valid.set('3d5', new DiceGroupsAndModifier([new DiceGroup(3, 5)], 0));
     valid.set(
-      '-2d6',
+      '-2d6   ',
       new DiceGroupsAndModifier([new DiceGroup(2, 6, false)], 0)
     );
     valid.set('40', new DiceGroupsAndModifier([], 40));

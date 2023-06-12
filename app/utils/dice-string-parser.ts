@@ -9,7 +9,7 @@ export default class DiceStringParser {
   // cannot be marked with "g" or it will preserve state between different
   // strings and incorrectly mark some as not matching.
   static diceStringRegexAsString =
-    '(?: *[\\+\\-]? *(?:(?:\\d+d\\d+)|\\d+))(?: *[\\+\\-] *(?:(?:\\d+d\\d+)|\\d+))*';
+    '(?: *[\\+\\-]? *(?:(?:\\d+d\\d+)|\\d+))(?: *[\\+\\-] *(?:(?:\\d+d\\d+)|\\d+))* *';
   static diceStringRegex = new RegExp(
     '^' + this.diceStringRegexAsString + '$',
     'i'
