@@ -28,12 +28,28 @@
         </div>
       </div>
 
-      <DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
-        @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} @initialDamage={{this.damage}}
-        @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
-        @initialVulnerable={{this.vulnerable}} />
+      {{#each this.damageList as |damage index| }}
+      <DamageType data-test-damage-type={{index}} @index={{index}} @setDamage={{damage.setDamage}}
+        @setDamageType={{damage.setDamageType}} @setResistant={{damage.setResistant}}
+        @setVulnerable={{damage.setVulnerable}} @initialDamage={{damage.damageString}}
+        @initialDamageType={{damage.type}} @initialResistant={{damage.targetResistant}}
+        @initialVulnerable={{damage.targetVulnerable}} />
+      <div class="row align-items-top justify-items-end">
+        <div class="col-sm">
+          <button data-test-button-remove-damage-type={{index}} class="btn btn-warning my-2" type="button" {{on "click"
+            (fn this.removeDamageType index)}}>-</button>
+        </div>
+      </div>
+      <hr>
+      {{/each}}
+      <div class="row row-cols-sm-auto align-items-top justify-items-end">
+        <div class="col">
+          <button data-test-button-add-damage-type class="btn btn-info my-3" type="button" {{on "click"
+            this.addNewDamageType}}>New Damage Type</button>
+        </div>
+      </div>
 
-      <div class="row row-cols-sm-auto align-items-top">
+      <div class="row align-items-top">
         <button data-test-button-getDamage class="btn btn-primary m-3" type="submit" id="attackBtn" {{on "click"
           this.simulateRepeatedAttacks}}>Attack!</button>
       </div>
@@ -42,8 +58,7 @@
 
   <div class="col-lg">
     <DetailDisplay @targetAC={{this.targetAC}} @numberOfAttacks={{this.numberOfAttacks}} @toHit={{this.toHit}}
-      @advantageState={{this.advantageState}} @damage={{this.damage}} @damageType={{this.damageType}}
-      @resistant={{this.resistant}} @vulnerable={{this.vulnerable}} @attackTriggered={{this.attackTriggered}}
+      @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{this.attackTriggered}}
       @totalDmg={{this.totalDmg}} @attackDetailsList={{this.attackDetailsList}} />
   </div>
 </div>

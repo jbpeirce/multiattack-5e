@@ -42,7 +42,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await fillIn('[data-test-input-numberOfAttacks]', '8');
     await fillIn('[data-test-input-targetAC]', '15');
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
-    await fillIn('[data-test-input-damage]', '2d6 + 3');
+    await fillIn('[data-test-input-damage="0"]', '2d6 + 3');
 
     // The description should have been updated
     assert
@@ -63,11 +63,11 @@ module('Acceptance | repeated attack form', function (hooks) {
     await fillIn('[data-test-input-numberOfAttacks]', '8');
     await fillIn('[data-test-input-targetAC]', '15');
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
-    await fillIn('[data-test-input-damage]', '2d6 + 5');
-    await select('[data-test-damage-dropdown]', '[data-test-damage-Acid]');
+    await fillIn('[data-test-input-damage="0"]', '2d6 + 5');
+    await select('[data-test-damage-dropdown="0"]', 'Radiant');
     await click('[data-test-value="advantage"]');
     await click('[data-test-value="disadvantage"]');
-    await click('[data-test-input-resistant]');
+    await click('[data-test-input-resistant="0"]');
 
     assert
       .dom('[data-test-plan-detail-list]')
@@ -76,7 +76,7 @@ module('Acceptance | repeated attack form', function (hooks) {
           'Number of attacks: 8\n' +
           'Attack roll: 1d20 + 3 - 1d6\n' +
           '(rolls with disadvantage)\n' +
-          'Attack damage: 2d6 + 5 Acid damage\n' +
+          'Attack damage: 2d6 + 5 Radiant damage\n' +
           '(target resistant)',
         'the details for the input damage should be displayed'
       );
@@ -116,7 +116,108 @@ module('Acceptance | repeated attack form', function (hooks) {
     );
   });
 
-  test('it invalidates malformatted fields', async function (this: ElementContext, assert) {
+  test('adding and removing damage types', async function (assert) {
+    await visit('/');
+
+    // Initially, there should be one damage type displayed
+    assert
+      .dom('[data-test-input-damage="0"]')
+      .exists('one damage type should exist');
+    assert
+      .dom('[data-test-input-damage="1"]')
+      .doesNotExist('only one damage type should exist');
+    assert
+      .dom('[data-test-damage-dropdown="0"]')
+      .hasValue('Piercing', 'damage 0 should be piercing (by default)');
+
+    // Add another damage type
+    await click('[data-test-button-add-damage-type]');
+
+    assert
+      .dom('[data-test-input-damage="0"]')
+      .exists('after add damage type, one damage type should exist');
+    assert
+      .dom('[data-test-input-damage="1"]')
+      .exists('after add damage type, a second damage type should exist');
+    assert
+      .dom('[data-test-input-damage="2"]')
+      .doesNotExist('after add damage type, a third damage type should exist');
+
+    // Customize the damage type dropdown for the newly added damage type
+    await select('[data-test-damage-dropdown="1"]', 'Fire');
+    assert
+      .dom('[data-test-damage-dropdown="0"]')
+      .hasValue('Piercing', 'damage 0 should be piercing (by default)');
+    assert
+      .dom('[data-test-damage-dropdown="1"]')
+      .hasValue(
+        'Fire',
+        'damage 1 should be fire (after the dropdown reset the value)'
+      );
+
+    // Add a third damage type
+    await click('[data-test-button-add-damage-type]');
+
+    assert
+      .dom('[data-test-input-damage="0"]')
+      .exists('after a second add damage type, one damage type should exist');
+    assert
+      .dom('[data-test-input-damage="1"]')
+      .exists(
+        'after a second add damage type, a second damage type should exist'
+      );
+    assert
+      .dom('[data-test-input-damage="2"]')
+      .exists(
+        'after a second add damage type, a third damage type should exist'
+      );
+    assert
+      .dom('[data-test-input-damage="3"]')
+      .doesNotExist(
+        'after a second add damage type, a fourth damage type should exist'
+      );
+
+    // Customize the damage type dropdown for the newly added damage type
+    await select('[data-test-damage-dropdown="2"]', 'Acid');
+    assert
+      .dom('[data-test-damage-dropdown="0"]')
+      .hasValue('Piercing', 'damage 0 should be piercing (by default)');
+    assert
+      .dom('[data-test-damage-dropdown="1"]')
+      .hasValue(
+        'Fire',
+        'damage 1 should be fire (after the dropdown reset the value)'
+      );
+    assert
+      .dom('[data-test-damage-dropdown="2"]')
+      .hasValue(
+        'Acid',
+        'damage 2 should be acid (after the dropdown reset the value)'
+      );
+
+    // Remove the radiant damage
+    await click('[data-test-button-remove-damage-type="1"]');
+
+    assert
+      .dom('[data-test-input-damage="0"]')
+      .exists('after add x2 and remove x1, one damage type should exist');
+    assert
+      .dom('[data-test-damage-dropdown="0"]')
+      .hasValue('Piercing', 'piercing damage should not have been removed');
+    assert
+      .dom('[data-test-input-damage="1"]')
+      .exists('after add x2 and remove x1, a second damage type should exist');
+    assert
+      .dom('[data-test-damage-dropdown="1"]')
+      .hasValue('Acid', 'acid damage should not have been removed');
+    assert
+      .dom('[data-test-input-damage="2"]')
+      .doesNotExist(
+        'after add x2 and remove x1, a third damage type should not exist'
+      );
+  });
+
+  test('invalidating malformatted fields', async function (this: ElementContext, assert) {
     await visit('/');
 
     // numberOfAttacks
@@ -140,16 +241,5 @@ module('Acceptance | repeated attack form', function (hooks) {
     assert
       .dom('[data-test-input-toHit]')
       .isNotValid('invalid input toHit should be flagged');
-
-    // damage
-    await fillIn('[data-test-input-damage]', '2d6 + 3');
-    assert
-      .dom('[data-test-input-damage]')
-      .isValid('initial damage should be valid');
-
-    await fillIn('[data-test-input-damage]', 'invalid');
-    assert
-      .dom('[data-test-input-damage]')
-      .isNotValid('invalid input damage should be flagged');
   });
 });

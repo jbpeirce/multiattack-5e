@@ -1,14 +1,17 @@
+import { action } from '@ember/object';
 import DiceGroupsAndModifier from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
+import { assert } from '@ember/debug';
+import { tracked } from '@glimmer/tracking';
 
 export default class Damage {
-  type: string;
+  @tracked type: string;
 
-  damageString: string;
+  @tracked damageString: string;
   damage: DiceGroupsAndModifier;
 
-  targetResistant: boolean;
-  targetVulnerable: boolean;
+  @tracked targetResistant: boolean;
+  @tracked targetVulnerable: boolean;
 
   constructor(
     damageString: string,
@@ -21,6 +24,44 @@ export default class Damage {
     this.type = type;
     this.targetResistant = targetResistant;
     this.targetVulnerable = targetVulnerable;
+  }
+
+  @action
+  setDamageType(newType: InputEvent) {
+    assert(
+      'damage type handler must receive an event with a target that is an HTMLSelectElement',
+      newType.target instanceof HTMLSelectElement
+    );
+    this.type = newType.target.value || 'Piercing';
+  }
+
+  @action
+  setDamage(newDamage: InputEvent) {
+    assert(
+      'damage handler must receive an event with a target that is an HTMLInputElement',
+      newDamage.target instanceof HTMLInputElement
+    );
+
+    this.damageString = newDamage.target.value || '0';
+    this.damage = DiceStringParser.parse(this.damageString);
+  }
+
+  @action
+  setResistant(newResistant: InputEvent) {
+    assert(
+      'resistance handler must receive an event with a target that is an HTMLInputElement',
+      newResistant.target instanceof HTMLInputElement
+    );
+    this.targetResistant = newResistant.target.checked || false;
+  }
+
+  @action
+  setVulnerable(newVulnerable: InputEvent) {
+    assert(
+      'vulnerability handler must receive an event with a target that is an HTMLInputElement',
+      newVulnerable.target instanceof HTMLInputElement
+    );
+    this.targetVulnerable = newVulnerable.target.checked || false;
   }
 
   /**

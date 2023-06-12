@@ -20,25 +20,25 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @setDamage={{this.doNotCall}} @setDamageType={{this.doNotCall}}
+    await render(hbs`<DamageType @index=0 @setDamage={{this.doNotCall}} @setDamageType={{this.doNotCall}}
     @setResistant={{this.doNotCall}} @setVulnerable={{this.doNotCall}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
 
     assert
-      .dom('[data-test-input-damage]')
+      .dom('[data-test-input-damage="0"]')
       .hasValue('1d6 + 3', 'damage should be set to expected initial value');
 
     assert
-      .dom('[data-test-damage-dropdown]')
+      .dom('[data-test-damage-dropdown="0"]')
       .hasValue('Fire', 'damage type should be set to expected initial value');
 
     assert
-      .dom('[data-test-input-resistant]')
+      .dom('[data-test-input-resistant="0"]')
       .isChecked('resistance should be set to expected initial value');
 
     assert
-      .dom('[data-test-input-vulnerable]')
+      .dom('[data-test-input-vulnerable="0"]')
       .isNotChecked('vulnerability should be set to expected initial value');
   });
 
@@ -94,29 +94,29 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
+    await render(hbs`<DamageType @index=3 @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
     @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
 
-    await fillIn('[data-test-input-damage]', '3d8-1');
+    await fillIn('[data-test-input-damage="3"]', '3d8-1');
     assert
-      .dom('[data-test-input-damage]')
+      .dom('[data-test-input-damage="3"]')
       .hasValue('3d8-1', 'damage should be reset after form is filled in');
 
-    await select('[data-test-damage-dropdown]', '[data-test-damage-Acid]');
+    await select('[data-test-damage-dropdown="3"]', '[data-test-damage-Acid]');
     assert
-      .dom('[data-test-damage-dropdown]')
+      .dom('[data-test-damage-dropdown="3"]')
       .hasValue('Acid', 'damage type should be reset as expected');
 
-    await click('[data-test-input-resistant]');
+    await click('[data-test-input-resistant="3"]');
     assert
-      .dom('[data-test-input-resistant]')
+      .dom('[data-test-input-resistant="3"]')
       .isNotChecked('previously-checked resistance field should be unchecked');
 
-    await click('[data-test-input-vulnerable]');
+    await click('[data-test-input-vulnerable="3"]');
     assert
-      .dom('[data-test-input-vulnerable]')
+      .dom('[data-test-input-vulnerable="3"]')
       .isChecked('previously-unchecked vulnerability field should be checked');
   });
 
@@ -145,18 +145,18 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @setDamage={{this.setDamage}} @setDamageType={{this.doNotCall}}
+    await render(hbs`<DamageType @index=0 @setDamage={{this.setDamage}} @setDamageType={{this.doNotCall}}
     @setResistant={{this.doNotCall}} @setVulnerable={{this.doNotCall}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
 
     assert
-      .dom('[data-test-input-damage]')
+      .dom('[data-test-input-damage="0"]')
       .isValid('initial damage should be valid');
 
-    await fillIn('[data-test-input-damage]', 'invalid');
+    await fillIn('[data-test-input-damage="0"]', 'invalid');
     assert
-      .dom('[data-test-input-damage]')
+      .dom('[data-test-input-damage="0"]')
       .isNotValid('invalid input should be flagged');
   });
 });

@@ -4,15 +4,17 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { ElementContext } from 'multiattack-5e/tests/types/element-context';
 import AdvantageState from 'multiattack-5e/components/advantage-state';
+import Damage from 'multiattack-5e/utils/damage';
 
 module('Integration | Component | detail-display', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders planned attack details before any attack', async function (this: ElementContext, assert) {
     this.set('advantageState', AdvantageState.DISADVANTAGE);
+    this.set('damageList', [new Damage('2d6 + 5', 'Acid', true, true)]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6" @damage="2d6 + 5" @damageType="Acid" @advantageState={{this.advantageState}} @resistant=true @vulnerable=true @attackTriggered=false />`
+      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false />`
     );
 
     assert
@@ -24,6 +26,18 @@ module('Integration | Component | detail-display', function (hooks) {
           'Attack damage: 2d6 + 5 Acid damage (target resistant) (target vulnerable)',
         'the details for the input damage should be displayed'
       );
+
+    const damageList = this.element.querySelector(
+      '[data-test-plan-detail-damage-list]'
+    )?.children;
+    assert.equal(damageList?.length, 1, 'damage list should have one entry');
+    if (damageList) {
+      assert.equal(
+        damageList[0]?.textContent?.trim().replace(/\s+/g, ' '),
+        '2d6 + 5 Acid damage (target resistant) (target vulnerable)',
+        'acid damage details should be displayed'
+      );
+    }
   });
 
   test('it renders attack details after the attack', async function (this: ElementContext, assert) {
@@ -65,9 +79,10 @@ module('Integration | Component | detail-display', function (hooks) {
         damage: 0,
       },
     ]);
+    this.set('damageList', [new Damage('2d6 + 5', 'Acid', true, true)]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6" @damage="2d6 + 5" @damageType="Acid" @advantageState={{this.advantageState}} @resistant=true @vulnerable=true @attackTriggered=false @attackTriggered=true @totalDmg=4 @attackDetailsList={{this.attackDetails}} />`
+      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6"  @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false @attackTriggered=true @totalDmg=4 @attackDetailsList={{this.attackDetails}} />`
     );
 
     assert
@@ -105,23 +120,28 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack inflicted 4 damage with an attack roll of 25 (CRIT!)'
+        'Attack inflicted 4 damage with an attack roll of 25 (CRIT!)',
+        'critical hit should be correctly displayed'
       );
       assert.equal(
         detailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of -4'
+        'Attack missed with an attack roll of -4',
+        'negative attack roll should be properly displayed'
       );
       assert.equal(
         detailsList[2]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of 13'
+        'Attack missed with an attack roll of 13',
+        'double-digit attack roll with a miss should be properly displayed'
       );
       assert.equal(
         detailsList[3]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of -5 (NAT 1!)'
+        'Attack missed with an attack roll of -5 (NAT 1!)',
+        'natural one should be correctly displayed'
       );
       assert.equal(
         detailsList[4]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of 6'
+        'Attack missed with an attack roll of 6',
+        'single-digit attack roll with a miss should be properly displayed'
       );
     }
   });
