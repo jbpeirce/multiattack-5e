@@ -2,20 +2,25 @@
   Attack Details
 </h4>
 <ul data-test-plan-detail-list>
-<li>Target AC: {{@targetAC}}</li>
-<li>Number of attacks: {{@numberOfAttacks}}</li>
-<li>Attack roll: 1d20 + {{@toHit}}
-  {{#if (eq @advantageState.name "advantage") }}
-  (rolls with advantage)
-  {{/if}}
-  {{#if (eq @advantageState.name "disadvantage") }}
-  (rolls with disadvantage)
-  {{/if}}
-</li>
-<li>Attack damage: {{@damage}} {{@damageType}} damage
-  {{#if @resistant}} (target resistant){{/if}}
-  {{#if @vulnerable}} (target vulnerable){{/if}}
-</li>
+  <li>Target AC: {{@targetAC}}</li>
+  <li>Number of attacks: {{@numberOfAttacks}}</li>
+  <li>Attack roll: 1d20 + {{@toHit}}
+    {{#if (eq @advantageState.name "advantage") }}
+    (rolls with advantage)
+    {{/if}}
+    {{#if (eq @advantageState.name "disadvantage") }}
+    (rolls with disadvantage)
+    {{/if}}
+  </li>
+  <li>Attack damage:</li>
+  <ul data-test-plan-detail-damage-list>
+    {{#each @damageList as |damage|}}
+    <li>{{damage.damageString}} {{damage.type}} damage
+      {{#if damage.targetResistant}} (target resistant){{/if}}
+      {{#if damage.targetVulnerable}} (target vulnerable){{/if}}
+    </li>
+    {{/each}}
+  </ul>
 </ul>
 {{#if @attackTriggered}}
 <h4 data-test-total-damage-header>

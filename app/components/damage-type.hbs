@@ -1,8 +1,9 @@
 <div class="row row-cols-sm-auto align-items-top">
   <div class="col">
     <label for="damage">Attack Damage</label>
-    <Input data-test-input-damage class="form-control" @type="text" name="damage" aria-describedby="dmgDescription"
-      @value={{@initialDamage}} {{on "input" @setDamage}} pattern={{this.diceGroupsRegex}}
+    <Input data-test-input-damage={{@index}} class="form-control" @type="text" name="damage"
+      aria-describedby="dmgDescription" @value={{@initialDamage}} {{on "input" @setDamage}}
+      pattern={{this.diceGroupsRegex}}
       title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '+1d4 - 1d6 + 2'" />
     <small id="dmgDescription" class="form-text text-muted">
       A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
@@ -12,22 +13,22 @@
 
 <div class="row row-cols-sm-auto align-items-top">
   <label for="damageDropdown">Damage Type</label>
-  <select name="damageDropdown" data-test-damage-dropdown {{on "change" @setDamageType}}>
+  <select name="damageDropdown" data-test-damage-dropdown={{@index}} {{on "change" @setDamageType}}>
     Damage Type
     {{#each this.damageTypes as |damageType|}}
-    <option data-test-damage-{{damageType}} selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
+    <option selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
     {{/each}}
   </select>
 </div>
 
 <div class="row row-cols-sm-auto align-items-top">
   <div class="col">
-    <Input data-test-input-resistant class="form-check-input" @type="checkbox" name="resistant"
+    <Input data-test-input-resistant={{@index}} class="form-check-input" @type="checkbox" name="resistant"
       @checked={{@initialResistant}} {{on "input" @setResistant}} />
     <label class="form-check-label" for="resistant">
       Target Resistant
     </label>
-    <Input data-test-input-vulnerable class="form-check-input" @type="checkbox" name="vulnerable"
+    <Input data-test-input-vulnerable={{@index}} class="form-check-input" @type="checkbox" name="vulnerable"
       @checked={{@initialVulnerable}} {{on "input" @setVulnerable}} />
     <label class="form-check-label" for="vulnerable">
       Target Vulnerable
