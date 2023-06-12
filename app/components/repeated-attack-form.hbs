@@ -35,22 +35,15 @@
 
       <div class="row row-cols-sm-auto align-items-top">
         <button data-test-button-getDamage class="btn btn-primary m-3" type="submit" id="attackBtn" {{on "click"
-          this.getDamageMessage}}>Attack!</button>
-
-        <button data-test-button-getDetails class="btn btn-info m-3" type="submit" id="detailsBtn" {{on "click"
-          this.getAttackDetailsMessage}}>Display
-          Attack Details</button>
+          this.simulateRepeatedAttacks}}>Attack!</button>
       </div>
     </form>
   </div>
 
   <div class="col-lg">
-
     <DetailDisplay @targetAC={{this.targetAC}} @numberOfAttacks={{this.numberOfAttacks}} @toHit={{this.toHit}}
       @advantageState={{this.advantageState}} @damage={{this.damage}} @damageType={{this.damageType}}
-      @resistant={{this.resistant}} @vulnerable={{this.vulnerable}} @attackTriggered={{this.attackTriggered}} @totalDmg={{this.totalDmg}}
-      @attackDetailsList={{this.attackDetailsList}} />
-
-    <Textarea data-test-message id="message" @value={{this.message}} rows="15" cols="80" />
+      @resistant={{this.resistant}} @vulnerable={{this.vulnerable}} @attackTriggered={{this.attackTriggered}}
+      @totalDmg={{this.totalDmg}} @attackDetailsList={{this.attackDetailsList}} />
   </div>
 </div>
