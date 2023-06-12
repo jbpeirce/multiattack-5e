@@ -1,7 +1,7 @@
 <h4>
   Attack Details
 </h4>
-<ul>
+<ul data-test-plan-detail-list>
 <li>Target AC: {{@targetAC}}</li>
 <li>Number of attacks: {{@numberOfAttacks}}</li>
 <li>Attack roll: 1d20 + {{@toHit}}
@@ -18,10 +18,10 @@
 </li>
 </ul>
 {{#if @attackTriggered}}
-<h4>
+<h4 data-test-total-damage-header>
   <strong>*** Total Damage: {{@totalDmg}} ***</strong>
 </h4>
-<ol>
+<ol data-test-attack-detail-list>
   {{#each @attackDetailsList as |attackDetails|}}
   <li>
     Attack {{@index}}

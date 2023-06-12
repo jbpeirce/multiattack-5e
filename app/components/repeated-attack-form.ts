@@ -54,7 +54,7 @@ export default class RepeatedAttackFormComponent extends Component {
       'damage type handler must receive an event with a target that is an HTMLSelectElement',
       newType.target instanceof HTMLSelectElement
     );
-    this.damageType = newType.target.value.toLowerCase() || 'piercing';
+    this.damageType = newType.target.value || 'Piercing';
   }
 
   @action
