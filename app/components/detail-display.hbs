@@ -4,7 +4,7 @@
 <ul data-test-plan-detail-list>
   <li>Target AC: {{@targetAC}}</li>
   <li>Number of attacks: {{@numberOfAttacks}}</li>
-  <li>Attack roll: 1d20 + {{@toHit}}
+  <li>Attack roll: {{this.getAttackString @toHit}}
     {{#if (eq @advantageState.name "advantage") }}
     (rolls with advantage)
     {{/if}}
