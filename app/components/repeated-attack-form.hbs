@@ -5,13 +5,13 @@
       <div class="row row-cols-sm-auto align-items-top">
         <div class="col">
           <label for="numberOfAttacks">Number of Attacks</label>
-          <Input data-test-input-numberOfAttacks class="form-control" name="numberOfAttacks" @type="number"
-            @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative" />
+          <Input data-test-input-numberOfAttacks class="form-control" id="numberOfAttacks" name="numberOfAttacks"
+            @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative" />
         </div>
 
         <div class="col">
           <label for="targetAC">Target AC</label>
-          <Input data-test-input-targetAC class="form-control" name="targetAC" @type="number"
+          <Input data-test-input-targetAC class="form-control" id="targetAC" name="targetAC" @type="number"
             @value={{this.targetAC}} />
         </div>
       </div>
@@ -22,9 +22,12 @@
       <div class="row row-cols-sm-auto align-items-top">
         <div class="col">
           <label for="toHit">To Hit Modifier</label>
-          <Input data-test-input-toHit class="form-control" @type="text" name="toHit" @value={{this.toHit}}
-            pattern={{this.diceGroupsRegex}}
-            title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '+1d4 - 1d6 + 2'" />
+          <Input data-test-input-toHit class="form-control" @type="text" id="toHit" name="toHit" @value={{this.toHit}}
+            aria-describedby="toHitDescription" pattern={{this.diceGroupsRegex}}
+            title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
+          <small id="toHitDescription" class="form-text text-muted">
+            A number or a string of the form 'XdY+Z' or 'XdY-Z' (ex: 5 + 1d4).
+          </small>
         </div>
       </div>
 
@@ -37,7 +40,7 @@
       <div class="row align-items-top justify-items-end">
         <div class="col-sm">
           <button data-test-button-remove-damage-type={{index}} class="btn btn-warning my-2" type="button" {{on "click"
-            (fn this.removeDamageType index)}}>-</button>
+            (fn this.removeDamageType index)}}>Remove Damage Type</button>
         </div>
       </div>
       <hr>

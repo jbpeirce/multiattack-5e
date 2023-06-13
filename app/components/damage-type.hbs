@@ -1,20 +1,20 @@
 <div class="row row-cols-sm-auto align-items-top">
   <div class="col">
-    <label for="damage">Attack Damage</label>
-    <Input data-test-input-damage={{@index}} class="form-control" @type="text" name="damage"
-      aria-describedby="dmgDescription" @value={{@initialDamage}} {{on "input" @setDamage}}
+    <label for="damage-{{@index}}">Attack Damage</label>
+    <Input data-test-input-damage={{@index}} class="form-control" @type="text" id="damage-{{@index}}" name="damage"
+      aria-describedby="dmgDescription-{{@index}}" @value={{@initialDamage}} {{on "input" @setDamage}}
       pattern={{this.diceGroupsRegex}}
-      title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '+1d4 - 1d6 + 2'" />
-    <small id="dmgDescription" class="form-text text-muted">
+      title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
+    <small id="dmgDescription-{{@index}}" class="form-text text-muted">
       A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
     </small>
   </div>
 </div>
 
 <div class="row row-cols-sm-auto align-items-top">
-  <label for="damageDropdown">Damage Type</label>
-  <select name="damageDropdown" data-test-damage-dropdown={{@index}} {{on "change" @setDamageType}}>
-    Damage Type
+  <label for="damageDropdown-{{@index}}">Damage Type</label>
+  <select id="damageDropdown-{{@index}}" name="damageDropdown" data-test-damage-dropdown={{@index}} {{on "change"
+    @setDamageType}}>
     {{#each this.damageTypes as |damageType|}}
     <option selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
     {{/each}}
@@ -23,14 +23,14 @@
 
 <div class="row row-cols-sm-auto align-items-top">
   <div class="col">
-    <Input data-test-input-resistant={{@index}} class="form-check-input" @type="checkbox" name="resistant"
-      @checked={{@initialResistant}} {{on "input" @setResistant}} />
-    <label class="form-check-label" for="resistant">
+    <Input data-test-input-resistant={{@index}} class="form-check-input" @type="checkbox" id="resistant-{{@index}}"
+      name="resistant" @checked={{@initialResistant}} {{on "input" @setResistant}} />
+    <label class="form-check-label" for="resistant-{{@index}}">
       Target Resistant
     </label>
-    <Input data-test-input-vulnerable={{@index}} class="form-check-input" @type="checkbox" name="vulnerable"
-      @checked={{@initialVulnerable}} {{on "input" @setVulnerable}} />
-    <label class="form-check-label" for="vulnerable">
+    <Input data-test-input-vulnerable={{@index}} class="form-check-input" @type="checkbox" id="vulnerable-{{@index}}"
+      name="vulnerable" @checked={{@initialVulnerable}} {{on "input" @setVulnerable}} />
+    <label class="form-check-label" for="vulnerable-{{@index}}">
       Target Vulnerable
     </label>
   </div>
