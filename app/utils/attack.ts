@@ -9,7 +9,14 @@ export interface AttackDetails {
   crit: boolean;
   nat1: boolean;
   damage: number;
-  damageDetails: Map<string, number>;
+  damageDetails: DamageDetails[];
+}
+
+export interface DamageDetails {
+  label: string;
+  roll: number;
+  resisted: boolean;
+  vulnerable: boolean;
 }
 
 export default class Attack {
@@ -55,7 +62,7 @@ export default class Attack {
     const nat1 = attackD20 == 1;
 
     let totalDmg = 0;
-    const damageDetails = new Map();
+    const damageDetails: DamageDetails[] = [];
 
     // Attacks always miss on a nat1, always hit on a crit, and otherwise hit if
     // the roll equals or exceeds the target AC.
@@ -64,10 +71,12 @@ export default class Attack {
       for (const damage of this.damageTypes) {
         const rolledDmg = damage.roll(crit);
         totalDmg += rolledDmg;
-        // This will overwrite a damage record if the attack has multiple damage
-        // components of the same type with the same damage string, but this is
-        // unlikely
-        damageDetails.set(`${damage.type} (${damage.damageString})`, rolledDmg);
+        damageDetails.push({
+          label: `${damage.type} (${damage.damageString})`,
+          roll: rolledDmg,
+          resisted: damage.targetResistant,
+          vulnerable: damage.targetVulnerable,
+        });
       }
     }
 
