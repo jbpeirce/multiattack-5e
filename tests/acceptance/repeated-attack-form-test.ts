@@ -51,7 +51,7 @@ module('Acceptance | repeated attack form', function (hooks) {
         'Target AC: 15\n' +
           'Number of attacks: 8\n' +
           'Attack roll: 1d20 + 3 - 1d6\n' +
-          'Attack damage: 2d6 + 3 Piercing damage',
+          'Attack damage: 2d6 + 3 piercing damage',
         'the details for the input damage should be displayed'
       );
   });
@@ -64,7 +64,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await fillIn('[data-test-input-targetAC]', '15');
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
     await fillIn('[data-test-input-damage="0"]', '2d6 + 5');
-    await select('[data-test-damage-dropdown="0"]', 'Radiant');
+    await select('[data-test-damage-dropdown="0"]', 'radiant');
     await click('[data-test-value="advantage"]');
     await click('[data-test-value="disadvantage"]');
     await click('[data-test-input-resistant="0"]');
@@ -76,7 +76,7 @@ module('Acceptance | repeated attack form', function (hooks) {
           'Number of attacks: 8\n' +
           'Attack roll: 1d20 + 3 - 1d6\n' +
           '(rolls with disadvantage)\n' +
-          'Attack damage: 2d6 + 5 Radiant damage\n' +
+          'Attack damage: 2d6 + 5 radiant damage\n' +
           '(target resistant)',
         'the details for the input damage should be displayed'
       );
@@ -128,7 +128,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .doesNotExist('only one damage type should exist');
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('Piercing', 'damage 0 should be piercing (by default)');
+      .hasValue('piercing', 'damage 0 should be piercing (by default)');
 
     // Add another damage type
     await click('[data-test-button-add-damage-type]');
@@ -144,14 +144,14 @@ module('Acceptance | repeated attack form', function (hooks) {
       .doesNotExist('after add damage type, a third damage type should exist');
 
     // Customize the damage type dropdown for the newly added damage type
-    await select('[data-test-damage-dropdown="1"]', 'Fire');
+    await select('[data-test-damage-dropdown="1"]', 'fire');
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('Piercing', 'damage 0 should be piercing (by default)');
+      .hasValue('piercing', 'damage 0 should be piercing (by default)');
     assert
       .dom('[data-test-damage-dropdown="1"]')
       .hasValue(
-        'Fire',
+        'fire',
         'damage 1 should be fire (after the dropdown reset the value)'
       );
 
@@ -178,21 +178,21 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
 
     // Customize the damage type dropdown for the newly added damage type
-    await select('[data-test-damage-dropdown="2"]', 'Acid');
+    await select('[data-test-damage-dropdown="2"]', 'bludgeoning');
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('Piercing', 'damage 0 should be piercing (by default)');
+      .hasValue('piercing', 'damage 0 should be piercing (by default)');
     assert
       .dom('[data-test-damage-dropdown="1"]')
       .hasValue(
-        'Fire',
+        'fire',
         'damage 1 should be fire (after the dropdown reset the value)'
       );
     assert
       .dom('[data-test-damage-dropdown="2"]')
       .hasValue(
-        'Acid',
-        'damage 2 should be acid (after the dropdown reset the value)'
+        'bludgeoning',
+        'damage 2 should be bludgeoning (after the dropdown reset the value)'
       );
 
     // Remove the radiant damage
@@ -203,13 +203,16 @@ module('Acceptance | repeated attack form', function (hooks) {
       .exists('after add x2 and remove x1, one damage type should exist');
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('Piercing', 'piercing damage should not have been removed');
+      .hasValue('piercing', 'piercing damage should not have been removed');
     assert
       .dom('[data-test-input-damage="1"]')
       .exists('after add x2 and remove x1, a second damage type should exist');
     assert
       .dom('[data-test-damage-dropdown="1"]')
-      .hasValue('Acid', 'acid damage should not have been removed');
+      .hasValue(
+        'bludgeoning',
+        'bludgeoning damage should not have been removed'
+      );
     assert
       .dom('[data-test-input-damage="2"]')
       .doesNotExist(

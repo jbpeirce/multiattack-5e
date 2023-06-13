@@ -32,7 +32,7 @@ export default class Damage {
       'damage type handler must receive an event with a target that is an HTMLSelectElement',
       newType.target instanceof HTMLSelectElement
     );
-    this.type = newType.target.value || 'Piercing';
+    this.type = newType.target.value || 'piercing';
   }
 
   @action

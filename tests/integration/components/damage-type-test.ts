@@ -16,7 +16,7 @@ module('Integration | Component | damage-type', function (hooks) {
     });
 
     this.set('damage', '1d6 + 3');
-    this.set('damageType', 'Fire');
+    this.set('damageType', 'fire');
     this.set('resistant', true);
     this.set('vulnerable', false);
 
@@ -31,7 +31,7 @@ module('Integration | Component | damage-type', function (hooks) {
 
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('Fire', 'damage type should be set to expected initial value');
+      .hasValue('fire', 'damage type should be set to expected initial value');
 
     assert
       .dom('[data-test-input-resistant="0"]')
@@ -62,7 +62,7 @@ module('Integration | Component | damage-type', function (hooks) {
       );
       assert.equal(
         (<HTMLSelectElement>actual.target).value,
-        'Acid',
+        'psychic',
         'damage type setter should be called with the expected value'
       );
     });
@@ -90,7 +90,7 @@ module('Integration | Component | damage-type', function (hooks) {
     });
 
     this.set('damage', '1d6 + 3');
-    this.set('damageType', 'Fire');
+    this.set('damageType', 'fire');
     this.set('resistant', true);
     this.set('vulnerable', false);
 
@@ -104,10 +104,10 @@ module('Integration | Component | damage-type', function (hooks) {
       .dom('[data-test-input-damage="3"]')
       .hasValue('3d8-1', 'damage should be reset after form is filled in');
 
-    await select('[data-test-damage-dropdown="3"]', '[data-test-damage-Acid]');
+    await select('[data-test-damage-dropdown="3"]', 'psychic');
     assert
       .dom('[data-test-damage-dropdown="3"]')
-      .hasValue('Acid', 'damage type should be reset as expected');
+      .hasValue('psychic', 'damage type should be reset as expected');
 
     await click('[data-test-input-resistant="3"]');
     assert
@@ -141,7 +141,7 @@ module('Integration | Component | damage-type', function (hooks) {
     });
 
     this.set('damage', '1d6 + 3');
-    this.set('damageType', 'Fire');
+    this.set('damageType', 'fire');
     this.set('resistant', true);
     this.set('vulnerable', false);
 

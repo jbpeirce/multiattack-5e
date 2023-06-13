@@ -55,7 +55,7 @@ export default class RepeatedAttackFormComponent extends Component {
   }
 
   getDefaultDamage(): Damage {
-    return new Damage('2d6 + 3', 'Piercing');
+    return new Damage('2d6 + 3', 'piercing');
   }
 
   simulateRepeatedAttacks = () => {
