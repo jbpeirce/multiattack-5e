@@ -48,7 +48,21 @@ module('Integration | Component | detail-display', function (hooks) {
         hit: true,
         crit: true,
         nat1: false,
-        damage: 4,
+        damage: 22,
+        damageDetails: [
+          {
+            label: 'Piercing (2d6 + 5 + 1d4)',
+            roll: 8,
+            resisted: true,
+            vulnerable: false,
+          },
+          {
+            label: 'Radiant (2d8)',
+            roll: 14,
+            resisted: false,
+            vulnerable: true,
+          },
+        ],
       },
       {
         roll: -4,
@@ -82,7 +96,7 @@ module('Integration | Component | detail-display', function (hooks) {
     this.set('damageList', [new Damage('2d6 + 5', 'Acid', true, true)]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6"  @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false @attackTriggered=true @totalDmg=4 @attackDetailsList={{this.attackDetails}} />`
+      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6"  @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false @attackTriggered=true @totalDmg=22 @attackDetailsList={{this.attackDetails}} />`
     );
 
     assert
@@ -101,7 +115,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header]')
-      .hasText('*** Total Damage: 4 ***');
+      .hasText('*** Total Damage: 22 ***');
 
     assert
       .dom('[data-test-attack-detail-list]')
@@ -120,7 +134,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack inflicted 4 damage with an attack roll of 25 (CRIT!)',
+        'Attack inflicted 22 damage with an attack roll of 25 (CRIT!) Piercing (2d6 + 5 + 1d4): 8 damage (resisted) Radiant (2d8): 14 damage (vulnerable)',
         'critical hit should be correctly displayed'
       );
       assert.equal(
@@ -142,6 +156,32 @@ module('Integration | Component | detail-display', function (hooks) {
         detailsList[4]?.textContent?.trim().replace(/\s+/g, ' '),
         'Attack missed with an attack roll of 6',
         'single-digit attack roll with a miss should be properly displayed'
+      );
+    }
+
+    const damageDetailsList = this.element.querySelector(
+      '[data-test-damage-detail-list="0"]'
+    )?.children;
+    assert.true(
+      damageDetailsList != null,
+      'damage detail list should be present'
+    );
+    if (damageDetailsList) {
+      assert.equal(
+        damageDetailsList.length,
+        2,
+        '2 types of damage should have been displayed'
+      );
+
+      assert.equal(
+        damageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
+        'Piercing (2d6 + 5 + 1d4): 8 damage (resisted)',
+        'piercing damage details should be displayed'
+      );
+      assert.equal(
+        damageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
+        'Radiant (2d8): 14 damage (vulnerable)',
+        'radiant damage details should be displayed'
       );
     }
   });

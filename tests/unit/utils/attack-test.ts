@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
-import Attack from 'multiattack-5e/utils/attack';
+import Attack, { DamageDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 
 module('Unit | Utils | attack', function (hooks) {
@@ -196,8 +196,8 @@ module('Unit | Utils | attack', function (hooks) {
 
   test('it adds damage dice as expected', async function (assert) {
     const attack = new Attack('5', [
-      new Damage('2d6 + 5 + 1d4', 'piercing'),
-      new Damage('2d8', 'radiant'),
+      new Damage('2d6 + 5 + 1d4', 'Piercing'),
+      new Damage('2d8', 'Radiant'),
     ]);
 
     // Fake the results of the d20 attack roll
@@ -236,9 +236,20 @@ module('Unit | Utils | attack', function (hooks) {
       20,
       '20 damage should have been inflicted'
     );
-    const expectedDmg: Map<string, number> = new Map();
-    expectedDmg.set('piercing (2d6 + 5 + 1d4)', 13);
-    expectedDmg.set('radiant (2d8)', 7);
+    const expectedDmg: DamageDetails[] = [
+      {
+        label: 'Piercing (2d6 + 5 + 1d4)',
+        roll: 13,
+        resisted: false,
+        vulnerable: false,
+      },
+      {
+        label: 'Radiant (2d8)',
+        roll: 7,
+        resisted: false,
+        vulnerable: false,
+      },
+    ];
     assert.deepEqual(
       attackData.damageDetails,
       expectedDmg,
@@ -248,8 +259,8 @@ module('Unit | Utils | attack', function (hooks) {
 
   test('it handles a critical hit as expected', async function (assert) {
     const attack = new Attack('-5', [
-      new Damage('2d6 + 5 + 1d4', 'piercing'),
-      new Damage('2d8', 'radiant'),
+      new Damage('2d6 + 5 + 1d4', 'Piercing'),
+      new Damage('2d8', 'Radiant'),
     ]);
 
     // Fake the results of the d20 attack roll
@@ -291,9 +302,20 @@ module('Unit | Utils | attack', function (hooks) {
       39,
       '39 damage should have been inflicted (25 + 14)'
     );
-    const expectedDmg: Map<string, number> = new Map();
-    expectedDmg.set('piercing (2d6 + 5 + 1d4)', 25);
-    expectedDmg.set('radiant (2d8)', 14);
+    const expectedDmg: DamageDetails[] = [
+      {
+        label: 'Piercing (2d6 + 5 + 1d4)',
+        roll: 25,
+        resisted: false,
+        vulnerable: false,
+      },
+      {
+        label: 'Radiant (2d8)',
+        roll: 14,
+        resisted: false,
+        vulnerable: false,
+      },
+    ];
     assert.deepEqual(
       attackData.damageDetails,
       expectedDmg,
