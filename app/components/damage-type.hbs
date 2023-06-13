@@ -1,4 +1,4 @@
-<div class="row row-cols-sm-auto align-items-top">
+<div class="row align-items-top my-2">
   <div class="col">
     <label for="damage-{{@index}}">Attack Damage</label>
     <Input data-test-input-damage={{@index}} class="form-control" @type="text" id="damage-{{@index}}" name="damage"
@@ -11,24 +11,26 @@
   </div>
 </div>
 
-<div class="row row-cols-sm-auto align-items-top">
-  <label for="damageDropdown-{{@index}}">Damage Type</label>
-  <select id="damageDropdown-{{@index}}" name="damageDropdown" data-test-damage-dropdown={{@index}} {{on "change"
-    @setDamageType}}>
-    {{#each this.damageTypes as |damageType|}}
-    <option selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
-    {{/each}}
-  </select>
+<div class="row align-items-top my-2">
+  <div class="col">
+    <label for="damageDropdown-{{@index}}">Damage Type</label>
+    <select id="damageDropdown-{{@index}}" name="damageDropdown" data-test-damage-dropdown={{@index}} {{on "change"
+      @setDamageType}}>
+      {{#each this.damageTypes as |damageType|}}
+      <option selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
+      {{/each}}
+    </select>
+  </div>
 </div>
 
-<div class="row row-cols-sm-auto align-items-top">
+<div class="row align-items-top my-2">
   <div class="col">
     <Input data-test-input-resistant={{@index}} class="form-check-input" @type="checkbox" id="resistant-{{@index}}"
       name="resistant" @checked={{@initialResistant}} {{on "input" @setResistant}} />
     <label class="form-check-label" for="resistant-{{@index}}">
       Target Resistant
     </label>
-    <Input data-test-input-vulnerable={{@index}} class="form-check-input" @type="checkbox" id="vulnerable-{{@index}}"
+    <Input data-test-input-vulnerable={{@index}} class="form-check-input ms-3" @type="checkbox" id="vulnerable-{{@index}}"
       name="vulnerable" @checked={{@initialVulnerable}} {{on "input" @setVulnerable}} />
     <label class="form-check-label" for="vulnerable-{{@index}}">
       Target Vulnerable
