@@ -18,7 +18,7 @@ module('Integration | Component | detail-display', function (hooks) {
     ]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false />`
+      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{false}} />`
     );
 
     assert
@@ -102,7 +102,7 @@ module('Integration | Component | detail-display', function (hooks) {
     ]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6"  @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false @attackTriggered=true @totalDmg=22 @attackDetailsList={{this.attackDetails}} />`
+      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{true}} @totalDmg={{22}} @attackDetailsList={{this.attackDetails}} />`
     );
 
     assert
