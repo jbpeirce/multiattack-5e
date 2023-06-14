@@ -1,8 +1,9 @@
-import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
+import { module, test } from 'qunit';
+
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 import DiceGroupsAndModifier from 'multiattack-5e/utils/dice-groups-and-modifier';
+import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
 
 module('Unit | Utils | dice-string-parser', function (hooks) {
   setupTest(hooks);

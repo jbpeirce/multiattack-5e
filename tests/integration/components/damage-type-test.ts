@@ -1,9 +1,10 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
 import { click, fillIn, render, select } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { ElementContext } from 'multiattack-5e/tests/types/element-context';
+import { setupRenderingTest } from 'ember-qunit';
+import { module, test } from 'qunit';
+
 import DamageType from 'multiattack-5e/components/damage-type-enum';
+import { ElementContext } from 'multiattack-5e/tests/types/element-context';
 
 module('Integration | Component | damage-type', function (hooks) {
   setupRenderingTest(hooks);

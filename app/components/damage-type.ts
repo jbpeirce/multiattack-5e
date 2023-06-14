@@ -1,5 +1,7 @@
 import Component from '@glimmer/component';
+
 import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
+
 import DamageType from './damage-type-enum';
 
 export default class DamageTypeComponent extends Component {

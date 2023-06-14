@@ -1,11 +1,12 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { ElementContext } from 'multiattack-5e/tests/types/element-context';
+import { setupRenderingTest } from 'ember-qunit';
+import { module, test } from 'qunit';
+
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
-import Damage from 'multiattack-5e/utils/damage';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
+import { ElementContext } from 'multiattack-5e/tests/types/element-context';
+import Damage from 'multiattack-5e/utils/damage';
 
 module('Integration | Component | detail-display', function (hooks) {
   setupRenderingTest(hooks);
@@ -96,7 +97,9 @@ module('Integration | Component | detail-display', function (hooks) {
         damage: 0,
       },
     ]);
-    this.set('damageList', [new Damage('2d6 + 5', DamageType.ACID.name, true, true)]);
+    this.set('damageList', [
+      new Damage('2d6 + 5', DamageType.ACID.name, true, true),
+    ]);
 
     await render(
       hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6"  @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false @attackTriggered=true @totalDmg=22 @attackDetailsList={{this.attackDetails}} />`
