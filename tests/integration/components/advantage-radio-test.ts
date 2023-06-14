@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import AdvantageState from 'multiattack-5e/components/advantage-state';
+import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 
 module('Integration | Component | advantage-radio', function (hooks) {
   setupRenderingTest(hooks);

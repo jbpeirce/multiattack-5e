@@ -17,7 +17,7 @@
     <select id="damageDropdown-{{@index}}" name="damageDropdown" data-test-damage-dropdown={{@index}} {{on "change"
       @setDamageType}}>
       {{#each this.damageTypes as |damageType|}}
-      <option selected={{(eq @initialDamageType damageType)}}>{{damageType}}</option>
+      <option selected={{(eq @initialDamageType damageType.name)}}>{{damageType.name}}</option>
       {{/each}}
     </select>
   </div>

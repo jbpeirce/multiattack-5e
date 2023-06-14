@@ -3,6 +3,7 @@ import DiceGroupsAndModifier from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
 import { assert } from '@ember/debug';
 import { tracked } from '@glimmer/tracking';
+import DamageType from 'multiattack-5e/components/damage-type-enum';
 
 export default class Damage {
   @tracked type: string;
@@ -32,7 +33,7 @@ export default class Damage {
       'damage type handler must receive an event with a target that is an HTMLSelectElement',
       newType.target instanceof HTMLSelectElement
     );
-    this.type = newType.target.value || 'Piercing';
+    this.type = newType.target.value || DamageType.OTHER.name;
   }
 
   @action

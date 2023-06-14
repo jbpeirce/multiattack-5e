@@ -1,22 +1,23 @@
 import Component from '@glimmer/component';
 import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
+import DamageType from './damage-type-enum';
 
 export default class DamageTypeComponent extends Component {
   damageTypes = [
-    'Acid',
-    'Bludgeoning',
-    'Cold',
-    'Fire',
-    'Force',
-    'Lightning',
-    'Necrotic',
-    'Piercing',
-    'Poison',
-    'Psychic',
-    'Radiant',
-    'Slashing',
-    'Thunder',
-    'Other',
+    DamageType.ACID,
+    DamageType.BLUDGEONING,
+    DamageType.COLD,
+    DamageType.FIRE,
+    DamageType.FORCE,
+    DamageType.LIGHTNING,
+    DamageType.NECROTIC,
+    DamageType.PIERCING,
+    DamageType.POISON,
+    DamageType.PSYCHIC,
+    DamageType.RADIANT,
+    DamageType.SLASHING,
+    DamageType.THUNDER,
+    DamageType.OTHER,
   ];
 
   diceGroupsRegex = DiceStringParser.diceStringRegexAsString;

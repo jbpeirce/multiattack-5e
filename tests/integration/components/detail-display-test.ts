@@ -3,15 +3,18 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { ElementContext } from 'multiattack-5e/tests/types/element-context';
-import AdvantageState from 'multiattack-5e/components/advantage-state';
+import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import Damage from 'multiattack-5e/utils/damage';
+import DamageType from 'multiattack-5e/components/damage-type-enum';
 
 module('Integration | Component | detail-display', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders planned attack details before any attack', async function (this: ElementContext, assert) {
     this.set('advantageState', AdvantageState.DISADVANTAGE);
-    this.set('damageList', [new Damage('2d6 + 5', 'Acid', true, true)]);
+    this.set('damageList', [
+      new Damage('2d6 + 5', DamageType.ACID.name, true, true),
+    ]);
 
     await render(
       hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false />`
@@ -23,7 +26,7 @@ module('Integration | Component | detail-display', function (hooks) {
         'Target AC: 15\n' +
           'Number of attacks: 8\n' +
           'Attack roll: 1d20 + 3 - 1d6 (rolls with disadvantage)\n' +
-          'Attack damage: 2d6 + 5 Acid damage (target resistant) (target vulnerable)',
+          'Attack damage: 2d6 + 5 acid damage (target resistant) (target vulnerable)',
         'the details for the input damage should be displayed'
       );
 
@@ -34,7 +37,7 @@ module('Integration | Component | detail-display', function (hooks) {
     if (damageList) {
       assert.equal(
         damageList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        '2d6 + 5 Acid damage (target resistant) (target vulnerable)',
+        '2d6 + 5 acid damage (target resistant) (target vulnerable)',
         'acid damage details should be displayed'
       );
     }
@@ -51,13 +54,13 @@ module('Integration | Component | detail-display', function (hooks) {
         damage: 22,
         damageDetails: [
           {
-            label: 'Piercing (2d6 + 5 + 1d4)',
+            label: 'piercing (2d6 + 5 + 1d4)',
             roll: 8,
             resisted: true,
             vulnerable: false,
           },
           {
-            label: 'Radiant (2d8)',
+            label: 'radiant (2d8)',
             roll: 14,
             resisted: false,
             vulnerable: true,
@@ -93,7 +96,7 @@ module('Integration | Component | detail-display', function (hooks) {
         damage: 0,
       },
     ]);
-    this.set('damageList', [new Damage('2d6 + 5', 'Acid', true, true)]);
+    this.set('damageList', [new Damage('2d6 + 5', DamageType.ACID.name, true, true)]);
 
     await render(
       hbs`<DetailDisplay @numberOfAttacks=8 @targetAC=15 @toHit="3 - 1d6"  @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered=false @attackTriggered=true @totalDmg=22 @attackDetailsList={{this.attackDetails}} />`
@@ -105,7 +108,7 @@ module('Integration | Component | detail-display', function (hooks) {
         'Target AC: 15\n' +
           'Number of attacks: 8\n' +
           'Attack roll: 1d20 + 3 - 1d6 (rolls with disadvantage)\n' +
-          'Attack damage: 2d6 + 5 Acid damage (target resistant) (target vulnerable)',
+          'Attack damage: 2d6 + 5 acid damage (target resistant) (target vulnerable)',
         'the details for the input damage should be displayed'
       );
 
@@ -134,7 +137,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack inflicted 22 damage with an attack roll of 25 (CRIT!) Piercing (2d6 + 5 + 1d4): 8 damage (resisted) Radiant (2d8): 14 damage (vulnerable)',
+        'Attack inflicted 22 damage with an attack roll of 25 (CRIT!) piercing (2d6 + 5 + 1d4): 8 damage (resisted) radiant (2d8): 14 damage (vulnerable)',
         'critical hit should be correctly displayed'
       );
       assert.equal(
@@ -175,12 +178,12 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         damageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Piercing (2d6 + 5 + 1d4): 8 damage (resisted)',
+        'piercing (2d6 + 5 + 1d4): 8 damage (resisted)',
         'piercing damage details should be displayed'
       );
       assert.equal(
         damageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Radiant (2d8): 14 damage (vulnerable)',
+        'radiant (2d8): 14 damage (vulnerable)',
         'radiant damage details should be displayed'
       );
     }

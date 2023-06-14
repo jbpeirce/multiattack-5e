@@ -3,10 +3,11 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import Attack, { AttackDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
-import AdvantageState from './advantage-state';
+import AdvantageState from './advantage-state-enum';
 import { assert } from '@ember/debug';
 import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
 import { A } from '@ember/array';
+import DamageType from './damage-type-enum';
 
 export default class RepeatedAttackFormComponent extends Component {
   @tracked numberOfAttacks = 0;
@@ -55,7 +56,7 @@ export default class RepeatedAttackFormComponent extends Component {
   }
 
   getDefaultDamage(): Damage {
-    return new Damage('2d6 + 3', 'Piercing');
+    return new Damage('2d6 + 3', DamageType.PIERCING.name);
   }
 
   simulateRepeatedAttacks = () => {
