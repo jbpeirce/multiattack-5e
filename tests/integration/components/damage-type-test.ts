@@ -22,7 +22,7 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @index=0 @setDamage={{this.doNotCall}} @setDamageType={{this.doNotCall}}
+    await render(hbs`<DamageType @index={{0}} @setDamage={{this.doNotCall}} @setDamageType={{this.doNotCall}}
     @setResistant={{this.doNotCall}} @setVulnerable={{this.doNotCall}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
@@ -99,7 +99,7 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @index=3 @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
+    await render(hbs`<DamageType @index={{3}} @setDamage={{this.setDamage}} @setDamageType={{this.setDamageType}}
     @setResistant={{this.setResistant}} @setVulnerable={{this.setVulnerable}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
@@ -153,7 +153,7 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('resistant', true);
     this.set('vulnerable', false);
 
-    await render(hbs`<DamageType @index=0 @setDamage={{this.setDamage}} @setDamageType={{this.doNotCall}}
+    await render(hbs`<DamageType @index={{0}} @setDamage={{this.setDamage}} @setDamageType={{this.doNotCall}}
     @setResistant={{this.doNotCall}} @setVulnerable={{this.doNotCall}} @initialDamage={{this.damage}}
     @initialDamageType={{this.damageType}} @initialResistant={{this.resistant}}
     @initialVulnerable={{this.vulnerable}} />`);
