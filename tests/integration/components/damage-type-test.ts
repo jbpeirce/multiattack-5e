@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { click, fillIn, render, select } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { ElementContext } from 'multiattack-5e/tests/types/element-context';
+import DamageType from 'multiattack-5e/components/damage-type-enum';
 
 module('Integration | Component | damage-type', function (hooks) {
   setupRenderingTest(hooks);
@@ -16,7 +17,7 @@ module('Integration | Component | damage-type', function (hooks) {
     });
 
     this.set('damage', '1d6 + 3');
-    this.set('damageType', 'fire');
+    this.set('damageType', DamageType.FIRE.name);
     this.set('resistant', true);
     this.set('vulnerable', false);
 
@@ -31,7 +32,10 @@ module('Integration | Component | damage-type', function (hooks) {
 
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('fire', 'damage type should be set to expected initial value');
+      .hasValue(
+        DamageType.FIRE.name,
+        'damage type should be set to expected initial value'
+      );
 
     assert
       .dom('[data-test-input-resistant="0"]')
@@ -62,7 +66,7 @@ module('Integration | Component | damage-type', function (hooks) {
       );
       assert.equal(
         (<HTMLSelectElement>actual.target).value,
-        'psychic',
+        DamageType.PSYCHIC.name,
         'damage type setter should be called with the expected value'
       );
     });
@@ -90,7 +94,7 @@ module('Integration | Component | damage-type', function (hooks) {
     });
 
     this.set('damage', '1d6 + 3');
-    this.set('damageType', 'fire');
+    this.set('damageType', DamageType.FIRE.name);
     this.set('resistant', true);
     this.set('vulnerable', false);
 
@@ -104,10 +108,13 @@ module('Integration | Component | damage-type', function (hooks) {
       .dom('[data-test-input-damage="3"]')
       .hasValue('3d8-1', 'damage should be reset after form is filled in');
 
-    await select('[data-test-damage-dropdown="3"]', 'psychic');
+    await select('[data-test-damage-dropdown="3"]', DamageType.PSYCHIC.name);
     assert
       .dom('[data-test-damage-dropdown="3"]')
-      .hasValue('psychic', 'damage type should be reset as expected');
+      .hasValue(
+        DamageType.PSYCHIC.name,
+        'damage type should be reset as expected'
+      );
 
     await click('[data-test-input-resistant="3"]');
     assert
@@ -141,7 +148,7 @@ module('Integration | Component | damage-type', function (hooks) {
     });
 
     this.set('damage', '1d6 + 3');
-    this.set('damageType', 'fire');
+    this.set('damageType', DamageType.FIRE.name);
     this.set('resistant', true);
     this.set('vulnerable', false);
 

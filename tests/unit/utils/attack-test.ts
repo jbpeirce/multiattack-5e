@@ -3,6 +3,7 @@ import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
 import Attack, { DamageDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
+import DamageType from 'multiattack-5e/components/damage-type-enum';
 
 module('Unit | Utils | attack', function (hooks) {
   setupTest(hooks);
@@ -131,8 +132,8 @@ module('Unit | Utils | attack', function (hooks) {
 
   test('it handles a hit with a constant attack modifier correctly', async function (assert) {
     const attack = new Attack('5', [
-      new Damage('2d6 + 5 + 1d4', 'piercing'),
-      new Damage('2d8', 'radiant'),
+      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
+      new Damage('2d8', DamageType.RADIANT.name),
     ]);
 
     // Fake the results of the d20 attack roll
@@ -160,8 +161,8 @@ module('Unit | Utils | attack', function (hooks) {
 
   test('it handles a hit with an attack modifier including dice correctly', async function (assert) {
     const attack = new Attack('5 + 1d4', [
-      new Damage('2d6 + 5 + 1d4', 'piercing'),
-      new Damage('2d8', 'radiant'),
+      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
+      new Damage('2d8', DamageType.RADIANT.name),
     ]);
 
     // Fake the results of the d20 attack roll
@@ -196,8 +197,8 @@ module('Unit | Utils | attack', function (hooks) {
 
   test('it adds damage dice as expected', async function (assert) {
     const attack = new Attack('5', [
-      new Damage('2d6 + 5 + 1d4', 'Piercing'),
-      new Damage('2d8', 'Radiant'),
+      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
+      new Damage('2d8', DamageType.RADIANT.name),
     ]);
 
     // Fake the results of the d20 attack roll
@@ -238,13 +239,13 @@ module('Unit | Utils | attack', function (hooks) {
     );
     const expectedDmg: DamageDetails[] = [
       {
-        label: 'Piercing (2d6 + 5 + 1d4)',
+        label: 'piercing (2d6 + 5 + 1d4)',
         roll: 13,
         resisted: false,
         vulnerable: false,
       },
       {
-        label: 'Radiant (2d8)',
+        label: 'radiant (2d8)',
         roll: 7,
         resisted: false,
         vulnerable: false,
@@ -259,8 +260,8 @@ module('Unit | Utils | attack', function (hooks) {
 
   test('it handles a critical hit as expected', async function (assert) {
     const attack = new Attack('-5', [
-      new Damage('2d6 + 5 + 1d4', 'Piercing'),
-      new Damage('2d8', 'Radiant'),
+      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
+      new Damage('2d8', DamageType.RADIANT.name),
     ]);
 
     // Fake the results of the d20 attack roll
@@ -304,13 +305,13 @@ module('Unit | Utils | attack', function (hooks) {
     );
     const expectedDmg: DamageDetails[] = [
       {
-        label: 'Piercing (2d6 + 5 + 1d4)',
+        label: 'piercing (2d6 + 5 + 1d4)',
         roll: 25,
         resisted: false,
         vulnerable: false,
       },
       {
-        label: 'Radiant (2d8)',
+        label: 'radiant (2d8)',
         roll: 14,
         resisted: false,
         vulnerable: false,

@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { click, fillIn, visit, currentURL, select } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { ElementContext } from '../types/element-context';
+import DamageType from 'multiattack-5e/components/damage-type-enum';
 
 module('Acceptance | repeated attack form', function (hooks) {
   setupApplicationTest(hooks);
@@ -64,7 +65,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await fillIn('[data-test-input-targetAC]', '15');
     await fillIn('[data-test-input-toHit]', '3 - 1d6');
     await fillIn('[data-test-input-damage="0"]', '2d6 + 5');
-    await select('[data-test-damage-dropdown="0"]', 'radiant');
+    await select('[data-test-damage-dropdown="0"]', DamageType.RADIANT.name);
     await click('[data-test-value="advantage"]');
     await click('[data-test-value="disadvantage"]');
     await click('[data-test-input-resistant="0"]');
@@ -128,7 +129,10 @@ module('Acceptance | repeated attack form', function (hooks) {
       .doesNotExist('only one damage type should exist');
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('piercing', 'damage 0 should be piercing (by default)');
+      .hasValue(
+        DamageType.PIERCING.name,
+        'damage 0 should be piercing (by default)'
+      );
 
     // Add another damage type
     await click('[data-test-button-add-damage-type]');
@@ -144,14 +148,17 @@ module('Acceptance | repeated attack form', function (hooks) {
       .doesNotExist('after add damage type, a third damage type should exist');
 
     // Customize the damage type dropdown for the newly added damage type
-    await select('[data-test-damage-dropdown="1"]', 'fire');
+    await select('[data-test-damage-dropdown="1"]', DamageType.FIRE.name);
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('piercing', 'damage 0 should be piercing (by default)');
+      .hasValue(
+        DamageType.PIERCING.name,
+        'damage 0 should be piercing (by default)'
+      );
     assert
       .dom('[data-test-damage-dropdown="1"]')
       .hasValue(
-        'fire',
+        DamageType.FIRE.name,
         'damage 1 should be fire (after the dropdown reset the value)'
       );
 
@@ -178,20 +185,26 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
 
     // Customize the damage type dropdown for the newly added damage type
-    await select('[data-test-damage-dropdown="2"]', 'bludgeoning');
+    await select(
+      '[data-test-damage-dropdown="2"]',
+      DamageType.BLUDGEONING.name
+    );
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('piercing', 'damage 0 should be piercing (by default)');
+      .hasValue(
+        DamageType.PIERCING.name,
+        'damage 0 should be piercing (by default)'
+      );
     assert
       .dom('[data-test-damage-dropdown="1"]')
       .hasValue(
-        'fire',
+        DamageType.FIRE.name,
         'damage 1 should be fire (after the dropdown reset the value)'
       );
     assert
       .dom('[data-test-damage-dropdown="2"]')
       .hasValue(
-        'bludgeoning',
+        DamageType.BLUDGEONING.name,
         'damage 2 should be bludgeoning (after the dropdown reset the value)'
       );
 
@@ -203,14 +216,17 @@ module('Acceptance | repeated attack form', function (hooks) {
       .exists('after add x2 and remove x1, one damage type should exist');
     assert
       .dom('[data-test-damage-dropdown="0"]')
-      .hasValue('piercing', 'piercing damage should not have been removed');
+      .hasValue(
+        DamageType.PIERCING.name,
+        'piercing damage should not have been removed'
+      );
     assert
       .dom('[data-test-input-damage="1"]')
       .exists('after add x2 and remove x1, a second damage type should exist');
     assert
       .dom('[data-test-damage-dropdown="1"]')
       .hasValue(
-        'bludgeoning',
+        DamageType.BLUDGEONING.name,
         'bludgeoning damage should not have been removed'
       );
     assert
