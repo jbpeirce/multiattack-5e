@@ -18,4 +18,5 @@ export default class DamageType {
 
   constructor(name: string) {
     this.name = name;
-  }}
+  }
+}

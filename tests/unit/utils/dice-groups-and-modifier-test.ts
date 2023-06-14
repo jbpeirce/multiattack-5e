@@ -1,6 +1,7 @@
-import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { module, test } from 'qunit';
 import sinon from 'sinon';
+
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 import DiceGroupsAndModifier from 'multiattack-5e/utils/dice-groups-and-modifier';
 

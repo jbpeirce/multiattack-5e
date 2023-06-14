@@ -1,12 +1,14 @@
+import { A } from '@ember/array';
+import { assert } from '@ember/debug';
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+
 import Attack, { AttackDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
-import AdvantageState from './advantage-state-enum';
-import { assert } from '@ember/debug';
 import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
-import { A } from '@ember/array';
+
+import AdvantageState from './advantage-state-enum';
 import DamageType from './damage-type-enum';
 
 export default class RepeatedAttackFormComponent extends Component {

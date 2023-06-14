@@ -112,6 +112,9 @@
     "edition": "octane"
   },
   "dependencies": {
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
     "sinon": "^15.1.0",
     "timers-browserify": "^2.0.12",
     "util": "0.10.4"

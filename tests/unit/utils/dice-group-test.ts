@@ -1,7 +1,8 @@
-import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import DiceGroup from 'multiattack-5e/utils/dice-group';
+import { module, test } from 'qunit';
 import sinon from 'sinon';
+
+import DiceGroup from 'multiattack-5e/utils/dice-group';
 
 module('Unit | Utils | dice-group', function (hooks) {
   setupTest(hooks);

@@ -1,9 +1,10 @@
-import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { module, test } from 'qunit';
 import sinon from 'sinon';
+
+import DamageType from 'multiattack-5e/components/damage-type-enum';
 import Attack, { DamageDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
-import DamageType from 'multiattack-5e/components/damage-type-enum';
 
 module('Unit | Utils | attack', function (hooks) {
   setupTest(hooks);
