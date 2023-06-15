@@ -17,6 +17,7 @@ module.exports = {
   ],
   env: {
     browser: true,
+    node: true,
   },
   settings: {
     'import/resolver': {
@@ -27,6 +28,7 @@ module.exports = {
     },
   },
   rules: {
+    '@typescript-eslint/no-var-requires': 0,
     semi: [2, 'always'],
     'prettier/prettier': [
       'error',
@@ -45,7 +47,7 @@ module.exports = {
       },
     ],
     // turn on errors for missing imports
-    'import/no-unresolved': 'error',
+    'import/no-unresolved': [2, { ignore: ['^@ember'] }],
     // 'import/no-named-as-default-member': 'off',
     'import/order': [
       'error',
