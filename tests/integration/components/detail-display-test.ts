@@ -18,7 +18,7 @@ module('Integration | Component | detail-display', function (hooks) {
     ]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{false}} />`
+      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="- 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{false}} />`
     );
 
     assert
@@ -26,7 +26,7 @@ module('Integration | Component | detail-display', function (hooks) {
       .hasText(
         'Target AC: 15\n' +
           'Number of attacks: 8\n' +
-          'Attack roll: 1d20 + 3 - 1d6 (rolls with disadvantage)\n' +
+          'Attack roll: 1d20 - 1d6 (rolls with disadvantage)\n' +
           'Attack damage: 2d6 + 5 acid damage (target resistant) (target vulnerable)',
         'the details for the input damage should be displayed'
       );

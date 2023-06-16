@@ -240,13 +240,13 @@ module('Unit | Utils | attack', function (hooks) {
     );
     const expectedDmg: DamageDetails[] = [
       {
-        label: 'piercing (2d6 + 5 + 1d4)',
+        label: 'Piercing (2d6 + 5 + 1d4)',
         roll: 13,
         resisted: false,
         vulnerable: false,
       },
       {
-        label: 'radiant (2d8)',
+        label: 'Radiant (2d8)',
         roll: 7,
         resisted: false,
         vulnerable: false,
@@ -306,13 +306,13 @@ module('Unit | Utils | attack', function (hooks) {
     );
     const expectedDmg: DamageDetails[] = [
       {
-        label: 'piercing (2d6 + 5 + 1d4)',
+        label: 'Piercing (2d6 + 5 + 1d4)',
         roll: 25,
         resisted: false,
         vulnerable: false,
       },
       {
-        label: 'radiant (2d8)',
+        label: 'Radiant (2d8)',
         roll: 14,
         resisted: false,
         vulnerable: false,
@@ -322,6 +322,26 @@ module('Unit | Utils | attack', function (hooks) {
       attackData.damageDetails,
       expectedDmg,
       'damage details should match expectations'
+    );
+  });
+
+  test('it capitalizes words as expected', async function (assert) {
+    assert.strictEqual(
+      Attack.capitalizeWord(''),
+      '',
+      'empty string should be capitalized correctly'
+    );
+
+    assert.strictEqual(
+      Attack.capitalizeWord('a'),
+      'A',
+      'single letter should be capitalized correctly'
+    );
+
+    assert.strictEqual(
+      Attack.capitalizeWord('radiant'),
+      'Radiant',
+      'multi-letter word should be capitalized correctly'
     );
   });
 });
