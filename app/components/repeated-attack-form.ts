@@ -12,8 +12,8 @@ import AdvantageState from './advantage-state-enum';
 import DamageType from './damage-type-enum';
 
 export default class RepeatedAttackFormComponent extends Component {
-  @tracked numberOfAttacks = 0;
-  @tracked targetAC = 0;
+  @tracked numberOfAttacks = 5;
+  @tracked targetAC = 15;
 
   @tracked toHit = '5 + 1d4';
 

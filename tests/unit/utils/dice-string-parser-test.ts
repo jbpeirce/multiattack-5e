@@ -42,7 +42,7 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
     );
     valid.set('4d8 + 1', new DiceGroupsAndModifier([new DiceGroup(4, 8)], 1));
     valid.set(
-      '+3d5-10+1 + 2 - 1d4',
+      '+3d5-10+1 + 2 - 1D4',
       new DiceGroupsAndModifier(
         [new DiceGroup(3, 5), new DiceGroup(1, 4, false)],
         -7

@@ -7,9 +7,11 @@ export default class DiceStringParser {
   // contain any other entries. Every entry must be preceded by "+" or "-"
   // except for the first term, where the sign is optional. Note that this regex
   // cannot be marked with "g" or it will preserve state between different
-  // strings and incorrectly mark some as not matching.
+  // strings and incorrectly mark some as not matching. It explicitly handles
+  // both possible cases for the "d" in "XdY" because this is used in HTML
+  // pattern validation as well as the case-insensitive diceStringRegex.
   static diceStringRegexAsString =
-    '(?: *[\\+\\-]? *(?:(?:\\d+d\\d+)|\\d+))(?: *[\\+\\-] *(?:(?:\\d+d\\d+)|\\d+))* *';
+    '(?: *[\\+\\-]? *(?:(?:\\d+[dD]\\d+)|\\d+))(?: *[\\+\\-] *(?:(?:\\d+[dD]\\d+)|\\d+))* *';
   static diceStringRegex = new RegExp(
     '^' + this.diceStringRegexAsString + '$',
     'i'

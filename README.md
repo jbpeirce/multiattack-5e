@@ -46,7 +46,10 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Deploying
 
-Specify what it takes to deploy your app.
+This application is deployed to [a Firebase site](https://repeated-attack-5e.web.app/) hosted on Google Cloud. After
+building with Ember as above, its owner can run `firebase deploy` to update the latest version of the site.
+
+To test the version which will be deployed to Firebase, run `firebase emulators:start --project repeated-attack-5e`.
 
 ## Further Reading / Useful Links
 
