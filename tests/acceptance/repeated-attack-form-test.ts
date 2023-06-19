@@ -65,7 +65,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     // Fill in some details for the attack
     await fillIn('[data-test-input-numberOfAttacks]', '8');
     await fillIn('[data-test-input-targetAC]', '15');
-    await fillIn('[data-test-input-toHit]', '3 - 1d6');
+    await fillIn('[data-test-input-toHit]', '3 - 1D6');
     await fillIn('[data-test-input-damage="0"]', '2d6 + 5');
     await select('[data-test-damage-dropdown="0"]', DamageType.RADIANT.name);
     await click('[data-test-value="advantage"]');
@@ -77,7 +77,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .hasText(
         'Target AC: 15\n' +
           'Number of attacks: 8\n' +
-          'Attack roll: 1d20 + 3 - 1d6\n' +
+          'Attack roll: 1d20 + 3 - 1D6\n' +
           '(rolls with disadvantage)\n' +
           'Attack damage: 2d6 + 5 radiant damage\n' +
           '(target resistant)',
