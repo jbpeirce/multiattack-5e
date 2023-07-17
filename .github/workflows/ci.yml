@@ -11,10 +11,7 @@ concurrency:
   group: ci-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
-jobs:
-  # TODO: The default Ember framework does not pass all lint checks. This should
-  # be reenabled once the current code passes all lint checks.
-  
+jobs: 
   lint:
     name: "Lint"
     runs-on: ubuntu-latest
