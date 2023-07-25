@@ -103,7 +103,7 @@
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
     "sinon": "^15.1.2",
-    "stylelint": "^15.10.1",
+    "stylelint": "^15.10.2",
     "stylelint-config-standard": "^34.0.0",
     "stylelint-prettier": "^3.0.0",
     "timers-browserify": "^2.0.12",
