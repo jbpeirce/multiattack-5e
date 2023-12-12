@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
-import { ElementContext } from 'multiattack-5e/tests/types/element-context';
+import { type ElementContext } from 'multiattack-5e/tests/types/element-context';
 
 module('Integration | Component | damage-type', function (hooks) {
   setupRenderingTest(hooks);

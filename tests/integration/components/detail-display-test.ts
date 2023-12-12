@@ -5,7 +5,7 @@ import { module, test } from 'qunit';
 
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
-import { ElementContext } from 'multiattack-5e/tests/types/element-context';
+import { type ElementContext } from 'multiattack-5e/tests/types/element-context';
 import Damage from 'multiattack-5e/utils/damage';
 
 module('Integration | Component | detail-display', function (hooks) {

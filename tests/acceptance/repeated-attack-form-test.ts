@@ -4,7 +4,7 @@ import { module, test } from 'qunit';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 
-import { ElementContext } from '../types/element-context';
+import { type ElementContext } from '../types/element-context';
 
 module('Acceptance | repeated attack form', function (hooks) {
   setupApplicationTest(hooks);
