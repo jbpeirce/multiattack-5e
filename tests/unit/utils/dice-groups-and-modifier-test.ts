@@ -11,7 +11,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
   test('it rolls one dice group', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
       [new DiceGroup(1, 6)],
-      1
+      1,
     );
 
     const fake1d6 = sinon.stub();
@@ -24,14 +24,14 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
     assert.strictEqual(
       diceGroupAndModifier.rollAndGetTotal(false),
       4,
-      'roll should total 3 + 1 = 4'
+      'roll should total 3 + 1 = 4',
     );
   });
 
   test('it rolls double dice when instructed', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
       [new DiceGroup(1, 6)],
-      2
+      2,
     );
 
     const fakeD6 = sinon.stub();
@@ -45,14 +45,14 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
     assert.strictEqual(
       diceGroupAndModifier.rollAndGetTotal(true),
       9,
-      'roll should inflict 3 + 4 + 2 = 9 total damage on a critical hit'
+      'roll should inflict 3 + 4 + 2 = 9 total damage on a critical hit',
     );
   });
 
   test('it rolls and adds multiple dice groups', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
       [new DiceGroup(3, 8), new DiceGroup(2, 6, false)],
-      -3
+      -3,
     );
 
     const fakeD8 = sinon.stub();
@@ -77,14 +77,14 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
     assert.strictEqual(
       diceGroupAndModifier.rollAndGetTotal(false),
       7,
-      'roll should inflict (3 + 7 + 5) - (1 + 4) - 3 = 7 total damage'
+      'roll should inflict (3 + 7 + 5) - (1 + 4) - 3 = 7 total damage',
     );
   });
 
   test('it doubles all dice groups on a critical hit', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
       [new DiceGroup(3, 8), new DiceGroup(2, 6)],
-      2
+      2,
     );
 
     const fakeD8 = sinon.stub();
@@ -114,7 +114,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
     assert.strictEqual(
       diceGroupAndModifier.rollAndGetTotal(true),
       34,
-      'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage'
+      'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
     );
   });
 });

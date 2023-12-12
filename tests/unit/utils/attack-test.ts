@@ -20,7 +20,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attack.getD20Roll(true, false),
       7,
-      'attack should roll with advantage'
+      'attack should roll with advantage',
     );
   });
 
@@ -35,7 +35,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attack.getD20Roll(false, true),
       3,
-      'attack should roll with disadvantage'
+      'attack should roll with disadvantage',
     );
   });
 
@@ -50,7 +50,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attack.getD20Roll(true, true),
       3,
-      'attack should choose the first roll with advantage=disadvantage=true'
+      'attack should choose the first roll with advantage=disadvantage=true',
     );
 
     fakeD20.onCall(2).returns(6);
@@ -58,7 +58,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attack.getD20Roll(true, true),
       6,
-      'attack should choose the first roll with advantage=disadvantage=true'
+      'attack should choose the first roll with advantage=disadvantage=true',
     );
   });
 
@@ -73,7 +73,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attack.getD20Roll(false, false),
       3,
-      'attack should choose the first roll with advantage=disadvantage=false'
+      'attack should choose the first roll with advantage=disadvantage=false',
     );
 
     fakeD20.onCall(2).returns(6);
@@ -81,7 +81,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attack.getD20Roll(false, false),
       6,
-      'attack should choose the first roll with advantage=disadvantage=false'
+      'attack should choose the first roll with advantage=disadvantage=false',
     );
   });
 
@@ -102,7 +102,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.damage,
       0,
-      'no damage should have been inflicted'
+      'no damage should have been inflicted',
     );
   });
 
@@ -119,7 +119,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.roll,
       21,
-      'attack should have rolled a 21 total'
+      'attack should have rolled a 21 total',
     );
     assert.false(attackData.hit, 'attack should have missed');
     assert.false(attackData.crit, 'attack was not a crit');
@@ -127,7 +127,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.damage,
       0,
-      'no damage should have been inflicted'
+      'no damage should have been inflicted',
     );
   });
 
@@ -149,14 +149,14 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.roll,
       18,
-      'attack should have rolled an 18 total (13 + 5)'
+      'attack should have rolled an 18 total (13 + 5)',
     );
     assert.true(attackData.hit, 'attack should have hit');
     assert.false(attackData.crit, 'attack was not a crit');
     assert.false(attackData.nat1, 'attack was not a nat 1');
     assert.true(
       attackData.damage > 0,
-      'some damage should have been inflicted'
+      'some damage should have been inflicted',
     );
   });
 
@@ -185,14 +185,14 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.roll,
       20,
-      'attack should have rolled a 20 total (13 + 5 + 2)'
+      'attack should have rolled a 20 total (13 + 5 + 2)',
     );
     assert.true(attackData.hit, 'attack should have hit');
     assert.false(attackData.crit, 'attack was not a crit');
     assert.false(attackData.nat1, 'attack was not a nat 1');
     assert.true(
       attackData.damage > 0,
-      'some damage should have been inflicted'
+      'some damage should have been inflicted',
     );
   });
 
@@ -228,7 +228,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.roll,
       18,
-      'attack should have rolled an 18 total (13 + 5)'
+      'attack should have rolled an 18 total (13 + 5)',
     );
     assert.true(attackData.hit, 'attack should have hit');
     assert.false(attackData.crit, 'attack was not a crit');
@@ -236,7 +236,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.damage,
       20,
-      '20 damage should have been inflicted'
+      '20 damage should have been inflicted',
     );
     const expectedDmg: DamageDetails[] = [
       {
@@ -255,7 +255,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.deepEqual(
       attackData.damageDetails,
       expectedDmg,
-      'damage details should match expectations'
+      'damage details should match expectations',
     );
   });
 
@@ -291,18 +291,18 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       attackData.roll,
       15,
-      'attack should have rolled an 15 total (20 - 5)'
+      'attack should have rolled an 15 total (20 - 5)',
     );
     assert.true(
       attackData.hit,
-      'attack should have hit (despite being below the target AC)'
+      'attack should have hit (despite being below the target AC)',
     );
     assert.true(attackData.crit, 'attack was a crit');
     assert.false(attackData.nat1, 'attack was not a nat 1');
     assert.strictEqual(
       attackData.damage,
       39,
-      '39 damage should have been inflicted (25 + 14)'
+      '39 damage should have been inflicted (25 + 14)',
     );
     const expectedDmg: DamageDetails[] = [
       {
@@ -321,7 +321,7 @@ module('Unit | Utils | attack', function (hooks) {
     assert.deepEqual(
       attackData.damageDetails,
       expectedDmg,
-      'damage details should match expectations'
+      'damage details should match expectations',
     );
   });
 
@@ -329,19 +329,19 @@ module('Unit | Utils | attack', function (hooks) {
     assert.strictEqual(
       Attack.capitalizeWord(''),
       '',
-      'empty string should be capitalized correctly'
+      'empty string should be capitalized correctly',
     );
 
     assert.strictEqual(
       Attack.capitalizeWord('a'),
       'A',
-      'single letter should be capitalized correctly'
+      'single letter should be capitalized correctly',
     );
 
     assert.strictEqual(
       Attack.capitalizeWord('radiant'),
       'Radiant',
-      'multi-letter word should be capitalized correctly'
+      'multi-letter word should be capitalized correctly',
     );
   });
 });

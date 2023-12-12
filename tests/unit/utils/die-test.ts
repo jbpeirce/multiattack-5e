@@ -10,12 +10,12 @@ module('Unit | Utils | die', function (hooks) {
     assert.throws(
       () => new Die(-1),
       new Error('Die must have a positive number of sides'),
-      'negative number of sides should throw error'
+      'negative number of sides should throw error',
     );
     assert.throws(
       () => new Die(0),
       new Error('Die must have a positive number of sides'),
-      'zero sides should throw error'
+      'zero sides should throw error',
     );
   });
 
@@ -26,11 +26,11 @@ module('Unit | Utils | die', function (hooks) {
       const roll: number = die.roll();
       assert.true(
         roll >= 1,
-        `die roll ${roll} should be greater than or equal to 1`
+        `die roll ${roll} should be greater than or equal to 1`,
       );
       assert.true(
         roll <= sides,
-        `die roll ${roll} should be less than or equal to the number of sides on the die (${sides})`
+        `die roll ${roll} should be less than or equal to the number of sides on the die (${sides})`,
       );
     }
   });
@@ -61,12 +61,12 @@ module('Unit | Utils | die', function (hooks) {
 
     assert.true(
       rolled20,
-      'a 20-sided die should have rolled a 20 in 1000 trials'
+      'a 20-sided die should have rolled a 20 in 1000 trials',
     );
 
     assert.true(
       rolled1,
-      'a 20-sided die should have rolled a 1 in 1000 trials'
+      'a 20-sided die should have rolled a 1 in 1000 trials',
     );
   });
 });

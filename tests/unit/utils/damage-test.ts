@@ -15,7 +15,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.damage.diceGroups.length,
       1,
-      'damage should roll one group of dice'
+      'damage should roll one group of dice',
     );
 
     const fake1d6 = sinon.stub();
@@ -28,7 +28,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.roll(false),
       4,
-      'roll should inflict 3 + 1 = 4 total damage'
+      'roll should inflict 3 + 1 = 4 total damage',
     );
   });
 
@@ -38,7 +38,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.damage.diceGroups.length,
       2,
-      'damage should roll two groups of dice'
+      'damage should roll two groups of dice',
     );
 
     const fakeD8 = sinon.stub();
@@ -63,7 +63,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.roll(false),
       21,
-      'roll should inflict (3 + 7 + 5) + (1 + 4) + 1 = 21 total damage'
+      'roll should inflict (3 + 7 + 5) + (1 + 4) + 1 = 21 total damage',
     );
   });
 
@@ -73,7 +73,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.damage.diceGroups.length,
       2,
-      'damage should roll two groups of dice'
+      'damage should roll two groups of dice',
     );
 
     const fakeD8 = sinon.stub();
@@ -103,7 +103,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.roll(true),
       34,
-      'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage'
+      'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
     );
   });
 
@@ -113,7 +113,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.damage.diceGroups.length,
       1,
-      'damage should roll one group of dice'
+      'damage should roll one group of dice',
     );
 
     const fakeD6 = sinon.stub();
@@ -127,7 +127,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.roll(false),
       4,
-      'roll should inflict (3 + 5 + 1) / 2 = 4 total damage'
+      'roll should inflict (3 + 5 + 1) / 2 = 4 total damage',
     );
   });
 
@@ -137,7 +137,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.damage.diceGroups.length,
       1,
-      'damage should roll one group of dice'
+      'damage should roll one group of dice',
     );
 
     const fakeD6 = sinon.stub();
@@ -151,7 +151,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.roll(false),
       18,
-      'roll should inflict (3 + 5 + 1) * 2 = 18 total damage'
+      'roll should inflict (3 + 5 + 1) * 2 = 18 total damage',
     );
   });
 
@@ -161,7 +161,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.damage.diceGroups.length,
       1,
-      'damage should roll one group of dice'
+      'damage should roll one group of dice',
     );
 
     const fakeD6 = sinon.stub();
@@ -175,7 +175,7 @@ module('Unit | Utils | damage', function (hooks) {
     assert.strictEqual(
       damage.roll(false),
       8,
-      'roll should inflict ((3 + 5 + 1) / 2) * 2 = 8 total damage'
+      'roll should inflict ((3 + 5 + 1) / 2) * 2 = 8 total damage',
     );
   });
 });

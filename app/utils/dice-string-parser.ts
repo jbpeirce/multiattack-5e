@@ -14,7 +14,7 @@ export default class DiceStringParser {
     '(?: *[\\+\\-]? *(?:(?:\\d+[dD]\\d+)|\\d+))(?: *[\\+\\-] *(?:(?:\\d+[dD]\\d+)|\\d+))* *';
   static diceStringRegex = new RegExp(
     '^' + this.diceStringRegexAsString + '$',
-    'i'
+    'i',
   );
   // /^(?: *[+-]? *(?:(?:\d+d\d+)|\d+))(?: *[+-] *(?:(?:\d+d\d+)|\d+))*$/i;
 
@@ -50,7 +50,7 @@ export default class DiceStringParser {
     // additional text or missing signs
     if (!this.validateDiceString(diceString)) {
       throw new Error(
-        `Unable to parse dice groups or constants from input string "${diceString}"`
+        `Unable to parse dice groups or constants from input string "${diceString}"`,
       );
     }
 
@@ -61,7 +61,7 @@ export default class DiceStringParser {
     while (match) {
       if (!match.groups) {
         throw new Error(
-          'Unexpectedly unable to find groups in match (regex constructed incorrectly?)'
+          'Unexpectedly unable to find groups in match (regex constructed incorrectly?)',
         );
       }
 
@@ -76,8 +76,8 @@ export default class DiceStringParser {
           new DiceGroup(
             Number(match.groups['numDice']),
             Number(match.groups['numSides']),
-            add
-          )
+            add,
+          ),
         );
       }
 
