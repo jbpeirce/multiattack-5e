@@ -11,12 +11,12 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.throws(
       () => new DiceGroup(-1, 6),
       new Error('Number of dice in group must be non-negative'),
-      'negative number of dice should throw an error'
+      'negative number of dice should throw an error',
     );
     assert.throws(
       () => new DiceGroup(4, -1),
       new Error('Die must have a positive number of sides'),
-      'negative number of sides for dice should throw an error'
+      'negative number of sides for dice should throw an error',
     );
   });
 
@@ -25,7 +25,7 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.strictEqual(
       noDice.roll(),
       0,
-      'rolling no dice should never result in a total'
+      'rolling no dice should never result in a total',
     );
 
     // Create a group with a single die and mock its roll
@@ -33,12 +33,12 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.strictEqual(
       group1d8.numDice,
       1,
-      'group should have expected number of dice'
+      'group should have expected number of dice',
     );
     assert.strictEqual(
       group1d8.die.sides,
       8,
-      "group's die should have expected number of sides"
+      "group's die should have expected number of sides",
     );
     assert.true(group1d8.shouldAdd(), 'dice group should be added by default');
 
@@ -46,7 +46,7 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.strictEqual(
       group1d8.roll(),
       3,
-      'roll of a single die should return expected sum'
+      'roll of a single die should return expected sum',
     );
 
     // Create a group with multiple dice and mock them
@@ -54,16 +54,16 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.strictEqual(
       group3d6.numDice,
       3,
-      'group should have expected number of dice'
+      'group should have expected number of dice',
     );
     assert.strictEqual(
       group3d6.die.sides,
       6,
-      "group's dice should have expected number of sides"
+      "group's dice should have expected number of sides",
     );
     assert.false(
       group3d6.shouldAdd(),
-      'dice group should track whether to add value to a larger total'
+      'dice group should track whether to add value to a larger total',
     );
 
     const fakeDie = sinon.stub();
@@ -76,7 +76,7 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.strictEqual(
       group3d6.roll(),
       9,
-      'roll of multiple dice should return expected sum'
+      'roll of multiple dice should return expected sum',
     );
   });
 });

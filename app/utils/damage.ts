@@ -20,7 +20,7 @@ export default class Damage {
     damageString: string,
     type: string,
     targetResistant = false,
-    targetVulnerable = false
+    targetVulnerable = false,
   ) {
     this.damage = DiceStringParser.parse(damageString);
     this.damageString = damageString;
@@ -33,7 +33,7 @@ export default class Damage {
   setDamageType(newType: InputEvent) {
     assert(
       'damage type handler must receive an event with a target that is an HTMLSelectElement',
-      newType.target instanceof HTMLSelectElement
+      newType.target instanceof HTMLSelectElement,
     );
     this.type = newType.target.value || DamageType.OTHER.name;
   }
@@ -42,7 +42,7 @@ export default class Damage {
   setDamage(newDamage: InputEvent) {
     assert(
       'damage handler must receive an event with a target that is an HTMLInputElement',
-      newDamage.target instanceof HTMLInputElement
+      newDamage.target instanceof HTMLInputElement,
     );
 
     this.damageString = newDamage.target.value || '0';
@@ -53,7 +53,7 @@ export default class Damage {
   setResistant(newResistant: InputEvent) {
     assert(
       'resistance handler must receive an event with a target that is an HTMLInputElement',
-      newResistant.target instanceof HTMLInputElement
+      newResistant.target instanceof HTMLInputElement,
     );
     this.targetResistant = newResistant.target.checked || false;
   }
@@ -62,7 +62,7 @@ export default class Damage {
   setVulnerable(newVulnerable: InputEvent) {
     assert(
       'vulnerability handler must receive an event with a target that is an HTMLInputElement',
-      newVulnerable.target instanceof HTMLInputElement
+      newVulnerable.target instanceof HTMLInputElement,
     );
     this.targetVulnerable = newVulnerable.target.checked || false;
   }

@@ -42,7 +42,7 @@ export default class RepeatedAttackFormComponent extends Component {
   setAdvantageState(newState: AdvantageState) {
     assert(
       'advantage state handler must receive an advantage state',
-      newState instanceof AdvantageState
+      newState instanceof AdvantageState,
     );
     this.advantageState = newState;
   }
@@ -72,7 +72,7 @@ export default class RepeatedAttackFormComponent extends Component {
       const attackDetails = attack.makeAttack(
         this.targetAC,
         this.advantageState == AdvantageState.ADVANTAGE,
-        this.advantageState == AdvantageState.DISADVANTAGE
+        this.advantageState == AdvantageState.DISADVANTAGE,
       );
 
       this.totalDmg += attackDetails.damage;

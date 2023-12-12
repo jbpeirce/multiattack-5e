@@ -50,7 +50,7 @@ export default class Attack {
   makeAttack(
     targetAC: number,
     advantage: boolean,
-    disadvantage: boolean
+    disadvantage: boolean,
   ): AttackDetails {
     // Roll the d20 with advantage/disadvantage as appropriate. In addition,
     // roll any dice groups which modify the attack (such as a 1d4 from Bless or
@@ -111,7 +111,7 @@ export default class Attack {
       // F/T by the third. However, Typescript does not detect this and alerts
       // for a missing return statement.
       throw new Error(
-        `Unexpected error when rolling d20; app logic does not handle the case where advantage=${advantage} and disadvantage=${disadvantage}. Please file an issue in Github.`
+        `Unexpected error when rolling d20; app logic does not handle the case where advantage=${advantage} and disadvantage=${disadvantage}. Please file an issue in Github.`,
       );
     }
   }

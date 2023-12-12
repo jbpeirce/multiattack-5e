@@ -12,7 +12,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
     this.set('updateState', (actual: AdvantageState) => {
       assert.true(
         false,
-        `updateState should not be called in initial render but was called with ${actual}`
+        `updateState should not be called in initial render but was called with ${actual}`,
       );
     });
 
@@ -25,7 +25,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
       assert.deepEqual(
         actual,
         AdvantageState.ADVANTAGE,
-        'advantage should have been passed to the updateState function'
+        'advantage should have been passed to the updateState function',
       );
     });
 
@@ -40,7 +40,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
       assert.deepEqual(
         actual,
         AdvantageState.DISADVANTAGE,
-        'disadvantage should have been passed to the updateState function'
+        'disadvantage should have been passed to the updateState function',
       );
     });
 
@@ -55,7 +55,7 @@ module('Integration | Component | advantage-radio', function (hooks) {
       assert.deepEqual(
         actual,
         AdvantageState.STRAIGHT,
-        'straight roll should have been set'
+        'straight roll should have been set',
       );
     });
 

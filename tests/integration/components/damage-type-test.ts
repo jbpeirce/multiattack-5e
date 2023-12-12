@@ -13,7 +13,7 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('doNotCall', (actual: InputEvent) => {
       assert.true(
         false,
-        `this setter should not have been called but was called with ${actual}`
+        `this setter should not have been called but was called with ${actual}`,
       );
     });
 
@@ -35,7 +35,7 @@ module('Integration | Component | damage-type', function (hooks) {
       .dom('[data-test-damage-dropdown="0"]')
       .hasValue(
         DamageType.FIRE.name,
-        'damage type should be set to expected initial value'
+        'damage type should be set to expected initial value',
       );
 
     assert
@@ -51,46 +51,46 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('setDamage', (actual: InputEvent) => {
       assert.true(
         actual.target instanceof HTMLInputElement,
-        'damage handler must receive an event with a target that is an HTMLInputElement'
+        'damage handler must receive an event with a target that is an HTMLInputElement',
       );
       assert.equal(
         (<HTMLInputElement>actual.target).value,
         '3d8-1',
-        'damage setter should be called with the expected value'
+        'damage setter should be called with the expected value',
       );
     });
 
     this.set('setDamageType', (actual: InputEvent) => {
       assert.true(
         actual.target instanceof HTMLSelectElement,
-        'damage type handler must receive an event with a target that is an HTMLSelectElement'
+        'damage type handler must receive an event with a target that is an HTMLSelectElement',
       );
       assert.equal(
         (<HTMLSelectElement>actual.target).value,
         DamageType.PSYCHIC.name,
-        'damage type setter should be called with the expected value'
+        'damage type setter should be called with the expected value',
       );
     });
 
     this.set('setResistant', (actual: InputEvent) => {
       assert.true(
         actual.target instanceof HTMLInputElement,
-        'damage type handler must receive an event with a target that is an HTMLInputElement'
+        'damage type handler must receive an event with a target that is an HTMLInputElement',
       );
       assert.false(
         (<HTMLInputElement>actual.target).checked,
-        'resistance setter should be called with the expected value'
+        'resistance setter should be called with the expected value',
       );
     });
 
     this.set('setVulnerable', (actual: InputEvent) => {
       assert.true(
         actual.target instanceof HTMLInputElement,
-        'damage type handler must receive an event with a target that is an HTMLInputElement'
+        'damage type handler must receive an event with a target that is an HTMLInputElement',
       );
       assert.true(
         (<HTMLInputElement>actual.target).checked,
-        'vulnerability setter should be called with the expected value'
+        'vulnerability setter should be called with the expected value',
       );
     });
 
@@ -114,7 +114,7 @@ module('Integration | Component | damage-type', function (hooks) {
       .dom('[data-test-damage-dropdown="3"]')
       .hasValue(
         DamageType.PSYCHIC.name,
-        'damage type should be reset as expected'
+        'damage type should be reset as expected',
       );
 
     await click('[data-test-input-resistant="3"]');
@@ -132,19 +132,19 @@ module('Integration | Component | damage-type', function (hooks) {
     this.set('setDamage', (actual: InputEvent) => {
       assert.true(
         actual.target instanceof HTMLInputElement,
-        'damage handler must receive an event with a target that is an HTMLInputElement'
+        'damage handler must receive an event with a target that is an HTMLInputElement',
       );
       assert.equal(
         (<HTMLInputElement>actual.target).value,
         'invalid',
-        'damage setter should be called with the expected value'
+        'damage setter should be called with the expected value',
       );
     });
 
     this.set('doNotCall', (actual: InputEvent) => {
       assert.true(
         false,
-        `this setter should not have been called but was called with ${actual}`
+        `this setter should not have been called but was called with ${actual}`,
       );
     });
 

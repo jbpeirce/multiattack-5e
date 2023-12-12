@@ -26,9 +26,9 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
       assert.throws(
         () => DiceStringParser.parse(invalid),
         new Error(
-          `Unable to parse dice groups or constants from input string "${invalid}"`
+          `Unable to parse dice groups or constants from input string "${invalid}"`,
         ),
-        `invalid string "${invalid}" should be rejected`
+        `invalid string "${invalid}" should be rejected`,
       );
     }
   });
@@ -38,20 +38,20 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
     valid.set('1d6+4', new DiceGroupsAndModifier([new DiceGroup(1, 6)], 4));
     valid.set(
       '11d12-10',
-      new DiceGroupsAndModifier([new DiceGroup(11, 12)], -10)
+      new DiceGroupsAndModifier([new DiceGroup(11, 12)], -10),
     );
     valid.set('4d8 + 1', new DiceGroupsAndModifier([new DiceGroup(4, 8)], 1));
     valid.set(
       '+3d5-10+1 + 2 - 1D4',
       new DiceGroupsAndModifier(
         [new DiceGroup(3, 5), new DiceGroup(1, 4, false)],
-        -7
-      )
+        -7,
+      ),
     );
     valid.set('3d5', new DiceGroupsAndModifier([new DiceGroup(3, 5)], 0));
     valid.set(
       '-2d6   ',
-      new DiceGroupsAndModifier([new DiceGroup(2, 6, false)], 0)
+      new DiceGroupsAndModifier([new DiceGroup(2, 6, false)], 0),
     );
     valid.set('40', new DiceGroupsAndModifier([], 40));
     valid.set('-40', new DiceGroupsAndModifier([], -40));
@@ -64,7 +64,7 @@ module('Unit | Utils | dice-string-parser', function (hooks) {
         assert.deepEqual(
           DiceStringParser.parse(dmgStr),
           expected,
-          `${dmgStr} should parse to expected value`
+          `${dmgStr} should parse to expected value`,
         );
       } catch (error) {
         assert.true(false, `Unexpected error thrown for ${dmgStr}: ${error}`);
