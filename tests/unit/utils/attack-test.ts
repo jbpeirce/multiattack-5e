@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 import sinon from 'sinon';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
-import Attack, { DamageDetails } from 'multiattack-5e/utils/attack';
+import Attack, { type DamageDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 
 module('Unit | Utils | attack', function (hooks) {

@@ -1,4 +1,4 @@
-import { TestContext } from '@ember/test-helpers';
+import { type TestContext } from '@ember/test-helpers';
 
 /**
  * An interface for working with tests that include a .element field in the context.

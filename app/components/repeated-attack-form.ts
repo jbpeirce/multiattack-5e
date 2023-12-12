@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 
-import Attack, { AttackDetails } from 'multiattack-5e/utils/attack';
+import Attack, { type AttackDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
 
