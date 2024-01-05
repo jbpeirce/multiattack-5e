@@ -28,27 +28,31 @@
 </h4>
 <ol data-test-attack-detail-list>
   {{#each @attackDetailsList as |attackDetails index|}}
-  <li>
-    Attack
-    {{#if attackDetails.hit }}
-    inflicted {{attackDetails.damage}} damage
-    {{/if}}
-    {{#unless attackDetails.hit}}
-    missed
-    {{/unless}}
-    with an attack roll of {{attackDetails.roll}}
+
+  {{#if attackDetails.hit }}
+  <hit>
+    Attack roll: {{attackDetails.roll}}
     {{#if attackDetails.crit}} (CRIT!){{/if}}
-    {{#if attackDetails.nat1}} (NAT 1!){{/if}}
+
     <ul data-test-damage-detail-list={{index}}>
       {{#each attackDetails.damageDetails as |damage|}}
       <li>
-        {{damage.label}}: {{damage.roll}} damage
+        {{damage.label}}: {{damage.roll}} damage inflicted
         {{#if damage.resisted}} (resisted){{/if}}
         {{#if damage.vulnerable}} (vulnerable){{/if}}
       </li>
       {{/each}}
     </ul>
-  </li>
+  </hit>
+  {{/if}}
+
+  {{#unless attackDetails.hit }}
+  <miss>
+    Attack roll: {{attackDetails.roll}}
+    {{#if attackDetails.nat1}} (NAT 1!){{/if}}
+  </miss>
+  {{/unless}}
+
   {{/each}}
 </ol>
 {{/if}}

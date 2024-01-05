@@ -1,1 +1,21 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
+
+hit {
+  display: list-item;
+  padding-inline-start: 1ch;
+}
+
+hit::marker {
+  color: green;
+  content: "✓";
+}
+
+miss {
+  display: list-item;
+  padding-inline-start: 1ch;
+}
+
+miss::marker {
+  color: red;
+  content: "✕";
+}

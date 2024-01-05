@@ -139,29 +139,58 @@ module('Integration | Component | detail-display', function (hooks) {
       );
 
       assert.equal(
+        detailsList[0]?.tagName?.toLowerCase(),
+        'hit',
+        'critical hit should have bullet point formatted as a hit',
+      );
+      assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack inflicted 22 damage with an attack roll of 25 (CRIT!) piercing (2d6 + 5 + 1d4): 8 damage (resisted) radiant (2d8): 14 damage (vulnerable)',
-        'critical hit should be correctly displayed',
+        'Attack roll: 25 (CRIT!) piercing (2d6 + 5 + 1d4): 8 damage inflicted (resisted) radiant (2d8): 14 damage inflicted (vulnerable)',
+        'critical hit should have expected detail text',
+      );
+
+      assert.equal(
+        detailsList[1]?.tagName?.toLowerCase(),
+        'miss',
+        'negative attack roll should have bullet point formatted as a miss',
       );
       assert.equal(
         detailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of -4',
-        'negative attack roll should be properly displayed',
+        'Attack roll: -4',
+        'negative attack roll should have expected detail text',
+      );
+
+      assert.equal(
+        detailsList[2]?.tagName?.toLowerCase(),
+        'miss',
+        'double-digit attack roll with a miss should have bullet point formatted as a miss',
       );
       assert.equal(
         detailsList[2]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of 13',
-        'double-digit attack roll with a miss should be properly displayed',
+        'Attack roll: 13',
+        'double-digit attack roll with a miss should have expected detail text',
+      );
+
+      assert.equal(
+        detailsList[3]?.tagName?.toLowerCase(),
+        'miss',
+        'natural one should have bullet point formatted as a miss',
       );
       assert.equal(
         detailsList[3]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of -5 (NAT 1!)',
-        'natural one should be correctly displayed',
+        'Attack roll: -5 (NAT 1!)',
+        'natural one should have expected detail text',
+      );
+
+      assert.equal(
+        detailsList[4]?.tagName?.toLowerCase(),
+        'miss',
+        'single-digit attack roll with a miss should have bullet point formatted as a miss',
       );
       assert.equal(
         detailsList[4]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack missed with an attack roll of 6',
-        'single-digit attack roll with a miss should be properly displayed',
+        'Attack roll: 6',
+        'single-digit attack roll with a miss should have expected detail text',
       );
     }
 
@@ -181,12 +210,12 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         damageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'piercing (2d6 + 5 + 1d4): 8 damage (resisted)',
+        'piercing (2d6 + 5 + 1d4): 8 damage inflicted (resisted)',
         'piercing damage details should be displayed',
       );
       assert.equal(
         damageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'radiant (2d8): 14 damage (vulnerable)',
+        'radiant (2d8): 14 damage inflicted (vulnerable)',
         'radiant damage details should be displayed',
       );
     }
