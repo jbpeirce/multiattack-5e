@@ -52,17 +52,38 @@ module('Integration | Component | detail-display', function (hooks) {
         hit: true,
         crit: true,
         nat1: false,
-        damage: 22,
+        damage: 37,
         damageDetails: [
           {
             label: 'piercing (2d6 + 5 + 1d4)',
-            roll: 8,
+            roll: 11,
             resisted: true,
             vulnerable: false,
           },
           {
             label: 'radiant (2d8)',
-            roll: 14,
+            roll: 26,
+            resisted: false,
+            vulnerable: true,
+          },
+        ],
+      },
+      {
+        roll: 18,
+        hit: true,
+        crit: false,
+        nat1: false,
+        damage: 25,
+        damageDetails: [
+          {
+            label: 'piercing (2d6 + 5 + 1d4)',
+            roll: 5,
+            resisted: true,
+            vulnerable: false,
+          },
+          {
+            label: 'radiant (2d8)',
+            roll: 20,
             resisted: false,
             vulnerable: true,
           },
@@ -102,7 +123,7 @@ module('Integration | Component | detail-display', function (hooks) {
     ]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{true}} @totalDmg={{22}} @attackDetailsList={{this.attackDetails}} />`,
+      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{true}} @totalDmg={{62}} @attackDetailsList={{this.attackDetails}} />`,
     );
 
     assert
@@ -121,7 +142,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header]')
-      .hasText('*** Total Damage: 22 ***');
+      .hasText('*** Total Damage: 62 ***');
 
     assert
       .dom('[data-test-attack-detail-list]')
@@ -134,88 +155,125 @@ module('Integration | Component | detail-display', function (hooks) {
     if (detailsList) {
       assert.equal(
         detailsList.length,
-        5,
-        '5 attacks should have been displayed',
+        6,
+        '6 attacks should have been displayed',
       );
 
       assert.equal(
-        detailsList[0]?.tagName?.toLowerCase(),
-        'hit',
+        detailsList[0]?.className,
+        'li-hit',
         'critical hit should have bullet point formatted as a hit',
       );
       assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 25 (CRIT!) piercing (2d6 + 5 + 1d4): 8 damage inflicted (resisted) radiant (2d8): 14 damage inflicted (vulnerable)',
+        'Attack roll: 25 (CRIT!) piercing (2d6 + 5 + 1d4): 11 damage inflicted (resisted) radiant (2d8): 26 damage inflicted (vulnerable)',
         'critical hit should have expected detail text',
       );
 
       assert.equal(
-        detailsList[1]?.tagName?.toLowerCase(),
-        'miss',
-        'negative attack roll should have bullet point formatted as a miss',
+        detailsList[1]?.className,
+        'li-hit',
+        'normal hit should have bullet point formatted as a hit',
       );
       assert.equal(
         detailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
+        'Attack roll: 18 piercing (2d6 + 5 + 1d4): 5 damage inflicted (resisted) radiant (2d8): 20 damage inflicted (vulnerable)',
+        'normal hit should have expected detail text',
+      );
+
+      assert.equal(
+        detailsList[2]?.className,
+        'li-miss',
+        'negative attack roll should have bullet point formatted as a miss',
+      );
+      assert.equal(
+        detailsList[2]?.textContent?.trim().replace(/\s+/g, ' '),
         'Attack roll: -4',
         'negative attack roll should have expected detail text',
       );
 
       assert.equal(
-        detailsList[2]?.tagName?.toLowerCase(),
-        'miss',
+        detailsList[3]?.className,
+        'li-miss',
         'double-digit attack roll with a miss should have bullet point formatted as a miss',
       );
       assert.equal(
-        detailsList[2]?.textContent?.trim().replace(/\s+/g, ' '),
+        detailsList[3]?.textContent?.trim().replace(/\s+/g, ' '),
         'Attack roll: 13',
         'double-digit attack roll with a miss should have expected detail text',
       );
 
       assert.equal(
-        detailsList[3]?.tagName?.toLowerCase(),
-        'miss',
+        detailsList[4]?.className,
+        'li-miss',
         'natural one should have bullet point formatted as a miss',
       );
       assert.equal(
-        detailsList[3]?.textContent?.trim().replace(/\s+/g, ' '),
+        detailsList[4]?.textContent?.trim().replace(/\s+/g, ' '),
         'Attack roll: -5 (NAT 1!)',
         'natural one should have expected detail text',
       );
 
       assert.equal(
-        detailsList[4]?.tagName?.toLowerCase(),
-        'miss',
+        detailsList[5]?.className,
+        'li-miss',
         'single-digit attack roll with a miss should have bullet point formatted as a miss',
       );
       assert.equal(
-        detailsList[4]?.textContent?.trim().replace(/\s+/g, ' '),
+        detailsList[5]?.textContent?.trim().replace(/\s+/g, ' '),
         'Attack roll: 6',
         'single-digit attack roll with a miss should have expected detail text',
       );
     }
 
-    const damageDetailsList = this.element.querySelector(
+    const critDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0"]',
     )?.children;
     assert.true(
-      damageDetailsList != null,
+      critDamageDetailsList != null,
       'damage detail list should be present',
     );
-    if (damageDetailsList) {
+    if (critDamageDetailsList) {
       assert.equal(
-        damageDetailsList.length,
+        critDamageDetailsList.length,
         2,
         '2 types of damage should have been displayed',
       );
 
       assert.equal(
-        damageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'piercing (2d6 + 5 + 1d4): 8 damage inflicted (resisted)',
+        critDamageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
+        'piercing (2d6 + 5 + 1d4): 11 damage inflicted (resisted)',
         'piercing damage details should be displayed',
       );
       assert.equal(
-        damageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'radiant (2d8): 14 damage inflicted (vulnerable)',
+        critDamageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
+        'radiant (2d8): 26 damage inflicted (vulnerable)',
+        'radiant damage details should be displayed',
+      );
+    }
+
+    const regularDamageDetailsList = this.element.querySelector(
+      '[data-test-damage-detail-list="1"]',
+    )?.children;
+    assert.true(
+      regularDamageDetailsList != null,
+      'damage detail list should be present',
+    );
+    if (regularDamageDetailsList) {
+      assert.equal(
+        regularDamageDetailsList.length,
+        2,
+        '2 types of damage should have been displayed',
+      );
+
+      assert.equal(
+        regularDamageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
+        'piercing (2d6 + 5 + 1d4): 5 damage inflicted (resisted)',
+        'piercing damage details should be displayed',
+      );
+      assert.equal(
+        regularDamageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
+        'radiant (2d8): 20 damage inflicted (vulnerable)',
         'radiant damage details should be displayed',
       );
     }

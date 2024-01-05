@@ -30,7 +30,7 @@
   {{#each @attackDetailsList as |attackDetails index|}}
 
   {{#if attackDetails.hit }}
-  <hit>
+  <li class="li-hit">
     Attack roll: {{attackDetails.roll}}
     {{#if attackDetails.crit}} (CRIT!){{/if}}
 
@@ -43,14 +43,14 @@
       </li>
       {{/each}}
     </ul>
-  </hit>
+  </li>
   {{/if}}
 
   {{#unless attackDetails.hit }}
-  <miss>
+  <li class="li-miss">
     Attack roll: {{attackDetails.roll}}
     {{#if attackDetails.nat1}} (NAT 1!){{/if}}
-  </miss>
+  </li>
   {{/unless}}
 
   {{/each}}
