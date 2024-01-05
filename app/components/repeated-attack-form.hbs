@@ -29,11 +29,13 @@
           <Input data-test-input-toHit class="form-control" @type="text" id="toHit" name="toHit" @value={{this.toHit}}
             aria-describedby="toHitDescription" pattern={{this.diceGroupsRegex}}
             title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
-          <small id="toHitDescription" class="form-text text-muted">
+          {{!-- <small id="toHitDescription" class="form-text text-muted">
             A number or a string of the form 'XdY+Z' or 'XdY-Z' (ex: 5 + 1d4).
-          </small>
+          </small> --}}
         </div>
       </div>
+      <hr>
+
 
       {{#each this.damageList as |damage index| }}
       <DamageType data-test-damage-type={{index}} @index={{index}} @setDamage={{damage.setDamage}}
