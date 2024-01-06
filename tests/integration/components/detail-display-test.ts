@@ -123,7 +123,7 @@ module('Integration | Component | detail-display', function (hooks) {
     ]);
 
     await render(
-      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{true}} @totalDmg={{62}} @attackDetailsList={{this.attackDetails}} />`,
+      hbs`<DetailDisplay @numberOfAttacks={{8}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{true}} @totalDmg={{62}} @numberOfHits={{2}} @attackDetailsList={{this.attackDetails}} />`,
     );
 
     assert
@@ -142,7 +142,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header]')
-      .hasText('*** Total Damage: 62 ***');
+      .hasText('*** Total Damage: 62 (2 hits) ***');
 
     assert
       .dom('[data-test-attack-detail-list]')
@@ -277,5 +277,68 @@ module('Integration | Component | detail-display', function (hooks) {
         'radiant damage details should be displayed',
       );
     }
+  });
+
+  test('it renders a single attack correctly', async function (this: ElementContext, assert) {
+    this.set('advantageState', AdvantageState.ADVANTAGE);
+    this.set('attackDetails', [
+      {
+        roll: 18,
+        hit: true,
+        crit: false,
+        nat1: false,
+        damage: 25,
+        damageDetails: [
+          {
+            label: 'piercing (2d6 + 5 + 1d4)',
+            roll: 5,
+            resisted: true,
+            vulnerable: false,
+          },
+          {
+            label: 'radiant (2d8)',
+            roll: 20,
+            resisted: false,
+            vulnerable: true,
+          },
+        ],
+      },
+      {
+        roll: -4,
+        hit: false,
+        crit: false,
+        nat1: false,
+        damage: 0,
+      },
+    ]);
+    this.set('damageList', [
+      new Damage('2d6 + 5', DamageType.ACID.name, true, true),
+    ]);
+
+    await render(
+      hbs`<DetailDisplay @numberOfAttacks={{2}} @targetAC={{15}} @toHit="3 - 1d6" @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{true}} @totalDmg={{25}} @numberOfHits={{1}} @attackDetailsList={{this.attackDetails}} />`,
+    );
+
+    assert
+      .dom('[data-test-plan-detail-list]')
+      .hasText(
+        'Target AC: 15\n' +
+          'Number of attacks: 2\n' +
+          'Attack roll: 1d20 + 3 - 1d6 (rolls with advantage)\n' +
+          'Attack damage: 2d6 + 5 acid damage (target resistant) (target vulnerable)',
+        'the details for the input damage should be displayed',
+      );
+
+    assert
+      .dom('[data-test-total-damage-header]')
+      .isVisible('damage header should be displayed');
+
+    assert
+      .dom('[data-test-total-damage-header]')
+      .hasText('*** Total Damage: 25 (1 hit) ***');
+
+    assert
+      .dom('[data-test-attack-detail-list]')
+      .isVisible('attack details should be displayed');
   });
 });
