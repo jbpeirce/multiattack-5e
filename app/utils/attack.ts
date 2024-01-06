@@ -9,6 +9,7 @@ export interface AttackDetails {
   crit: boolean;
   nat1: boolean;
   damage: number;
+  numberOfHits: number;
   damageDetails: DamageDetails[];
 }
 
@@ -62,12 +63,14 @@ export default class Attack {
     const nat1 = attackD20 == 1;
 
     let totalDmg = 0;
+    let numberOfHits = 0;
     const damageDetails: DamageDetails[] = [];
 
     // Attacks always miss on a nat1, always hit on a crit, and otherwise hit if
     // the roll equals or exceeds the target AC.
     const hit = !nat1 && (crit || attackRoll >= targetAC);
     if (hit) {
+      numberOfHits += 1;
       for (const damage of this.damageTypes) {
         const rolledDmg = damage.roll(crit);
         totalDmg += rolledDmg;
@@ -88,6 +91,7 @@ export default class Attack {
       crit: crit,
       nat1: nat1,
       damage: totalDmg,
+      numberOfHits: numberOfHits,
       damageDetails: damageDetails,
     };
   }

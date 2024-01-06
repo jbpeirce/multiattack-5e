@@ -21,4 +21,19 @@ export default class DetailDisplayComponent extends Component {
       return `1d20 + ${toHit}`;
     }
   };
+
+  /**
+   * Use the given number of hits to return either "hits" or "hit" as
+   * appropriate
+   * @param numberOfHits the number of hits involved
+   * @returns "hit" or "hits" depending on whether numberOfHits is greater than
+   * one
+   */
+  getHitString = (numberOfHits: number) => {
+    if (numberOfHits == 1) {
+      return 'hit';
+    } else {
+      return 'hits';
+    }
+  };
 }

@@ -23,6 +23,7 @@ export default class RepeatedAttackFormComponent extends Component {
 
   @tracked attackTriggered = false;
   @tracked totalDmg = 0;
+  @tracked totalNumberOfHits = 0;
   @tracked attackDetailsList: AttackDetails[] = [];
 
   diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
@@ -64,6 +65,7 @@ export default class RepeatedAttackFormComponent extends Component {
   simulateRepeatedAttacks = () => {
     this.attackTriggered = true;
     this.totalDmg = 0;
+    this.totalNumberOfHits = 0;
     this.attackDetailsList = [];
 
     const attack = new Attack(this.toHit, this.damageList.toArray());
@@ -76,6 +78,7 @@ export default class RepeatedAttackFormComponent extends Component {
       );
 
       this.totalDmg += attackDetails.damage;
+      this.totalNumberOfHits += attackDetails.numberOfHits;
       this.attackDetailsList.push(attackDetails);
     }
   };
