@@ -5,9 +5,6 @@
       aria-describedby="dmgDescription-{{@index}}" @value={{@initialDamage}} {{on "input" @setDamage}}
       pattern={{this.diceGroupsRegex}}
       title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
-    <small id="dmgDescription-{{@index}}" class="form-text text-muted">
-      A string of the form 'XdY+Z' or 'XdY-Z' (ex: 3d8+4).
-    </small>
   </div>
 </div>
 
