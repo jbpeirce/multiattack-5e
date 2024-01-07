@@ -1,7 +1,7 @@
 <div class="row align-items-top">
   <div class="col-sm">
     <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
-      <h2>Set Up Current Attacks</h2>
+      <h2>Set Up Attacks</h2>
       <div class="row align-items-top">
         <div class="col">
           <label for="numberOfAttacks">Number of Attacks</label>
@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <h3 class="mt-3">Enter Attack Details</h3>
+      <h3 class="mt-3" data-test-enter-details-header>Enter Attack Details</h3>
       <div class="row align-items-top">
         <div class="col">
           <label for="toHit">To Hit Modifier</label>
@@ -62,9 +62,7 @@
     </form>
   </div>
 
-  <div class="col-md">
-    <DetailDisplay @targetAC={{this.targetAC}} @numberOfAttacks={{this.numberOfAttacks}} @toHit={{this.toHit}}
-      @advantageState={{this.advantageState}} @damageList={{this.damageList}} @attackTriggered={{this.attackTriggered}}
-      @totalDmg={{this.totalDmg}} @numberOfHits={{this.totalNumberOfHits}} @attackDetailsList={{this.attackDetailsList}} />
+  <div class="col-md col-scrollable">
+    <DetailDisplay @repeatedAttackLog={{this.attackResultLog}} />
   </div>
 </div>
