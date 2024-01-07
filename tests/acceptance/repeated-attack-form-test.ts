@@ -20,46 +20,19 @@ module('Acceptance | repeated attack form', function (hooks) {
 
     assert
       .dom('h2')
-      .hasText(
-        'Set Up Current Attacks',
-        'current attack heading should be displayed',
-      );
+      .hasText('Set Up Attacks', 'attack setup heading should be displayed');
     assert
-      .dom('h3')
+      .dom('[data-test-enter-details-header]')
       .hasText(
         'Enter Attack Details',
         'attack details heading should be displayed',
       );
     assert
-      .dom('h4')
-      .hasText(
-        'Attack Details',
-        'current attack details heading should be displayed',
-      );
+      .dom('[data-test-log-header]')
+      .hasText('Attack Log', 'attack log heading should be displayed');
   });
 
-  test('displaying attack details', async function (assert) {
-    await visit('/');
-
-    // Fill in some details for the attack
-    await fillIn('[data-test-input-numberOfAttacks]', '8');
-    await fillIn('[data-test-input-targetAC]', '15');
-    await fillIn('[data-test-input-toHit]', '3 - 1d6');
-    await fillIn('[data-test-input-damage="0"]', '2d6 + 3');
-
-    // The description should have been updated
-    assert
-      .dom('[data-test-plan-detail-list]')
-      .hasText(
-        'Target AC: 15\n' +
-          'Number of attacks: 8\n' +
-          'Attack roll: 1d20 + 3 - 1d6\n' +
-          'Attack damage: 2d6 + 3 piercing damage',
-        'the details for the input damage should be displayed',
-      );
-  });
-
-  test('getting attack information', async function (this: ElementContext, assert) {
+  test('performing single attack', async function (this: ElementContext, assert) {
     await visit('/');
 
     // Fill in some details for the attack
@@ -73,25 +46,19 @@ module('Acceptance | repeated attack form', function (hooks) {
     await click('[data-test-input-resistant="0"]');
 
     assert
-      .dom('[data-test-plan-detail-list]')
-      .hasText(
-        'Target AC: 15\n' +
-          'Number of attacks: 8\n' +
-          'Attack roll: 1d20 + 3 - 1D6\n' +
-          '(rolls with disadvantage)\n' +
-          'Attack damage: 2d6 + 5 radiant damage\n' +
-          '(target resistant)',
-        'the details for the input damage should be displayed',
+      .dom('[data-test-plan-detail-list="0"]')
+      .isNotVisible(
+        'attack details should not be displayed before the attack is requested',
       );
 
     assert
-      .dom('[data-test-total-damage-header]')
+      .dom('[data-test-total-damage-header="0"]')
       .isNotVisible(
         'damage header should not be displayed before the attack has been requested',
       );
 
     assert
-      .dom('[data-test-attack-detail-list]')
+      .dom('[data-test-attack-detail-list="0"]')
       .isNotVisible(
         'attack detail list should not be displayed before the attack has been requested',
       );
@@ -100,22 +67,98 @@ module('Acceptance | repeated attack form', function (hooks) {
     await click('[data-test-button-getDamage]');
 
     assert
-      .dom('[data-test-total-damage-header]')
+      .dom('[data-test-attack-data-list="0"]')
+      .hasText(
+        'Number of attacks: 8\n' +
+          'Target AC: 15\n' +
+          'Attack roll: 1d20 + 3 - 1D6 (disadvantage)\n',
+        'the details for the input damage should be displayed',
+      );
+
+    assert
+      .dom('[data-test-total-damage-header="0"]')
       .isVisible('damage header should be displayed');
 
     assert
-      .dom('[data-test-total-damage-header]')
+      .dom('[data-test-total-damage-header="0"]')
       .hasTextContaining('*** Total Damage');
 
     assert
-      .dom('[data-test-attack-detail-list]')
+      .dom('[data-test-attack-detail-list="0"]')
       .isVisible('attack details should be displayed');
 
     assert.equal(
-      this.element.querySelector('[data-test-attack-detail-list]')?.children
+      this.element.querySelector('[data-test-attack-detail-list="0"]')?.children
         .length,
       8,
       '8 attacks should have been displayed',
+    );
+  });
+
+  test('performing repeated attacks', async function (this: ElementContext, assert) {
+    await visit('/');
+
+    // Fill in some details for the attack
+    await fillIn('[data-test-input-numberOfAttacks]', '8');
+    await fillIn('[data-test-input-targetAC]', '15');
+    await fillIn('[data-test-input-toHit]', '3 - 1D6');
+    await fillIn('[data-test-input-damage="0"]', '2d6 + 5');
+    await select('[data-test-damage-dropdown="0"]', DamageType.RADIANT.name);
+    await click('[data-test-value="advantage"]');
+    await click('[data-test-value="disadvantage"]');
+    await click('[data-test-input-resistant="0"]');
+
+    // Calculate the attack
+    await click('[data-test-button-getDamage]');
+
+    // Change some attack details
+    await fillIn('[data-test-input-numberOfAttacks]', '4');
+    await click('[data-test-value="advantage"]');
+    await fillIn('[data-test-input-toHit]', '3');
+
+    // Attack again
+    await click('[data-test-button-getDamage]');
+
+    // The second attack should be displayed first
+    assert
+      .dom('[data-test-attack-data-list="0"]')
+      .hasText(
+        'Number of attacks: 4\n' +
+          'Target AC: 15\n' +
+          'Attack roll: 1d20 + 3 (advantage)\n',
+        'the details for the second set of attacks should be displayed',
+      );
+
+    assert
+      .dom('[data-test-attack-detail-list="0"]')
+      .isVisible('attack details should be displayed for the second attack');
+
+    assert.equal(
+      this.element.querySelector('[data-test-attack-detail-list="0"]')?.children
+        .length,
+      4,
+      '4 attacks should have been displayed for the second set of attacks',
+    );
+
+    // The first repeated attack should still be visible
+    assert
+      .dom('[data-test-attack-data-list="1"]')
+      .hasText(
+        'Number of attacks: 8\n' +
+          'Target AC: 15\n' +
+          'Attack roll: 1d20 + 3 - 1D6 (disadvantage)\n',
+        'the details for the first set of attacks should be displayed',
+      );
+
+    assert
+      .dom('[data-test-attack-detail-list="1"]')
+      .isVisible('attack details should be displayed for the first attack');
+
+    assert.equal(
+      this.element.querySelector('[data-test-attack-detail-list="1"]')?.children
+        .length,
+      8,
+      '8 attacks should have been displayed for the first set of attacks',
     );
   });
 

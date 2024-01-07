@@ -17,3 +17,8 @@
   color: red;
   content: "✕";
 }
+
+.col-scrollable {
+  overflow-y: scroll;
+  max-height: calc(100vh - 15px);
+}
