@@ -18,6 +18,10 @@
   content: "✕";
 }
 
+.li-no-bullets {
+  list-style-type: none;
+}
+
 .col-scrollable {
   overflow-y: scroll;
   max-height: calc(100vh - 15px);

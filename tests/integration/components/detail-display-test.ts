@@ -33,13 +33,15 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 37,
             damageDetails: [
               {
-                label: 'piercing (2d6 + 5 + 1d4)',
+                type: 'piercing',
+                dice: '2d6 + 5 + 1d4',
                 roll: 11,
                 resisted: true,
                 vulnerable: false,
               },
               {
-                label: 'radiant (2d8)',
+                type: 'radiant',
+                dice: '2d8',
                 roll: 26,
                 resisted: false,
                 vulnerable: true,
@@ -54,13 +56,15 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 25,
             damageDetails: [
               {
-                label: 'piercing (2d6 + 5 + 1d4)',
+                type: 'piercing',
+                dice: '2d6 + 5 + 1d4',
                 roll: 5,
                 resisted: true,
                 vulnerable: false,
               },
               {
-                label: 'radiant (2d8)',
+                type: 'radiant',
+                dice: '2d8',
                 roll: 20,
                 resisted: false,
                 vulnerable: true,
@@ -118,7 +122,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header="0"]')
-      .hasText('*** Total Damage: 62 (2 hits) ***');
+      .hasText('Total Damage: 62 (2 hits)');
 
     assert
       .dom('[data-test-attack-detail-list="0"]')
@@ -142,7 +146,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 25 (CRIT!) piercing (2d6 + 5 + 1d4): 11 damage inflicted (resisted) radiant (2d8): 26 damage inflicted (vulnerable)',
+        'Attack roll: 25 (CRIT!) 11 piercing damage (2d6 + 5 + 1d4) (resisted) 26 radiant damage (2d8) (vulnerable)',
         'critical hit should have expected detail text',
       );
 
@@ -153,7 +157,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 18 piercing (2d6 + 5 + 1d4): 5 damage inflicted (resisted) radiant (2d8): 20 damage inflicted (vulnerable)',
+        'Attack roll: 18 5 piercing damage (2d6 + 5 + 1d4) (resisted) 20 radiant damage (2d8) (vulnerable)',
         'normal hit should have expected detail text',
       );
 
@@ -218,12 +222,12 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         critDamageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'piercing (2d6 + 5 + 1d4): 11 damage inflicted (resisted)',
+        '11 piercing damage (2d6 + 5 + 1d4) (resisted)',
         'piercing damage details should be displayed',
       );
       assert.equal(
         critDamageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'radiant (2d8): 26 damage inflicted (vulnerable)',
+        '26 radiant damage (2d8) (vulnerable)',
         'radiant damage details should be displayed',
       );
     }
@@ -244,12 +248,12 @@ module('Integration | Component | detail-display', function (hooks) {
 
       assert.equal(
         regularDamageDetailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'piercing (2d6 + 5 + 1d4): 5 damage inflicted (resisted)',
+        '5 piercing damage (2d6 + 5 + 1d4) (resisted)',
         'piercing damage details should be displayed',
       );
       assert.equal(
         regularDamageDetailsList[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'radiant (2d8): 20 damage inflicted (vulnerable)',
+        '20 radiant damage (2d8) (vulnerable)',
         'radiant damage details should be displayed',
       );
     }
@@ -277,13 +281,15 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 25,
             damageDetails: [
               {
-                label: 'piercing (2d6 + 5 + 1d4)',
+                type: 'piercing',
+                dice: '2d6 + 5 + 1d4',
                 roll: 5,
                 resisted: true,
                 vulnerable: false,
               },
               {
-                label: 'radiant (2d8)',
+                type: 'radiant',
+                dice: '2d8',
                 roll: 20,
                 resisted: false,
                 vulnerable: true,
@@ -318,7 +324,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header="0"]')
-      .hasText('*** Total Damage: 25 (1 hit) ***');
+      .hasText('Total Damage: 25 (1 hit)');
 
     assert
       .dom('[data-test-attack-detail-list="0"]')
@@ -354,13 +360,15 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 15,
             damageDetails: [
               {
-                label: 'piercing (2d6 + 5 + 1d4)',
+                type: 'piercing',
+                dice: '2d6 + 5 + 1d4',
                 roll: 5,
                 resisted: true,
                 vulnerable: false,
               },
               {
-                label: 'radiant (2d8)',
+                type: 'radiant',
+                dice: '2d8',
                 roll: 10,
                 resisted: false,
                 vulnerable: false,
@@ -393,7 +401,8 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 9,
             damageDetails: [
               {
-                label: 'acid (3d6)',
+                type: 'acid',
+                dice: '3d6',
                 roll: 9,
                 resisted: true,
                 vulnerable: true,
@@ -418,7 +427,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header="0"]')
-      .hasText('*** Total Damage: 15 (1 hit) ***');
+      .hasText('Total Damage: 15 (1 hit)');
 
     const detailsList1 = this.element.querySelector(
       '[data-test-attack-detail-list="0"]',
@@ -438,7 +447,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList1[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 18 piercing (2d6 + 5 + 1d4): 5 damage inflicted (resisted) radiant (2d8): 10 damage inflicted',
+        'Attack roll: 18 5 piercing damage (2d6 + 5 + 1d4) (resisted) 10 radiant damage (2d8)',
         'first attack: hit should have expected detail text',
       );
 
@@ -464,7 +473,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header="1"]')
-      .hasText('*** Total Damage: 9 (1 hit) ***');
+      .hasText('Total Damage: 9 (1 hit)');
 
     const detailsList2 = this.element.querySelector(
       '[data-test-attack-detail-list="1"]',
@@ -484,7 +493,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList2[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 15 acid (3d6): 9 damage inflicted (resisted) (vulnerable)',
+        'Attack roll: 15 9 acid damage (3d6) (resisted) (vulnerable)',
         'second attack: hit should have expected detail text',
       );
     }

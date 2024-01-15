@@ -22,12 +22,6 @@ module('Acceptance | repeated attack form', function (hooks) {
       .dom('h2')
       .hasText('Set Up Attacks', 'attack setup heading should be displayed');
     assert
-      .dom('[data-test-enter-details-header]')
-      .hasText(
-        'Enter Attack Details',
-        'attack details heading should be displayed',
-      );
-    assert
       .dom('[data-test-log-header]')
       .hasText('Attack Log', 'attack log heading should be displayed');
   });
@@ -81,7 +75,7 @@ module('Acceptance | repeated attack form', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header="0"]')
-      .hasTextContaining('*** Total Damage');
+      .hasTextContaining('Total Damage');
 
     assert
       .dom('[data-test-attack-detail-list="0"]')
