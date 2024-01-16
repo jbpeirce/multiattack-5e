@@ -61,7 +61,8 @@ export default class DiceGroupsAndModifier {
     if (firstTerm) {
       sign = this.modifier >= 0 ? '' : '- ';
     }
-    if (this.modifier != 0) {
+    // Skip 0 modifiers unless they are the only term present
+    if (firstTerm || this.modifier != 0) {
       output = `${output}${sign}${Math.abs(this.modifier)}`;
     }
     return output;

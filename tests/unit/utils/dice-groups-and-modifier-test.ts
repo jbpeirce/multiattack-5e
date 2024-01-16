@@ -146,6 +146,11 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       'solitary negative modifier should print as expected',
     );
     assert.equal(
+      new DiceGroupsAndModifier([], 0).prettyString(false),
+      '0',
+      '0 modifier should print if there are no accompanying dice groups',
+    );
+    assert.equal(
       new DiceGroupsAndModifier([new DiceGroup(1, 4)], 0).prettyString(false),
       '1d4',
       'single dice group should print as expected',
