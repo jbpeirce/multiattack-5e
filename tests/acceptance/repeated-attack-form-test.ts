@@ -65,7 +65,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .hasText(
         'Number of attacks: 8\n' +
           'Target AC: 15\n' +
-          'Attack roll: 1d20 + 3 - 1D6 (disadvantage)\n',
+          'Attack roll: 1d20 - 1d6 + 3 (disadvantage)\n',
         'the details for the input damage should be displayed',
       );
 
@@ -140,7 +140,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .hasText(
         'Number of attacks: 8\n' +
           'Target AC: 15\n' +
-          'Attack roll: 1d20 + 3 - 1D6 (disadvantage)\n',
+          'Attack roll: 1d20 - 1d6 + 3 (disadvantage)\n',
         'the details for the first set of attacks should be displayed',
       );
 

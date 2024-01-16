@@ -93,4 +93,15 @@ export default class Damage {
 
     return total;
   }
+
+  /**
+   * Display this damage as a string. If the attack was a critical hit, double
+   * the number of dice displayed (eg "2d6 + 1d4 + 3" becomes "4d6 + 2d4 + 3").
+   * @param crit: whether this attack was a critical hit
+   * @returns a string representation of the damage inflicted by an attack
+   * described by this class
+   */
+  prettyString(crit: boolean): string {
+    return this.damage.prettyString(crit);
+  }
 }

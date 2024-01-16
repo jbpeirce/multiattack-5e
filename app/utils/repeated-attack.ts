@@ -70,7 +70,7 @@ export default class RepeatedAttack {
     return {
       numberOfAttacks: this.numberOfAttacks,
       targetAC: this.targetAC,
-      toHit: this.toHit,
+      toHit: attack.toHitModifier.prettyString(false),
       damageList: this.damageList,
       advantageState: this.advantageState,
 

@@ -241,7 +241,7 @@ module('Unit | Utils | attack', function (hooks) {
     const expectedDmg: DamageDetails[] = [
       {
         type: 'piercing',
-        dice: '2d6 + 5 + 1d4',
+        dice: '2d6 + 1d4 + 5',
         roll: 13,
         resisted: false,
         vulnerable: false,
@@ -309,14 +309,14 @@ module('Unit | Utils | attack', function (hooks) {
     const expectedDmg: DamageDetails[] = [
       {
         type: 'piercing',
-        dice: '2d6 + 5 + 1d4',
+        dice: '4d6 + 2d4 + 5',
         roll: 25,
         resisted: false,
         vulnerable: false,
       },
       {
         type: 'radiant',
-        dice: '2d8',
+        dice: '4d8',
         roll: 14,
         resisted: false,
         vulnerable: false,

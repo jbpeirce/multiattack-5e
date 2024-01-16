@@ -39,4 +39,17 @@ export default class DiceGroup {
   shouldAdd(): boolean {
     return this.add;
   }
+
+  /**
+   * Represent this dice group as a string, optionally doubling the number of
+   * dice printed.
+   *
+   * @param double whether to double the number of dice being displayed (eg
+   * "2d6" becomes "4d6")
+   * @return a string representation of this group of dice
+   */
+  prettyString(double: boolean): string {
+    const dice = double ? 2 * this.numDice : this.numDice;
+    return `${dice}d${this.die.sides}`;
+  }
 }

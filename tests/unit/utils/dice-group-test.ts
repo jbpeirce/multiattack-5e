@@ -79,4 +79,27 @@ module('Unit | Utils | dice-group', function (hooks) {
       'roll of multiple dice should return expected sum',
     );
   });
+
+  test('it prints as expected', async function (assert) {
+    assert.equal(
+      new DiceGroup(1, 6).prettyString(false),
+      '1d6',
+      'group being added should print as expected',
+    );
+    assert.equal(
+      new DiceGroup(3, 12, false).prettyString(false),
+      '3d12',
+      'whether a group is being subtracted should not affect its printing',
+    );
+    assert.equal(
+      new DiceGroup(2, 10, false).prettyString(true),
+      '4d10',
+      'the number of dice should be doubled when requested',
+    );
+    assert.equal(
+      new DiceGroup(0, 4, false).prettyString(true),
+      '0d4',
+      'zero dice should be handled without errors',
+    );
+  });
 });

@@ -77,7 +77,7 @@ export default class Attack {
         totalDmg += rolledDmg;
         damageDetails.push({
           type: `${damage.type}`,
-          dice: `${damage.damageString}`,
+          dice: `${damage.prettyString(crit)}`,
           roll: rolledDmg,
           resisted: damage.targetResistant,
           vulnerable: damage.targetVulnerable,
