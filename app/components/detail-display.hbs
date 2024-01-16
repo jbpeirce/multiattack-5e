@@ -1,58 +1,59 @@
-<h3 data-test-log-header>
+<h2 data-test-log-header>
   Attack Log
-</h3>
-<ul data-test-attack-log>
-  {{#each @repeatedAttackLog as |repeatedAttackDetails index|}}
-  <h5 data-test-attack-data-header={{index}}>
-    Attack Data
-  </h5>
-  <ul data-test-attack-data-list={{index}}>
-    <li>Number of attacks: {{repeatedAttackDetails.numberOfAttacks}}</li>
-    <li>Target AC: {{repeatedAttackDetails.targetAC}}</li>
-    <li>Attack roll: {{this.getAttackString repeatedAttackDetails.toHit}}
-      {{#if (eq repeatedAttackDetails.advantageState.name "advantage") }}
-      (advantage)
-      {{/if}}
-      {{#if (eq repeatedAttackDetails.advantageState.name "disadvantage") }}
-      (disadvantage)
-      {{/if}}
-    </li>
-  </ul>
-  <h4 data-test-total-damage-header={{index}}>
-    <strong>*** Total Damage: {{repeatedAttackDetails.totalDmg}} ({{repeatedAttackDetails.totalNumberOfHits}}
-      {{this.getHitString repeatedAttackDetails.totalNumberOfHits}}) ***</strong>
-  </h4>
-  <ol data-test-attack-detail-list={{index}}>
-    {{#each repeatedAttackDetails.attackDetailsList as |attackDetails index2|}}
-
-    {{#if attackDetails.hit }}
-    <li class="li-hit">
-      Attack roll: {{attackDetails.roll}}
-      {{#if attackDetails.crit}} (CRIT!){{/if}}
-
-      <ul data-test-damage-detail-list="{{index}}-{{index2}}">
-        {{#each attackDetails.damageDetails as |damage|}}
-        <li>
-          {{damage.label}}: {{damage.roll}} damage inflicted
-          {{#if damage.resisted}} (resisted){{/if}}
-          {{#if damage.vulnerable}} (vulnerable){{/if}}
+</h2>
+<div class="pt-3">
+  <div class="col-scrollable rounded border">
+    <ul class="p-4" data-test-attack-log>
+      {{#each @repeatedAttackLog as |repeatedAttackDetails index|}}
+      <h4 data-test-total-damage-header={{index}}>
+        Total Damage: {{repeatedAttackDetails.totalDmg}} ({{repeatedAttackDetails.totalNumberOfHits}}
+        {{this.getHitString repeatedAttackDetails.totalNumberOfHits}})
+      </h4>
+      <ul data-test-attack-data-list={{index}} class="list-group">
+        <li class="li-no-bullets">Number of attacks: {{repeatedAttackDetails.numberOfAttacks}}</li>
+        <li class="li-no-bullets">Target AC: {{repeatedAttackDetails.targetAC}}</li>
+        <li class="li-no-bullets">Attack roll: {{this.getAttackString repeatedAttackDetails.toHit}}
+          {{#if (eq repeatedAttackDetails.advantageState.name "advantage") }}
+          (advantage)
+          {{/if}}
+          {{#if (eq repeatedAttackDetails.advantageState.name "disadvantage") }}
+          (disadvantage)
+          {{/if}}
         </li>
-        {{/each}}
       </ul>
-    </li>
-    {{/if}}
+      <ol data-test-attack-detail-list={{index}}>
+        {{#each repeatedAttackDetails.attackDetailsList as |attackDetails index2|}}
 
-    {{#unless attackDetails.hit }}
-    <li class="li-miss">
-      Attack roll: {{attackDetails.roll}}
-      {{#if attackDetails.nat1}} (NAT 1!){{/if}}
-    </li>
-    {{/unless}}
+        {{#if attackDetails.hit }}
+        <li class="li-hit">
+          Attack roll: {{attackDetails.roll}}
+          {{#if attackDetails.crit}} (CRIT!){{/if}}
 
-    {{/each}}
-  </ol>
-  <hr>
-  <hr>
-  <hr>
-  {{/each}}
-</ul>
+          <ul data-test-damage-detail-list="{{index}}-{{index2}}">
+            {{#each attackDetails.damageDetails as |damage|}}
+            <li>
+              {{damage.roll}} {{damage.type}} damage ({{damage.dice}})
+              {{#if damage.resisted}} (resisted){{/if}}
+              {{#if damage.vulnerable}} (vulnerable){{/if}}
+            </li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/if}}
+
+        {{#unless attackDetails.hit }}
+        <li class="li-miss">
+          Attack roll: {{attackDetails.roll}}
+          {{#if attackDetails.nat1}} (NAT 1!){{/if}}
+        </li>
+        {{/unless}}
+
+        {{/each}}
+      </ol>
+      <hr>
+      <hr>
+      <hr>
+      {{/each}}
+    </ul>
+  </div>
+</div>

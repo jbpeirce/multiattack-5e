@@ -14,7 +14,8 @@ export interface AttackDetails {
 }
 
 export interface DamageDetails {
-  label: string;
+  type: string;
+  dice: string;
   roll: number;
   resisted: boolean;
   vulnerable: boolean;
@@ -75,9 +76,8 @@ export default class Attack {
         const rolledDmg = damage.roll(crit);
         totalDmg += rolledDmg;
         damageDetails.push({
-          label: `${Attack.capitalizeWord(damage.type)} (${
-            damage.damageString
-          })`,
+          type: `${damage.type}`,
+          dice: `${damage.damageString}`,
           roll: rolledDmg,
           resisted: damage.targetResistant,
           vulnerable: damage.targetVulnerable,
@@ -119,15 +119,4 @@ export default class Attack {
       );
     }
   }
-
-  static capitalizeWord = (word: string) => {
-    if (word.length == 0) {
-      return word;
-    }
-    const firstLetter = word.charAt(0).toUpperCase();
-    if (word.length == 1) {
-      return firstLetter;
-    }
-    return firstLetter + word.slice(1);
-  };
 }
