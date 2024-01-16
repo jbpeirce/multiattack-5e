@@ -117,4 +117,58 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
     );
   });
+
+  test('it prints as expected', async function (assert) {
+    assert.equal(
+      new DiceGroupsAndModifier(
+        [new DiceGroup(3, 8), new DiceGroup(2, 12)],
+        2,
+      ).prettyString(false),
+      '3d8 + 2d12 + 2',
+      'groups and modifiers being added should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier(
+        [new DiceGroup(3, 8), new DiceGroup(2, 4, false)],
+        -5,
+      ).prettyString(false),
+      '3d8 - 2d4 - 5',
+      'groups and modifiers being subtracted should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier([], 12).prettyString(false),
+      '12',
+      'solitary positive modifier should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier([], -5).prettyString(false),
+      '- 5',
+      'solitary negative modifier should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier([new DiceGroup(1, 4)], 0).prettyString(false),
+      '1d4',
+      'single dice group should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier([new DiceGroup(1, 4, false)], 0).prettyString(
+        false,
+      ),
+      '- 1d4',
+      'single negative dice group should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier(
+        [new DiceGroup(3, 8), new DiceGroup(2, 4, false)],
+        -5,
+      ).prettyString(true),
+      '6d8 - 4d4 - 5',
+      'doubled dice should print as expected',
+    );
+    assert.equal(
+      new DiceGroupsAndModifier([], 12).prettyString(true),
+      '12',
+      'solitary positive modifier should not be affected by doubled-dice parameter',
+    );
+  });
 });

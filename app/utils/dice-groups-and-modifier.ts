@@ -33,4 +33,37 @@ export default class DiceGroupsAndModifier {
     total += this.modifier;
     return total;
   }
+
+  /**
+   * Represent this dice group as a string, optionally doubling the number of
+   * dice printed.
+   *
+   * @param double whether to double the number of dice being displayed (eg
+   * "2d6 + 2" becomes "4d6 + 2")
+   * @return a string representation of this dice group and modifier
+   */
+  prettyString(double: boolean): string {
+    let output = '';
+    let firstTerm = true;
+    for (const dice of this.diceGroups) {
+      // get the sign which goes before this dice group; skip the sign for the
+      // first term unless it's negative
+      let sign = dice.shouldAdd() ? ' + ' : ' - ';
+      if (firstTerm) {
+        sign = dice.shouldAdd() ? '' : '- ';
+      }
+
+      output = `${output}${sign}${dice.prettyString(double)}`;
+      firstTerm = false;
+    }
+
+    let sign = this.modifier >= 0 ? ' + ' : ' - ';
+    if (firstTerm) {
+      sign = this.modifier >= 0 ? '' : '- ';
+    }
+    if (this.modifier != 0) {
+      output = `${output}${sign}${Math.abs(this.modifier)}`;
+    }
+    return output;
+  }
 }
