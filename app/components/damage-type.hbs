@@ -3,7 +3,7 @@
   <div class="col-6">
     <Input data-test-input-damage={{@index}} class="form-control" @type="text" id="damage-{{@index}}" name="damage"
       aria-describedby="dmgDescription-{{@index}}" @value={{@initialDamage}} {{on "change" @setDamage}}
-      pattern={{this.diceGroupsRegex}}
+      required="required" pattern={{this.diceGroupsRegex}}
       title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
   </div>
 </div>

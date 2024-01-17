@@ -40,6 +40,30 @@ export default class RepeatedAttack {
   }
 
   /**
+   * Check that all necessary fields for this set of repeated attacks are set.
+   * @returns whether this is a valid representation of repeated attacks
+   */
+  valid(): boolean {
+    for (const damage of this.damageList) {
+      if (!damage.valid()) {
+        return false;
+      }
+    }
+
+    // double-equals comparison to null should check whether fields are null or
+    // undefined
+    return (
+      this.numberOfAttacks != null &&
+      this.numberOfAttacks >= 0 &&
+      this.numberOfAttacks.toString().length > 0 &&
+      this.targetAC != null &&
+      this.targetAC >= 0 &&
+      this.targetAC.toString().length > 0 &&
+      this.toHit != null
+    );
+  }
+
+  /**
    * Simulate attacks against a target with a given AC, with the details of the
    * attack specified by the constructor for this class. This method may
    * produce significantly different results on repeated calls, since it relies
@@ -49,6 +73,10 @@ export default class RepeatedAttack {
    * given parameters
    */
   simulateRepeatedAttacks(): RepeatedAttackResult {
+    if (!this.valid()) {
+      throw new Error('Invalid configuration for repeated attacks');
+    }
+
     let totalDmg = 0;
     let totalNumberOfHits = 0;
     const attackDetailsList = [];

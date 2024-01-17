@@ -2,8 +2,6 @@ import { assert } from '@ember/debug';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-import DamageType from 'multiattack-5e/components/damage-type-enum';
-
 import DiceGroupsAndModifier from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
 
@@ -11,7 +9,8 @@ export default class Damage {
   @tracked type: string;
 
   @tracked damageString: string;
-  damage: DiceGroupsAndModifier;
+  damageParsingErrored = false;
+  damage = new DiceGroupsAndModifier([], 0);
 
   @tracked targetResistant: boolean;
   @tracked targetVulnerable: boolean;
@@ -22,11 +21,22 @@ export default class Damage {
     targetResistant = false,
     targetVulnerable = false,
   ) {
-    this.damage = DiceStringParser.parse(damageString);
+    this.parseDamageString(damageString);
     this.damageString = damageString;
     this.type = type;
     this.targetResistant = targetResistant;
     this.targetVulnerable = targetVulnerable;
+  }
+
+  parseDamageString(damageString: string) {
+    try {
+      this.damage = DiceStringParser.parse(damageString);
+      this.damageParsingErrored = false;
+    } catch (e) {
+      this.damage = new DiceGroupsAndModifier([], 0);
+      this.damageParsingErrored = true;
+      throw e;
+    }
   }
 
   @action
@@ -35,7 +45,7 @@ export default class Damage {
       'damage type handler must receive an event with a target that is an HTMLSelectElement',
       newType.target instanceof HTMLSelectElement,
     );
-    this.type = newType.target.value || DamageType.OTHER.name;
+    this.type = newType.target.value;
   }
 
   @action
@@ -45,8 +55,8 @@ export default class Damage {
       newDamage.target instanceof HTMLInputElement,
     );
 
-    this.damageString = newDamage.target.value || '0';
-    this.damage = DiceStringParser.parse(this.damageString);
+    this.damageString = newDamage.target.value;
+    this.parseDamageString(this.damageString);
   }
 
   @action
@@ -68,6 +78,23 @@ export default class Damage {
   }
 
   /**
+   * Check that all necessary fields for this damage are set.
+   * @returns whether this is a valid representation of damage
+   */
+  valid(): boolean {
+    // double-equals comparison to null should check whether fields are null or
+    // undefined
+    return (
+      this.damage != null &&
+      !this.damageParsingErrored &&
+      this.damageString != null &&
+      this.damageString.length > 0 &&
+      this.type != null &&
+      this.type.length > 0
+    );
+  }
+
+  /**
    * Calculate the damage inflicted by an attack described by this class. This
    * simulates rolling the dice (if applicable) and takes target resistance and
    * vulnerability into account when finding the total amount of damage
@@ -77,6 +104,10 @@ export default class Damage {
    * @returns the damage inflicted by an attack described by this class
    */
   roll(crit: boolean) {
+    if (!this.valid()) {
+      throw new Error('Damage did not have all necessary fields set');
+    }
+
     let total = this.damage.rollAndGetTotal(crit);
 
     // Reset the total to 0 if it is negative (which may happen due to a
