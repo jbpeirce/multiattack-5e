@@ -72,6 +72,12 @@ export default class RepeatedAttackFormComponent extends Component {
     this.damageList.removeAt(index);
   }
 
+  @action
+  clearAttackLog() {
+    // TODO: Clear the log from storage as well as in memory
+    this.attackResultLog = [];
+  }
+
   getDefaultDamage(): Damage {
     return new Damage('2d6 + 3', DamageType.PIERCING.name);
   }

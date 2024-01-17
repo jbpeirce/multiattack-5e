@@ -103,8 +103,15 @@ module('Integration | Component | detail-display', function (hooks) {
       },
     ]);
 
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`,
+      );
+    });
+
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
     );
 
     assert
@@ -307,8 +314,15 @@ module('Integration | Component | detail-display', function (hooks) {
       },
     ]);
 
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`,
+      );
+    });
+
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
     );
 
     assert
@@ -413,8 +427,15 @@ module('Integration | Component | detail-display', function (hooks) {
       },
     ]);
 
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`,
+      );
+    });
+
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
     );
 
     // First attack
