@@ -275,9 +275,52 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
   });
 
-  test('invalidating malformatted fields', async function (this: ElementContext, assert) {
+  test('clearing the attack log', async function (this: ElementContext, assert) {
     await visit('/');
 
+    // Attack (using the default setup)
+    await click('[data-test-button-getDamage]');
+
+    // There should be one set of attack details displayed
+    assert
+      .dom('[data-test-attack-data-list="0"]')
+      .exists('details should be displayed for one attack');
+    assert
+      .dom('[data-test-attack-data-list="1"]')
+      .doesNotExist('only one attack set should be displayed');
+
+    // Attack twice more
+    await click('[data-test-button-getDamage]');
+    await click('[data-test-button-getDamage]');
+
+    // There should be three sets of attack details displayed
+    assert
+      .dom('[data-test-attack-data-list="0"]')
+      .exists('details should be displayed for one attack');
+    assert
+      .dom('[data-test-attack-data-list="1"]')
+      .exists('details should be displayed for two attacks');
+    assert
+      .dom('[data-test-attack-data-list="2"]')
+      .exists('details should be displayed for two attacks');
+    assert
+      .dom('[data-test-attack-data-list="3"]')
+      .doesNotExist('details should not be displayed for a fourth attack');
+
+    // Clear the attack log
+    await click('[data-test-button-clear-attack-log]');
+
+    // No attack details should be displayed
+    assert
+      .dom('[data-test-attack-data-list="0"]')
+      .doesNotExist('details should no longer be displayed');
+
+    // Clicking again should not cause any errors
+    await click('[data-test-button-clear-attack-log]');
+  });
+
+  test('invalidating malformatted fields', async function (this: ElementContext, assert) {
+    await visit('/');
     // numberOfAttacks
     await fillIn('[data-test-input-numberOfAttacks]', '8');
     assert
