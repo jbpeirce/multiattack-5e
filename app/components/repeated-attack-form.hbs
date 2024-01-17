@@ -20,7 +20,8 @@
         <label for="numberOfAttacks" class="col-6 col-form-label">Number of Attacks</label>
         <div class="col-6">
           <Input data-test-input-numberOfAttacks class="form-control" id="numberOfAttacks" name="numberOfAttacks"
-            @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative" />
+            @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative"
+            required="required" />
         </div>
       </div>
 
@@ -28,7 +29,7 @@
         <label for="targetAC" class="col-6 col-form-label">Target AC</label>
         <div class="col-6">
           <Input data-test-input-targetAC class="form-control" id="targetAC" name="targetAC" @type="number"
-            @value={{this.targetAC}} />
+            @value={{this.targetAC}} required="required" />
         </div>
       </div>
 
@@ -38,7 +39,7 @@
           <div class="input-group">
             <div class="input-group-text">1d20 +</div>
             <Input data-test-input-toHit class="form-control" @type="text" id="toHit" name="toHit" @value={{this.toHit}}
-              aria-describedby="toHitDescription" pattern={{this.diceGroupsRegex}}
+              aria-describedby="toHitDescription" required="required" pattern={{this.diceGroupsRegex}}
               title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
           </div>
         </div>
