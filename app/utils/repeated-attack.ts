@@ -51,7 +51,8 @@ export default class RepeatedAttack {
     }
 
     // double-equals comparison to null should check whether fields are null or
-    // undefined
+    // undefined; the cast to string detects the case where the number has been
+    // manually deleted and submitted as an empty string.
     return (
       this.numberOfAttacks != null &&
       this.numberOfAttacks >= 0 &&
