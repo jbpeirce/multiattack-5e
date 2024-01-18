@@ -26,3 +26,13 @@
   overflow-y: scroll;
   max-height: calc(100vh - 15px);
 }
+
+/* limit the maximum width of text for readability */
+.container-readable-width {
+  max-width: 600px;
+}
+
+/* limit the maximum width of the area in use, for very wide screens */
+.container-reasonable-width {
+  max-width: 1200px;
+}

@@ -51,4 +51,14 @@ export default class DetailDisplayComponent extends Component {
       .map((roll) => `${roll.name}: ${roll.rolls.join(', ')}`)
       .join(' | ');
   };
+
+  /**
+   * Get a string listing the given numbers with spaces between them (unlike
+   * the default string method for an array).
+   * @param array an array of numbers
+   * @returns a string containing the numbers separated by spaces
+   */
+  getStringWithSpaces = (array: number[]) => {
+    return array.join(', ');
+  };
 }
