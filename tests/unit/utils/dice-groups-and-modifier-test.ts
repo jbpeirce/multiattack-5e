@@ -90,7 +90,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       diceGroupAndModifier.roll(false),
       {
         total: 7,
@@ -100,7 +100,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
             rolls: [3, 7, 5],
           },
           {
-            name: '2d6',
+            name: '-2d6',
             rolls: [1, 4],
           },
         ],
@@ -139,7 +139,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       diceGroupAndModifier.roll(true),
       {
         total: 34,

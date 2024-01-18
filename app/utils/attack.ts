@@ -74,11 +74,11 @@ export default class Attack {
       numberOfHits += 1;
       for (const damage of this.damageTypes) {
         const rolledDmg = damage.roll(crit);
-        totalDmg += rolledDmg;
+        totalDmg += rolledDmg.total;
         damageDetails.push({
           type: `${damage.type}`,
           dice: `${damage.prettyString(crit)}`,
-          roll: rolledDmg,
+          roll: rolledDmg.total,
           resisted: damage.targetResistant,
           vulnerable: damage.targetVulnerable,
         });

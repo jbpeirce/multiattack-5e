@@ -212,8 +212,28 @@ module('Unit | Utils | attack', function (hooks) {
     attack.die.roll = fakeD20;
 
     // Fake the results of the damage dice
-    const fakePiercing = sinon.fake.returns(13);
-    const fakeRadiant = sinon.fake.returns(7);
+    const fakePiercing = sinon.fake.returns({
+      total: 13,
+      rolls: [
+        {
+          name: '2d6',
+          rolls: [3, 4],
+        },
+        {
+          name: '1d4',
+          rolls: [1],
+        },
+      ],
+    });
+    const fakeRadiant = sinon.fake.returns({
+      total: 7,
+      rolls: [
+        {
+          name: '2d8',
+          rolls: [6, 1],
+        },
+      ],
+    });
 
     const piercing: Damage | undefined = attack.damageTypes[0];
     if (piercing) {
@@ -277,8 +297,28 @@ module('Unit | Utils | attack', function (hooks) {
     attack.die.roll = fakeD20;
 
     // Fake the results of the damage dice
-    const fakePiercing = sinon.fake.returns(25);
-    const fakeRadiant = sinon.fake.returns(14);
+    const fakePiercing = sinon.fake.returns({
+      total: 25,
+      rolls: [
+        {
+          name: '4d6',
+          rolls: [3, 4, 6, 2],
+        },
+        {
+          name: '2d4',
+          rolls: [1, 4],
+        },
+      ],
+    });
+    const fakeRadiant = sinon.fake.returns({
+      total: 14,
+      rolls: [
+        {
+          name: '4d8',
+          rolls: [3, 1, 8, 2],
+        },
+      ],
+    });
 
     const piercing: Damage | undefined = attack.damageTypes[0];
     if (piercing) {

@@ -2,7 +2,9 @@ import { assert } from '@ember/debug';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-import DiceGroupsAndModifier from './dice-groups-and-modifier';
+import DiceGroupsAndModifier, {
+  type GroupRollDetails,
+} from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
 
 export default class Damage {
@@ -101,28 +103,31 @@ export default class Damage {
    * inflicted. If the attack was a critical hit, the number of dice rolled will
    * be doubled
    * @param crit: whether this attack was a critical hit
-   * @returns the damage inflicted by an attack described by this class
+   * @returns the total damage inflicted by an attack described by this class,
+   * and the dice rolls involved
    */
-  roll(crit: boolean) {
+  roll(crit: boolean): GroupRollDetails {
     if (!this.valid()) {
       throw new Error('Damage did not have all necessary fields set');
     }
 
-    let total = this.damage.roll(crit).total;
+    const damageRoll = this.damage.roll(crit);
 
     // Reset the total to 0 if it is negative (which may happen due to a
     // negative damage modifier)
-    total = Math.max(total, 0);
+    damageRoll.total = Math.max(damageRoll.total, 0);
 
+    // Take resistance and vulnerability (which are not mutually exclusive)
+    // into account.
     if (this.targetResistant) {
-      total = Math.floor(total / 2);
+      damageRoll.total = Math.floor(damageRoll.total / 2);
     }
 
     if (this.targetVulnerable) {
-      total = total * 2;
+      damageRoll.total = damageRoll.total * 2;
     }
 
-    return total;
+    return damageRoll;
   }
 
   /**
