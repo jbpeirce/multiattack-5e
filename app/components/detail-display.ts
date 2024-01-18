@@ -40,6 +40,8 @@ export default class DetailDisplayComponent extends Component {
   };
 
   getRollDetailString = (rollDetails: NameAndRolls[]) => {
-    return rollDetails.map((roll) => `${roll.name}: ${roll.rolls}`).join(' | ');
+    return rollDetails
+      .map((roll) => `${roll.name}: ${roll.rolls.join(', ')}`)
+      .join(' | ');
   };
 }

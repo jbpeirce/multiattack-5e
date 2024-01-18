@@ -282,11 +282,11 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-damage-roll-detail="0-0-0"]')
-      .hasAttribute('title', '4d6: 4,5,2,2 | 2d4: 3,2');
+      .hasAttribute('title', '4d6: 4, 5, 2, 2 | 2d4: 3, 2');
 
     assert
       .dom('[data-test-damage-roll-detail="0-0-1"]')
-      .hasAttribute('title', '4d8: 2,7,1,3');
+      .hasAttribute('title', '4d8: 2, 7, 1, 3');
 
     // Inspect the detailed display of the regular hit
     const regularDamageDetailsList = this.element.querySelector(
@@ -317,11 +317,11 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-damage-roll-detail="0-1-0"]')
-      .hasAttribute('title', '2d6: 2,1 | 1d4: 2');
+      .hasAttribute('title', '2d6: 2, 1 | 1d4: 2');
 
     assert
       .dom('[data-test-damage-roll-detail="0-1-1"]')
-      .hasAttribute('title', '2d8: 3,7');
+      .hasAttribute('title', '2d8: 3, 7');
   });
 
   test('it renders a single hit correctly', async function (this: ElementContext, assert) {
