@@ -1,9 +1,7 @@
 {{#each this.states as |state|}}
 <div class="form-check">
-  {{!-- Unfortunately, the Input element of type "radio" does not currently support the @checked/checked attribute. This
-  means we cannot configure one of the buttons to be checked initially. --}}
-  <Input data-test-value={{state.name}} class="form-check-input" @type="radio" name="advantage-radio" id={{state.name}}
-    {{on "click" (fn @updateState state) }} />
+  <input data-test-value={{state.name}} class="form-check-input" type="radio" name="advantage-radio" id={{state.name}}
+    checked={{this.getChecked state.name}} {{on "click" (fn @updateState state) }} />
   <label class="form-check-label" for={{state.name}}>
     {{state.name}}
   </label>
