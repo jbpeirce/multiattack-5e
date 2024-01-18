@@ -223,7 +223,7 @@ module('Integration | Component | detail-display', function (hooks) {
     });
 
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}}  @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
     );
 
     assert
@@ -506,7 +506,7 @@ module('Integration | Component | detail-display', function (hooks) {
     });
 
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}}  @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
     );
 
     assert
@@ -671,7 +671,7 @@ module('Integration | Component | detail-display', function (hooks) {
     });
 
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}}  @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
     );
 
     // First attack

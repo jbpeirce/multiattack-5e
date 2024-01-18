@@ -139,6 +139,38 @@ module('Unit | Utils | damage', function (hooks) {
     );
   });
 
+  test('it does not allow damage to be negative', async function (assert) {
+    const damage = new Damage('1d4 - 3', DamageType.RADIANT.name, true);
+
+    assert.strictEqual(
+      damage.damage.diceGroups.length,
+      1,
+      'damage should roll one group of dice',
+    );
+
+    const fakeD4 = sinon.stub();
+    fakeD4.onCall(0).returns(1);
+    fakeD4.onCall(1).returns(2);
+    const group1d4: DiceGroup | undefined = damage.damage.diceGroups[0];
+    if (group1d4) {
+      group1d4.die.roll = fakeD4;
+    }
+
+    assert.deepEqual(
+      damage.roll(false),
+      {
+        total: 0,
+        rolls: [
+          {
+            name: '1d4',
+            rolls: [1],
+          },
+        ],
+      },
+      'roll should inflict 1 - 3 = 0 total damage (damage cannot be negative)',
+    );
+  });
+
   test('it halves damage for resistant targets', async function (assert) {
     const damage = new Damage('2d6 + 1', DamageType.RADIANT.name, true);
 
