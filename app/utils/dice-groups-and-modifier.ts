@@ -1,5 +1,15 @@
 import DiceGroup from './dice-group';
 
+export interface GroupRollDetails {
+  total: number;
+  rolls: NameAndRolls[];
+}
+
+export interface NameAndRolls {
+  name: string;
+  rolls: number[];
+}
+
 export default class DiceGroupsAndModifier {
   diceGroups: DiceGroup[];
   modifier: number;
@@ -20,18 +30,37 @@ export default class DiceGroupsAndModifier {
    * class and adding the given modifier to them
    */
   rollAndGetTotal(doubleDice: boolean): number {
-    let total = 0;
+    const details: GroupRollDetails = {
+      total: 0,
+      rolls: [],
+    };
+
     for (const dice of this.diceGroups) {
-      const sign = dice.shouldAdd() ? 1 : -1;
-      total += sign * dice.roll();
+      this.rollAndUpdateDetails(dice, doubleDice, details);
 
       if (doubleDice) {
-        total += sign * dice.roll();
+        this.rollAndUpdateDetails(dice, doubleDice, details);
       }
     }
 
-    total += this.modifier;
-    return total;
+    return details.total;
+  }
+
+  rollAndUpdateDetails(
+    dice: DiceGroup,
+    doubleDice: boolean,
+    details: GroupRollDetails,
+  ) {
+    const sign = dice.shouldAdd() ? 1 : -1;
+    const roll = dice.roll();
+    details.total += sign * roll.total;
+
+    const signString = dice.shouldAdd() ? '' : '-';
+    const diceName = `${signString}${dice.prettyString(doubleDice)}`;
+    details.rolls.push({
+      name: diceName,
+      rolls: roll.rolls,
+    });
   }
 
   /**

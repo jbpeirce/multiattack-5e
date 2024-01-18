@@ -172,7 +172,10 @@ module('Unit | Utils | attack', function (hooks) {
     fakeD20.onCall(1).returns(3);
     attack.die.roll = fakeD20;
 
-    const fake1d4 = sinon.fake.returns(2);
+    const fake1d4 = sinon.fake.returns({
+      total: 2,
+      rolls: [2],
+    });
     const attack1d4 = attack.toHitModifier.diceGroups[0];
     if (attack1d4) {
       attack1d4.roll = fake1d4;

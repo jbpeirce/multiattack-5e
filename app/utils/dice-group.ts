@@ -1,5 +1,10 @@
 import Die from 'multiattack-5e/utils/die';
 
+export interface RollDetails {
+  total: number;
+  rolls: number[];
+}
+
 export default class DiceGroup {
   numDice: number;
   die: Die;
@@ -21,12 +26,18 @@ export default class DiceGroup {
    *
    * @returns the total from rolling all of the dice in this group
    */
-  roll(): number {
-    let total = 0;
+  roll(): RollDetails {
+    const details: RollDetails = {
+      total: 0,
+      rolls: [],
+    };
+
     for (let i = 0; i < this.numDice; i++) {
-      total += this.die.roll();
+      const roll = this.die.roll();
+      details.total += roll;
+      details.rolls.push(roll);
     }
-    return total;
+    return details;
   }
 
   /**
