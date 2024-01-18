@@ -26,7 +26,19 @@ module('Integration | Component | detail-display', function (hooks) {
         totalNumberOfHits: 2,
         attackDetailsList: [
           {
-            roll: 25,
+            roll: {
+              total: 21,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [20],
+                },
+                {
+                  name: '-1d6',
+                  rolls: [2],
+                },
+              ],
+            },
             hit: true,
             crit: true,
             nat1: false,
@@ -69,7 +81,19 @@ module('Integration | Component | detail-display', function (hooks) {
             ],
           },
           {
-            roll: 18,
+            roll: {
+              total: 18,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [18],
+                },
+                {
+                  name: '-1d6',
+                  rolls: [3],
+                },
+              ],
+            },
             hit: true,
             crit: false,
             nat1: false,
@@ -112,28 +136,76 @@ module('Integration | Component | detail-display', function (hooks) {
             ],
           },
           {
-            roll: -4,
+            roll: {
+              total: -1,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [2],
+                },
+                {
+                  name: '-1d6',
+                  rolls: [6],
+                },
+              ],
+            },
             hit: false,
             crit: false,
             nat1: false,
             damage: 0,
           },
           {
-            roll: 13,
+            roll: {
+              total: 13,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [14],
+                },
+                {
+                  name: '-1d6',
+                  rolls: [4],
+                },
+              ],
+            },
             hit: false,
             crit: false,
             nat1: false,
             damage: 0,
           },
           {
-            roll: -5,
+            roll: {
+              total: -2,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [1],
+                },
+                {
+                  name: '-1d6',
+                  rolls: [6],
+                },
+              ],
+            },
             hit: false,
             crit: false,
             nat1: true,
             damage: 0,
           },
           {
-            roll: 6,
+            roll: {
+              total: 6,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [8],
+                },
+                {
+                  name: '-1d6',
+                  rolls: [5],
+                },
+              ],
+            },
             hit: false,
             crit: false,
             nat1: false,
@@ -193,9 +265,12 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 25 (CRIT!) 11 piercing damage (4d6 + 2d4 + 5) (resisted) 26 radiant damage (4d8) (vulnerable)',
+        'Attack roll: 21 (CRIT!) 11 piercing damage (4d6 + 2d4 + 5) (resisted) 26 radiant damage (4d8) (vulnerable)',
         'critical hit should have expected detail text',
       );
+      assert
+        .dom('[data-test-attack-roll-detail="0-0"]')
+        .hasAttribute('title', '1d20: 20 | -1d6: 2');
 
       assert.equal(
         detailsList[1]?.className,
@@ -207,6 +282,9 @@ module('Integration | Component | detail-display', function (hooks) {
         'Attack roll: 18 5 piercing damage (2d6 + 1d4 + 5) (resisted) 20 radiant damage (2d8) (vulnerable)',
         'normal hit should have expected detail text',
       );
+      assert
+        .dom('[data-test-attack-roll-detail="0-1"]')
+        .hasAttribute('title', '1d20: 18 | -1d6: 3');
 
       assert.equal(
         detailsList[2]?.className,
@@ -215,9 +293,12 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList[2]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: -4',
+        'Attack roll: -1',
         'negative attack roll should have expected detail text',
       );
+      assert
+        .dom('[data-test-attack-roll-detail="0-2"]')
+        .hasAttribute('title', '1d20: 2 | -1d6: 6');
 
       assert.equal(
         detailsList[3]?.className,
@@ -229,6 +310,9 @@ module('Integration | Component | detail-display', function (hooks) {
         'Attack roll: 13',
         'double-digit attack roll with a miss should have expected detail text',
       );
+      assert
+        .dom('[data-test-attack-roll-detail="0-3"]')
+        .hasAttribute('title', '1d20: 14 | -1d6: 4');
 
       assert.equal(
         detailsList[4]?.className,
@@ -237,9 +321,12 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList[4]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: -5 (NAT 1!)',
+        'Attack roll: -2 (NAT 1!)',
         'natural one should have expected detail text',
       );
+      assert
+        .dom('[data-test-attack-roll-detail="0-4"]')
+        .hasAttribute('title', '1d20: 1 | -1d6: 6');
 
       assert.equal(
         detailsList[5]?.className,
@@ -251,6 +338,9 @@ module('Integration | Component | detail-display', function (hooks) {
         'Attack roll: 6',
         'single-digit attack roll with a miss should have expected detail text',
       );
+      assert
+        .dom('[data-test-attack-roll-detail="0-5"]')
+        .hasAttribute('title', '1d20: 8 | -1d6: 5');
     }
 
     // Inspect the detailed display of the critical hit
@@ -339,7 +429,15 @@ module('Integration | Component | detail-display', function (hooks) {
         totalNumberOfHits: 1,
         attackDetailsList: [
           {
-            roll: 18,
+            roll: {
+              total: 16,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [19],
+                },
+              ],
+            },
             hit: true,
             crit: false,
             nat1: false,
@@ -382,7 +480,15 @@ module('Integration | Component | detail-display', function (hooks) {
             ],
           },
           {
-            roll: -4,
+            roll: {
+              total: -1,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [2],
+                },
+              ],
+            },
             hit: false,
             crit: false,
             nat1: false,
@@ -445,7 +551,15 @@ module('Integration | Component | detail-display', function (hooks) {
         totalNumberOfHits: 1,
         attackDetailsList: [
           {
-            roll: 18,
+            roll: {
+              total: 16,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [19],
+                },
+              ],
+            },
             hit: true,
             crit: false,
             nat1: false,
@@ -488,7 +602,15 @@ module('Integration | Component | detail-display', function (hooks) {
             ],
           },
           {
-            roll: -4,
+            roll: {
+              total: -1,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [2],
+                },
+              ],
+            },
             hit: false,
             crit: false,
             nat1: false,
@@ -506,7 +628,15 @@ module('Integration | Component | detail-display', function (hooks) {
         totalNumberOfHits: 1,
         attackDetailsList: [
           {
-            roll: 15,
+            roll: {
+              total: 15,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [18],
+                },
+              ],
+            },
             hit: true,
             crit: false,
             nat1: false,
@@ -574,7 +704,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList1[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 18 5 piercing damage (2d6 + 1d4 + 5) (resisted) 10 radiant damage (2d8)',
+        'Attack roll: 16 5 piercing damage (2d6 + 1d4 + 5) (resisted) 10 radiant damage (2d8)',
         'first attack: hit should have expected detail text',
       );
 
@@ -585,7 +715,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList1[1]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: -4',
+        'Attack roll: -1',
         'first attack: miss should have expected detail text',
       );
     }

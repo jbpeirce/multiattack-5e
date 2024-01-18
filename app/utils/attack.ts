@@ -6,7 +6,7 @@ import DiceStringParser from './dice-string-parser';
 import Die from './die';
 
 export interface AttackDetails {
-  roll: number;
+  roll: GroupRollDetails;
   hit: boolean;
   crit: boolean;
   nat1: boolean;
@@ -58,9 +58,21 @@ export default class Attack {
   ): AttackDetails {
     // Roll the d20 with advantage/disadvantage as appropriate. In addition,
     // roll any dice groups which modify the attack (such as a 1d4 from Bless or
-    // -1d6 from Synaptic Static) and apply the fixed modifiers.
+    // -1d6 from Synaptic Static) and apply the modifiers.
+    const attackRollDetails: GroupRollDetails = {
+      total: 0,
+      rolls: [],
+    };
     const attackD20 = this.getD20Roll(advantage, disadvantage);
-    const attackRoll = attackD20 + this.toHitModifier.roll(false).total;
+    attackRollDetails.total = attackD20;
+    attackRollDetails.rolls.push({
+      name: '1d20',
+      rolls: [attackD20],
+    });
+
+    const modifierRollDetails = this.toHitModifier.roll(false);
+    attackRollDetails.total += modifierRollDetails.total;
+    attackRollDetails.rolls.push(...modifierRollDetails.rolls);
 
     const crit = attackD20 == 20;
     const nat1 = attackD20 == 1;
@@ -71,7 +83,7 @@ export default class Attack {
 
     // Attacks always miss on a nat1, always hit on a crit, and otherwise hit if
     // the roll equals or exceeds the target AC.
-    const hit = !nat1 && (crit || attackRoll >= targetAC);
+    const hit = !nat1 && (crit || attackRollDetails.total >= targetAC);
     if (hit) {
       numberOfHits += 1;
       for (const damage of this.damageTypes) {
@@ -88,7 +100,7 @@ export default class Attack {
     }
 
     return {
-      roll: attackRoll,
+      roll: attackRollDetails,
       hit: hit,
       crit: crit,
       nat1: nat1,
