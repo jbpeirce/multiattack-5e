@@ -36,20 +36,23 @@
 
         {{#if attackDetails.hit }}
         <li class="li-hit">
-          Attack roll: <span data-test-attack-roll-detail="{{index}}-{{index2}}"
-            title="{{this.getRollDetailString attackDetails.roll.rolls}}">{{attackDetails.roll.total}}</span>
-          {{#if attackDetails.crit}} (CRIT!){{/if}}
+          <span data-test-attack-roll-detail="{{index}}-{{index2}}"
+            title="{{this.getRollDetailString attackDetails.roll.rolls}}">
+            {{attackDetails.roll.total}} to hit
+            {{#if attackDetails.crit}} (CRIT!){{/if}}
+          </span>
 
           <ul data-test-damage-detail-list="{{index}}-{{index2}}">
             {{#each attackDetails.damageDetails as |damage index3|}}
             <li>
               <span data-test-damage-roll-detail="{{index}}-{{index2}}-{{index3}}"
-                title="{{this.getRollDetailString damage.roll.rolls}}">{{damage.roll.total}}</span>
-              {{damage.type}} damage
-              {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
-              {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
-              {{#if damage.resisted}} (resisted){{/if}}
-              {{#if damage.vulnerable}} (vulnerable){{/if}}
+                title="{{this.getRollDetailString damage.roll.rolls}}">
+                {{damage.roll.total}} {{damage.type}} damage
+                {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
+                {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
+                {{#if damage.resisted}} (resisted){{/if}}
+                {{#if damage.vulnerable}} (vulnerable){{/if}}
+              </span>
             </li>
             {{/each}}
           </ul>
@@ -58,8 +61,10 @@
 
         {{#unless attackDetails.hit }}
         <li class="li-miss">
-          Attack roll: <span data-test-attack-roll-detail="{{index}}-{{index2}}"
-            title="{{this.getRollDetailString attackDetails.roll.rolls}}">{{attackDetails.roll.total}}</span>
+          <span data-test-attack-roll-detail="{{index}}-{{index2}}"
+            title="{{this.getRollDetailString attackDetails.roll.rolls}}">
+            {{attackDetails.roll.total}} to hit
+          </span>
           {{#if attackDetails.nat1}} (NAT 1!){{/if}}
         </li>
         {{/unless}}
