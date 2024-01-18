@@ -35,14 +35,34 @@ module('Integration | Component | detail-display', function (hooks) {
               {
                 type: 'piercing',
                 dice: '4d6 + 2d4 + 5',
-                roll: 11,
+                roll: {
+                  total: 11,
+                  rolls: [
+                    {
+                      name: '4d6',
+                      rolls: [4, 5, 2, 2],
+                    },
+                    {
+                      name: '2d4',
+                      rolls: [3, 2],
+                    },
+                  ],
+                },
                 resisted: true,
                 vulnerable: false,
               },
               {
                 type: 'radiant',
                 dice: '4d8',
-                roll: 26,
+                roll: {
+                  total: 26,
+                  rolls: [
+                    {
+                      name: '4d8',
+                      rolls: [2, 7, 1, 3],
+                    },
+                  ],
+                },
                 resisted: false,
                 vulnerable: true,
               },
@@ -58,14 +78,34 @@ module('Integration | Component | detail-display', function (hooks) {
               {
                 type: 'piercing',
                 dice: '2d6 + 1d4 + 5',
-                roll: 5,
+                roll: {
+                  total: 5,
+                  rolls: [
+                    {
+                      name: '2d6',
+                      rolls: [2, 1],
+                    },
+                    {
+                      name: '1d4',
+                      rolls: [2],
+                    },
+                  ],
+                },
                 resisted: true,
                 vulnerable: false,
               },
               {
                 type: 'radiant',
                 dice: '2d8',
-                roll: 20,
+                roll: {
+                  total: 20,
+                  rolls: [
+                    {
+                      name: '2d8',
+                      rolls: [3, 7],
+                    },
+                  ],
+                },
                 resisted: false,
                 vulnerable: true,
               },
@@ -111,15 +151,15 @@ module('Integration | Component | detail-display', function (hooks) {
     });
 
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}}  @clearAttackLog={{this.doNotCall}} />`,
     );
 
     assert
       .dom('[data-test-attack-data-list="0"]')
       .hasText(
         'Number of attacks: 8\n' +
-          'Target AC: 15\n' +
-          'Attack roll: 1d20 + 3 - 1d6 (disadvantage)\n',
+        'Target AC: 15\n' +
+        'Attack roll: 1d20 + 3 - 1d6 (disadvantage)\n',
         'the details for the input damage should be displayed',
       );
 
@@ -290,14 +330,34 @@ module('Integration | Component | detail-display', function (hooks) {
               {
                 type: 'piercing',
                 dice: '2d6 + 1d4 + 5',
-                roll: 5,
+                roll: {
+                  total: 5,
+                  rolls: [
+                    {
+                      name: '2d6',
+                      rolls: [2, 1],
+                    },
+                    {
+                      name: '1d4',
+                      rolls: [2],
+                    },
+                  ],
+                },
                 resisted: true,
                 vulnerable: false,
               },
               {
                 type: 'radiant',
                 dice: '2d8',
-                roll: 20,
+                roll: {
+                  total: 20,
+                  rolls: [
+                    {
+                      name: '2d8',
+                      rolls: [2, 8],
+                    },
+                  ],
+                },
                 resisted: false,
                 vulnerable: true,
               },
@@ -322,7 +382,7 @@ module('Integration | Component | detail-display', function (hooks) {
     });
 
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}}  @clearAttackLog={{this.doNotCall}} />`,
     );
 
     assert
@@ -376,14 +436,34 @@ module('Integration | Component | detail-display', function (hooks) {
               {
                 type: 'piercing',
                 dice: '2d6 + 1d4 + 5',
-                roll: 5,
+                roll: {
+                  total: 5,
+                  rolls: [
+                    {
+                      name: '2d6',
+                      rolls: [2, 1],
+                    },
+                    {
+                      name: '1d4',
+                      rolls: [2],
+                    },
+                  ],
+                },
                 resisted: true,
                 vulnerable: false,
               },
               {
                 type: 'radiant',
                 dice: '2d8',
-                roll: 10,
+                roll: {
+                  total: 10,
+                  rolls: [
+                    {
+                      name: '2d8',
+                      rolls: [2, 8],
+                    },
+                  ],
+                },
                 resisted: false,
                 vulnerable: false,
               },
@@ -404,7 +484,7 @@ module('Integration | Component | detail-display', function (hooks) {
         toHit: '3',
         damageList: [new Damage('3d6', DamageType.ACID.name, true, true)],
         advantageState: AdvantageState.ADVANTAGE,
-        totalDmg: 9,
+        totalDmg: 10,
         totalNumberOfHits: 1,
         attackDetailsList: [
           {
@@ -412,12 +492,20 @@ module('Integration | Component | detail-display', function (hooks) {
             hit: true,
             crit: false,
             nat1: false,
-            damage: 9,
+            damage: 10,
             damageDetails: [
               {
                 type: 'acid',
                 dice: '3d6',
-                roll: 9,
+                roll: {
+                  total: 10,
+                  rolls: [
+                    {
+                      name: '3d6',
+                      rolls: [2, 5, 4],
+                    },
+                  ],
+                },
                 resisted: true,
                 vulnerable: true,
               },
@@ -435,7 +523,7 @@ module('Integration | Component | detail-display', function (hooks) {
     });
 
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}}  @clearAttackLog={{this.doNotCall}} />`,
     );
 
     // First attack
@@ -494,7 +582,7 @@ module('Integration | Component | detail-display', function (hooks) {
 
     assert
       .dom('[data-test-total-damage-header="1"]')
-      .hasText('Total Damage: 9 (1 hit)');
+      .hasText('Total Damage: 10 (1 hit)');
 
     const detailsList2 = this.element.querySelector(
       '[data-test-attack-detail-list="1"]',
@@ -514,7 +602,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
       assert.equal(
         detailsList2[0]?.textContent?.trim().replace(/\s+/g, ' '),
-        'Attack roll: 15 9 acid damage (3d6) (resisted) (vulnerable)',
+        'Attack roll: 15 10 acid damage (3d6) (resisted) (vulnerable)',
         'second attack: hit should have expected detail text',
       );
     }

@@ -41,7 +41,7 @@
           <ul data-test-damage-detail-list="{{index}}-{{index2}}">
             {{#each attackDetails.damageDetails as |damage|}}
             <li>
-              {{damage.roll}} {{damage.type}} damage
+              {{damage.roll.total}} {{damage.type}} damage
               {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
               {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
               {{#if damage.resisted}} (resisted){{/if}}

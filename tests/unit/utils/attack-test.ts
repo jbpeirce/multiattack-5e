@@ -212,7 +212,7 @@ module('Unit | Utils | attack', function (hooks) {
     attack.die.roll = fakeD20;
 
     // Fake the results of the damage dice
-    const fakePiercing = sinon.fake.returns({
+    const fakePiercingDamageDetails = {
       total: 13,
       rolls: [
         {
@@ -224,8 +224,10 @@ module('Unit | Utils | attack', function (hooks) {
           rolls: [1],
         },
       ],
-    });
-    const fakeRadiant = sinon.fake.returns({
+    };
+    const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
+
+    const fakeRadiantDamageDetails = {
       total: 7,
       rolls: [
         {
@@ -233,7 +235,8 @@ module('Unit | Utils | attack', function (hooks) {
           rolls: [6, 1],
         },
       ],
-    });
+    };
+    const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
 
     const piercing: Damage | undefined = attack.damageTypes[0];
     if (piercing) {
@@ -265,14 +268,14 @@ module('Unit | Utils | attack', function (hooks) {
       {
         type: 'piercing',
         dice: '2d6 + 1d4 + 5',
-        roll: 13,
+        roll: fakePiercingDamageDetails,
         resisted: false,
         vulnerable: false,
       },
       {
         type: 'radiant',
         dice: '2d8',
-        roll: 7,
+        roll: fakeRadiantDamageDetails,
         resisted: false,
         vulnerable: false,
       },
@@ -297,7 +300,7 @@ module('Unit | Utils | attack', function (hooks) {
     attack.die.roll = fakeD20;
 
     // Fake the results of the damage dice
-    const fakePiercing = sinon.fake.returns({
+    const fakePiercingDamageDetails = {
       total: 25,
       rolls: [
         {
@@ -309,8 +312,10 @@ module('Unit | Utils | attack', function (hooks) {
           rolls: [1, 4],
         },
       ],
-    });
-    const fakeRadiant = sinon.fake.returns({
+    };
+    const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
+
+    const fakeRadiantDamageDetails = {
       total: 14,
       rolls: [
         {
@@ -318,7 +323,8 @@ module('Unit | Utils | attack', function (hooks) {
           rolls: [3, 1, 8, 2],
         },
       ],
-    });
+    };
+    const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
 
     const piercing: Damage | undefined = attack.damageTypes[0];
     if (piercing) {
@@ -353,14 +359,14 @@ module('Unit | Utils | attack', function (hooks) {
       {
         type: 'piercing',
         dice: '4d6 + 2d4 + 5',
-        roll: 25,
+        roll: fakePiercingDamageDetails,
         resisted: false,
         vulnerable: false,
       },
       {
         type: 'radiant',
         dice: '4d8',
-        roll: 14,
+        roll: fakeRadiantDamageDetails,
         resisted: false,
         vulnerable: false,
       },

@@ -1,5 +1,7 @@
 import Damage from './damage';
-import DiceGroupsAndModifier from './dice-groups-and-modifier';
+import DiceGroupsAndModifier, {
+  type GroupRollDetails,
+} from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
 import Die from './die';
 
@@ -16,7 +18,7 @@ export interface AttackDetails {
 export interface DamageDetails {
   type: string;
   dice: string;
-  roll: number;
+  roll: GroupRollDetails;
   resisted: boolean;
   vulnerable: boolean;
 }
@@ -78,7 +80,7 @@ export default class Attack {
         damageDetails.push({
           type: `${damage.type}`,
           dice: `${damage.prettyString(crit)}`,
-          roll: rolledDmg.total,
+          roll: rolledDmg,
           resisted: damage.targetResistant,
           vulnerable: damage.targetVulnerable,
         });
