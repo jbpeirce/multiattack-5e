@@ -1,89 +1,96 @@
-<div class="row align-items-center">
-  <div class="col col-lg-9 pt-5 pb-4">
-    <h1>Repeated Attack Simulator</h1>
-    <p>
-      Has a horde of zombies cornered a victim? Is a marilith focusing its attacks on a single opponent? This tool
-      simulates repeated identical attacks on a single target and displays the total damage alongside a breakdown of
-      the attacks.
-    </p>
-    <p>
-      This uses a 20-sided die for attack rolls, as in D&D 5e and similar systems. If an attack is a critical hit (rolls
-      a 20), the damage dice are rolled twice. Rolling a 1 on the d20 always misses, and a 20 always hits.
-    </p>
+<div class="container-reasonable-width">
+  <div class="row align-items-center">
+    <div class="col col-lg-9 pt-5 pb-4">
+      <div class="container-readable-width">
+        <h1>Repeated Attack Simulator</h1>
+        <p>
+          Did a druid just summon a pack of wolves? Has a necromancer gathered a zombie horde? Is a marilith focusing on
+          a
+          single opponent? This tool simulates repeated identical attacks on a single target and displays the total
+          damage
+          alongside a breakdown of the attacks.
+        </p>
+        <p>
+          This uses a 20-sided die for attack rolls, as in D&D 5e and similar systems. If an attack is a critical hit
+          (rolls a 20), the damage dice are rolled twice. Rolling a 1 on the d20 always misses, and a 20 always hits.
+        </p>
+      </div>
+    </div>
   </div>
-</div>
-<div class="row align-items-top justify-content-between">
-  <div class="col-md-4">
-    <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
-      <h2>Set Up Attacks</h2>
-      <div class="row align-items-center py-2">
-        <label for="numberOfAttacks" class="col-6 col-form-label">Number of Attacks</label>
-        <div class="col-6">
-          <Input data-test-input-numberOfAttacks class="form-control" id="numberOfAttacks" name="numberOfAttacks"
-            @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative"
-            required="required" />
-        </div>
-      </div>
-
-      <div class="row align-items-center py-2">
-        <label for="targetAC" class="col-6 col-form-label">Target AC</label>
-        <div class="col-6">
-          <Input data-test-input-targetAC class="form-control" id="targetAC" name="targetAC" @type="number"
-            @value={{this.targetAC}} required="required" />
-        </div>
-      </div>
-
-      <div class="row align-items-center py-2">
-        <label for="toHit" class="col-6 col-form-label">To Hit Modifier</label>
-        <div class="col-6">
-          <div class="input-group">
-            <div class="input-group-text">1d20 +</div>
-            <Input data-test-input-toHit class="form-control" @type="text" id="toHit" name="toHit" @value={{this.toHit}}
-              aria-describedby="toHitDescription" required="required" pattern={{this.diceGroupsRegex}}
-              title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
+  <div class="row align-items-top justify-content-between">
+    <div class="col-md-4">
+      <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
+        <h2>Set Up Attacks</h2>
+        <div class="row align-items-center py-2">
+          <label for="numberOfAttacks" class="col-6 col-form-label">Number of Attacks</label>
+          <div class="col-6">
+            <Input data-test-input-numberOfAttacks class="form-control" id="numberOfAttacks" name="numberOfAttacks"
+              @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative"
+              required="required" />
           </div>
         </div>
-      </div>
 
-      <div class="row align-items-center py-2">
-        <label class="col-6 col-form-label">Rolls With</label>
-        <div class="col-6">
-          <AdvantageRadio @updateState={{this.setAdvantageState}} />
+        <div class="row align-items-center py-2">
+          <label for="targetAC" class="col-6 col-form-label">Target AC</label>
+          <div class="col-6">
+            <Input data-test-input-targetAC class="form-control" id="targetAC" name="targetAC" @type="number"
+              @value={{this.targetAC}} required="required" />
+          </div>
         </div>
-      </div>
 
-      <hr>
-
-
-      {{#each this.damageList as |damage index| }}
-      <DamageType data-test-damage-type={{index}} @index={{index}} @setDamage={{damage.setDamage}}
-        @setDamageType={{damage.setDamageType}} @setResistant={{damage.setResistant}}
-        @setVulnerable={{damage.setVulnerable}} @initialDamage={{damage.damageString}}
-        @initialDamageType={{damage.type}} @initialResistant={{damage.targetResistant}}
-        @initialVulnerable={{damage.targetVulnerable}} />
-      <div class="row align-items-center">
-        <div class="col-sm">
-          <button data-test-button-remove-damage-type={{index}} class="btn btn-danger my-2" type="button" {{on "click"
-            (fn this.removeDamageType index)}}>Remove Damage Type</button>
+        <div class="row align-items-center py-2">
+          <label for="toHit" class="col-6 col-form-label">To Hit Modifier</label>
+          <div class="col-6">
+            <div class="input-group">
+              <div class="input-group-text">1d20 +</div>
+              <Input data-test-input-toHit class="form-control" @type="text" id="toHit" name="toHit"
+                @value={{this.toHit}} aria-describedby="toHitDescription" required="required"
+                pattern={{this.diceGroupsRegex}}
+                title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
+            </div>
+          </div>
         </div>
-      </div>
-      <hr>
-      {{/each}}
-      <div class="row align-items-center">
-        <div class="col-sm">
-          <button data-test-button-add-damage-type class="btn btn-info my-3" type="button" {{on "click"
-            this.addNewDamageType}}>New Damage Type</button>
+
+        <div class="row align-items-center py-2">
+          <label class="col-6 col-form-label">Rolls With</label>
+          <div class="col-6">
+            <AdvantageRadio @updateState={{this.setAdvantageState}} />
+          </div>
         </div>
-      </div>
 
-      <div class="row align-items-center mx-auto mb-5">
-        <button data-test-button-getDamage class="btn btn-primary btn-lg w-70 d-block" type="submit" id="attackBtn"
-          {{on "click" this.simulateRepeatedAttacks}}>Attack!</button>
-      </div>
-    </form>
-  </div>
+        <hr>
 
-  <div class="col-md-7">
-    <DetailDisplay @repeatedAttackLog={{this.attackResultLog}} @clearAttackLog={{this.clearAttackLog}} />
+
+        {{#each this.damageList as |damage index| }}
+        <DamageType data-test-damage-type={{index}} @index={{index}} @setDamage={{damage.setDamage}}
+          @setDamageType={{damage.setDamageType}} @setResistant={{damage.setResistant}}
+          @setVulnerable={{damage.setVulnerable}} @initialDamage={{damage.damageString}}
+          @initialDamageType={{damage.type}} @initialResistant={{damage.targetResistant}}
+          @initialVulnerable={{damage.targetVulnerable}} />
+        <div class="row align-items-center">
+          <div class="col-sm">
+            <button data-test-button-remove-damage-type={{index}} class="btn btn-danger my-2" type="button" {{on "click"
+              (fn this.removeDamageType index)}}>Remove Damage Type</button>
+          </div>
+        </div>
+        <hr>
+        {{/each}}
+        <div class="row align-items-center">
+          <div class="col-sm">
+            <button data-test-button-add-damage-type class="btn btn-info my-3" type="button" {{on "click"
+              this.addNewDamageType}}>New Damage Type</button>
+          </div>
+        </div>
+
+        <div class="row align-items-center mx-auto mb-5">
+          <button data-test-button-getDamage class="btn btn-primary btn-lg w-70 d-block" type="submit" id="attackBtn"
+            {{on "click" this.simulateRepeatedAttacks}}>Attack!</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-7">
+      <DetailDisplay @repeatedAttackLog={{this.attackResultLog}} @clearAttackLog={{this.clearAttackLog}} />
+    </div>
   </div>
 </div>
