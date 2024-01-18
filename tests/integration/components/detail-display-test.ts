@@ -158,8 +158,8 @@ module('Integration | Component | detail-display', function (hooks) {
       .dom('[data-test-attack-data-list="0"]')
       .hasText(
         'Number of attacks: 8\n' +
-        'Target AC: 15\n' +
-        'Attack roll: 1d20 + 3 - 1d6 (disadvantage)\n',
+          'Target AC: 15\n' +
+          'Attack roll: 1d20 + 3 - 1d6 (disadvantage)\n',
         'the details for the input damage should be displayed',
       );
 
@@ -253,6 +253,7 @@ module('Integration | Component | detail-display', function (hooks) {
       );
     }
 
+    // Inspect the detailed display of the critical hit
     const critDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0-0"]',
     )?.children;
@@ -279,6 +280,15 @@ module('Integration | Component | detail-display', function (hooks) {
       );
     }
 
+    assert
+      .dom('[data-test-damage-roll-detail="0-0-0"]')
+      .hasAttribute('title', '4d6: 4,5,2,2 | 2d4: 3,2');
+
+    assert
+      .dom('[data-test-damage-roll-detail="0-0-1"]')
+      .hasAttribute('title', '4d8: 2,7,1,3');
+
+    // Inspect the detailed display of the regular hit
     const regularDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0-1"]',
     )?.children;
@@ -304,6 +314,14 @@ module('Integration | Component | detail-display', function (hooks) {
         'radiant damage details should be displayed',
       );
     }
+
+    assert
+      .dom('[data-test-damage-roll-detail="0-1-0"]')
+      .hasAttribute('title', '2d6: 2,1 | 1d4: 2');
+
+    assert
+      .dom('[data-test-damage-roll-detail="0-1-1"]')
+      .hasAttribute('title', '2d8: 3,7');
   });
 
   test('it renders a single hit correctly', async function (this: ElementContext, assert) {

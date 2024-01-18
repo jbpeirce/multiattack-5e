@@ -1,5 +1,7 @@
 import Component from '@glimmer/component';
 
+import type { NameAndRolls } from 'multiattack-5e/utils/dice-groups-and-modifier';
+
 import AdvantageState from './advantage-state-enum';
 
 export default class DetailDisplayComponent extends Component {
@@ -35,5 +37,9 @@ export default class DetailDisplayComponent extends Component {
     } else {
       return 'hits';
     }
+  };
+
+  getRollDetailString = (rollDetails: NameAndRolls[]) => {
+    return rollDetails.map((roll) => `${roll.name}: ${roll.rolls}`).join(' | ');
   };
 }

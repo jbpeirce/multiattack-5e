@@ -5,7 +5,8 @@
     </h2>
   </div>
   <div class="col col-sm-4 d-flex justify-content-end">
-    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearAttackLog}} data-test-button-clear-attack-log>
+    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearAttackLog}}
+      data-test-button-clear-attack-log>
       Clear
     </button>
   </div>
@@ -39,9 +40,10 @@
           {{#if attackDetails.crit}} (CRIT!){{/if}}
 
           <ul data-test-damage-detail-list="{{index}}-{{index2}}">
-            {{#each attackDetails.damageDetails as |damage|}}
+            {{#each attackDetails.damageDetails as |damage index3|}}
             <li>
-              {{damage.roll.total}} {{damage.type}} damage
+              <span data-test-damage-roll-detail="{{index}}-{{index2}}-{{index3}}" title="{{this.getRollDetailString damage.roll.rolls}}">{{damage.roll.total}}</span>
+              {{damage.type}} damage
               {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
               {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
               {{#if damage.resisted}} (resisted){{/if}}
