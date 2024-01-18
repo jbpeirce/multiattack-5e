@@ -38,21 +38,47 @@
         <li class="li-hit">
           <span data-test-attack-roll-detail="{{index}}-{{index2}}"
             title="{{this.getRollDetailString attackDetails.roll.rolls}}">
-            {{attackDetails.roll.total}} to hit
+            <a class="link link-dark" data-bs-toggle="collapse" href="#attack-detail-collapse-{{index}}-{{index2}}"
+              role="button" aria-expanded="false" aria-controls="attack-detail-collapse-{{index}}-{{index2}}">
+              {{attackDetails.roll.total}}</a> to hit
             {{#if attackDetails.crit}} (CRIT!){{/if}}
           </span>
+          <div class="collapse" id="attack-detail-collapse-{{index}}-{{index2}}">
+            <ul>
+              {{#each attackDetails.roll.rolls as |roll|}}
+              <li class="text-muted">
+                {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
+              </li>
+              {{/each}}
+            </ul>
+          </div>
 
           <ul data-test-damage-detail-list="{{index}}-{{index2}}">
             {{#each attackDetails.damageDetails as |damage index3|}}
             <li>
               <span data-test-damage-roll-detail="{{index}}-{{index2}}-{{index3}}"
                 title="{{this.getRollDetailString damage.roll.rolls}}">
-                {{damage.roll.total}} {{damage.type}} damage
+                <a data-test-damage-roll-collapse-link="{{index}}-{{index2}}-{{index3}}" class="link link-dark"
+                  data-bs-toggle="collapse" href="#damage-detail-collapse-{{index}}-{{index2}}-{{index3}}" role="button"
+                  aria-expanded="false"
+                  aria-controls="damage-detail-collapse-{{index}}-{{index2}}-{{index3}}">{{damage.roll.total}}</a>
+                {{damage.type}} damage
                 {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
                 {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
                 {{#if damage.resisted}} (resisted){{/if}}
                 {{#if damage.vulnerable}} (vulnerable){{/if}}
               </span>
+
+              <div data-test-damage-roll-collapse-pane="{{index}}-{{index2}}-{{index3}}" class="collapse"
+                id="damage-detail-collapse-{{index}}-{{index2}}-{{index3}}">
+                <ul>
+                  {{#each damage.roll.rolls as |roll|}}
+                  <li class="text-muted">
+                    {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
+                  </li>
+                  {{/each}}
+                </ul>
+              </div>
             </li>
             {{/each}}
           </ul>
@@ -63,9 +89,20 @@
         <li class="li-miss">
           <span data-test-attack-roll-detail="{{index}}-{{index2}}"
             title="{{this.getRollDetailString attackDetails.roll.rolls}}">
-            {{attackDetails.roll.total}} to hit
+            <a class="link link-dark" data-bs-toggle="collapse" href="#attack-detail-collapse-{{index}}-{{index2}}"
+              role="button" aria-expanded="false" aria-controls="attack-detail-collapse-{{index}}-{{index2}}">
+              {{attackDetails.roll.total}}</a> to hit
+            {{#if attackDetails.nat1}} (NAT 1!){{/if}}
           </span>
-          {{#if attackDetails.nat1}} (NAT 1!){{/if}}
+          <div class="collapse" id="attack-detail-collapse-{{index}}-{{index2}}">
+            <ul>
+              {{#each attackDetails.roll.rolls as |roll|}}
+              <li class="text-muted">
+                {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
+              </li>
+              {{/each}}
+            </ul>
+          </div>
         </li>
         {{/unless}}
 

@@ -51,4 +51,8 @@ export default class DetailDisplayComponent extends Component {
       .map((roll) => `${roll.name}: ${roll.rolls.join(', ')}`)
       .join(' | ');
   };
+
+  getStringWithSpaces = (array: number[]) => {
+    return array.join(', ');
+  };
 }
