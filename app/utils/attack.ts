@@ -58,7 +58,7 @@ export default class Attack {
     // roll any dice groups which modify the attack (such as a 1d4 from Bless or
     // -1d6 from Synaptic Static) and apply the fixed modifiers.
     const attackD20 = this.getD20Roll(advantage, disadvantage);
-    const attackRoll = attackD20 + this.toHitModifier.rollAndGetTotal(false);
+    const attackRoll = attackD20 + this.toHitModifier.roll(false).total;
 
     const crit = attackD20 == 20;
     const nat1 = attackD20 == 1;

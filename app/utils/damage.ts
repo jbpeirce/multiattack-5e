@@ -108,7 +108,7 @@ export default class Damage {
       throw new Error('Damage did not have all necessary fields set');
     }
 
-    let total = this.damage.rollAndGetTotal(crit);
+    let total = this.damage.roll(crit).total;
 
     // Reset the total to 0 if it is negative (which may happen due to a
     // negative damage modifier)

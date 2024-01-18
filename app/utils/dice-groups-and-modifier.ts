@@ -27,9 +27,9 @@ export default class DiceGroupsAndModifier {
    * modifier once). This is valuable for calculating the damage from a critical
    * hit.
    * @returns the total value from rolling the dice groups described by this
-   * class and adding the given modifier to them
+   * class and adding the given modifier to them, alongside details of each roll.
    */
-  rollAndGetTotal(doubleDice: boolean): number {
+  roll(doubleDice: boolean): GroupRollDetails {
     const details: GroupRollDetails = {
       total: 0,
       rolls: [],
@@ -58,7 +58,7 @@ export default class DiceGroupsAndModifier {
     // Once all dice are rolled, add the modifier to the total
     details.total += this.modifier;
 
-    return details.total;
+    return details;
   }
 
   /**
