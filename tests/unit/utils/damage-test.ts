@@ -25,9 +25,17 @@ module('Unit | Utils | damage', function (hooks) {
       group1d6.die.roll = fake1d6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       damage.roll(false),
-      4,
+      {
+        total: 4,
+        rolls: [
+          {
+            name: '1d6',
+            rolls: [3],
+          },
+        ],
+      },
       'roll should inflict 3 + 1 = 4 total damage',
     );
   });
@@ -60,9 +68,21 @@ module('Unit | Utils | damage', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       damage.roll(false),
-      21,
+      {
+        total: 21,
+        rolls: [
+          {
+            name: '3d8',
+            rolls: [3, 7, 5],
+          },
+          {
+            name: '2d6',
+            rolls: [1, 4],
+          },
+        ],
+      },
       'roll should inflict (3 + 7 + 5) + (1 + 4) + 1 = 21 total damage',
     );
   });
@@ -100,10 +120,54 @@ module('Unit | Utils | damage', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       damage.roll(true),
-      34,
+      {
+        total: 34,
+        rolls: [
+          {
+            name: '6d8',
+            rolls: [3, 7, 5, 5, 1, 2],
+          },
+          {
+            name: '4d6',
+            rolls: [1, 4, 2, 2],
+          },
+        ],
+      },
       'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
+    );
+  });
+
+  test('it does not allow damage to be negative', async function (assert) {
+    const damage = new Damage('1d4 - 3', DamageType.RADIANT.name, true);
+
+    assert.strictEqual(
+      damage.damage.diceGroups.length,
+      1,
+      'damage should roll one group of dice',
+    );
+
+    const fakeD4 = sinon.stub();
+    fakeD4.onCall(0).returns(1);
+    fakeD4.onCall(1).returns(2);
+    const group1d4: DiceGroup | undefined = damage.damage.diceGroups[0];
+    if (group1d4) {
+      group1d4.die.roll = fakeD4;
+    }
+
+    assert.deepEqual(
+      damage.roll(false),
+      {
+        total: 0,
+        rolls: [
+          {
+            name: '1d4',
+            rolls: [1],
+          },
+        ],
+      },
+      'roll should inflict 1 - 3 = 0 total damage (damage cannot be negative)',
     );
   });
 
@@ -124,9 +188,17 @@ module('Unit | Utils | damage', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       damage.roll(false),
-      4,
+      {
+        total: 4,
+        rolls: [
+          {
+            name: '2d6',
+            rolls: [3, 5],
+          },
+        ],
+      },
       'roll should inflict (3 + 5 + 1) / 2 = 4 total damage',
     );
   });
@@ -148,9 +220,17 @@ module('Unit | Utils | damage', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       damage.roll(false),
-      18,
+      {
+        total: 18,
+        rolls: [
+          {
+            name: '2d6',
+            rolls: [3, 5],
+          },
+        ],
+      },
       'roll should inflict (3 + 5 + 1) * 2 = 18 total damage',
     );
   });
@@ -172,9 +252,17 @@ module('Unit | Utils | damage', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
+    assert.deepEqual(
       damage.roll(false),
-      8,
+      {
+        total: 8,
+        rolls: [
+          {
+            name: '2d6',
+            rolls: [3, 5],
+          },
+        ],
+      },
       'roll should inflict ((3 + 5 + 1) / 2) * 2 = 8 total damage',
     );
   });

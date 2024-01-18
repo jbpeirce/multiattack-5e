@@ -14,16 +14,24 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       1,
     );
 
-    const fake1d6 = sinon.stub();
-    fake1d6.onCall(0).returns(3);
+    const fakeD6 = sinon.stub();
+    fakeD6.onCall(0).returns(3);
     const group1d6: DiceGroup | undefined = diceGroupAndModifier.diceGroups[0];
     if (group1d6) {
-      group1d6.die.roll = fake1d6;
+      group1d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
-      diceGroupAndModifier.rollAndGetTotal(false),
-      4,
+    assert.deepEqual(
+      diceGroupAndModifier.roll(false),
+      {
+        total: 4,
+        rolls: [
+          {
+            name: '1d6',
+            rolls: [3],
+          },
+        ],
+      },
       'roll should total 3 + 1 = 4',
     );
   });
@@ -42,9 +50,17 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       group1d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
-      diceGroupAndModifier.rollAndGetTotal(true),
-      9,
+    assert.deepEqual(
+      diceGroupAndModifier.roll(true),
+      {
+        total: 9,
+        rolls: [
+          {
+            name: '2d6',
+            rolls: [3, 4],
+          },
+        ],
+      },
       'roll should inflict 3 + 4 + 2 = 9 total damage on a critical hit',
     );
   });
@@ -74,9 +90,21 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
-      diceGroupAndModifier.rollAndGetTotal(false),
-      7,
+    assert.deepEqual(
+      diceGroupAndModifier.roll(false),
+      {
+        total: 7,
+        rolls: [
+          {
+            name: '3d8',
+            rolls: [3, 7, 5],
+          },
+          {
+            name: '-2d6',
+            rolls: [1, 4],
+          },
+        ],
+      },
       'roll should inflict (3 + 7 + 5) - (1 + 4) - 3 = 7 total damage',
     );
   });
@@ -111,9 +139,21 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       group2d6.die.roll = fakeD6;
     }
 
-    assert.strictEqual(
-      diceGroupAndModifier.rollAndGetTotal(true),
-      34,
+    assert.deepEqual(
+      diceGroupAndModifier.roll(true),
+      {
+        total: 34,
+        rolls: [
+          {
+            name: '6d8',
+            rolls: [3, 7, 5, 5, 1, 2],
+          },
+          {
+            name: '4d6',
+            rolls: [1, 4, 2, 2],
+          },
+        ],
+      },
       'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
     );
   });

@@ -22,9 +22,12 @@ module('Unit | Utils | dice-group', function (hooks) {
 
   test('it rolls and totals multiple dice', async function (assert) {
     const noDice = new DiceGroup(0, 6);
-    assert.strictEqual(
+    assert.deepEqual(
       noDice.roll(),
-      0,
+      {
+        total: 0,
+        rolls: [],
+      },
       'rolling no dice should never result in a total',
     );
 
@@ -43,9 +46,12 @@ module('Unit | Utils | dice-group', function (hooks) {
     assert.true(group1d8.shouldAdd(), 'dice group should be added by default');
 
     group1d8.die.roll = sinon.fake.returns(3);
-    assert.strictEqual(
+    assert.deepEqual(
       group1d8.roll(),
-      3,
+      {
+        total: 3,
+        rolls: [3],
+      },
       'roll of a single die should return expected sum',
     );
 
@@ -72,10 +78,13 @@ module('Unit | Utils | dice-group', function (hooks) {
     fakeDie.onCall(2).returns(5);
 
     group3d6.die.roll = fakeDie;
-    // 1 + 3 + 5 = 9 expected sum
-    assert.strictEqual(
+    // 3 + 1 + 5 = 9 expected sum
+    assert.deepEqual(
       group3d6.roll(),
-      9,
+      {
+        total: 9,
+        rolls: [3, 1, 5],
+      },
       'roll of multiple dice should return expected sum',
     );
   });

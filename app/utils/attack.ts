@@ -1,10 +1,12 @@
 import Damage from './damage';
-import DiceGroupsAndModifier from './dice-groups-and-modifier';
+import DiceGroupsAndModifier, {
+  type GroupRollDetails,
+} from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
 import Die from './die';
 
 export interface AttackDetails {
-  roll: number;
+  roll: GroupRollDetails;
   hit: boolean;
   crit: boolean;
   nat1: boolean;
@@ -16,7 +18,7 @@ export interface AttackDetails {
 export interface DamageDetails {
   type: string;
   dice: string;
-  roll: number;
+  roll: GroupRollDetails;
   resisted: boolean;
   vulnerable: boolean;
 }
@@ -56,9 +58,21 @@ export default class Attack {
   ): AttackDetails {
     // Roll the d20 with advantage/disadvantage as appropriate. In addition,
     // roll any dice groups which modify the attack (such as a 1d4 from Bless or
-    // -1d6 from Synaptic Static) and apply the fixed modifiers.
+    // -1d6 from Synaptic Static) and apply the modifiers.
+    const attackRollDetails: GroupRollDetails = {
+      total: 0,
+      rolls: [],
+    };
     const attackD20 = this.getD20Roll(advantage, disadvantage);
-    const attackRoll = attackD20 + this.toHitModifier.rollAndGetTotal(false);
+    attackRollDetails.total = attackD20;
+    attackRollDetails.rolls.push({
+      name: '1d20',
+      rolls: [attackD20],
+    });
+
+    const modifierRollDetails = this.toHitModifier.roll(false);
+    attackRollDetails.total += modifierRollDetails.total;
+    attackRollDetails.rolls.push(...modifierRollDetails.rolls);
 
     const crit = attackD20 == 20;
     const nat1 = attackD20 == 1;
@@ -69,12 +83,12 @@ export default class Attack {
 
     // Attacks always miss on a nat1, always hit on a crit, and otherwise hit if
     // the roll equals or exceeds the target AC.
-    const hit = !nat1 && (crit || attackRoll >= targetAC);
+    const hit = !nat1 && (crit || attackRollDetails.total >= targetAC);
     if (hit) {
       numberOfHits += 1;
       for (const damage of this.damageTypes) {
         const rolledDmg = damage.roll(crit);
-        totalDmg += rolledDmg;
+        totalDmg += rolledDmg.total;
         damageDetails.push({
           type: `${damage.type}`,
           dice: `${damage.prettyString(crit)}`,
@@ -86,7 +100,7 @@ export default class Attack {
     }
 
     return {
-      roll: attackRoll,
+      roll: attackRollDetails,
       hit: hit,
       crit: crit,
       nat1: nat1,

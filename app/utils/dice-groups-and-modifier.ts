@@ -1,5 +1,15 @@
 import DiceGroup from './dice-group';
 
+export interface GroupRollDetails {
+  total: number;
+  rolls: NameAndRolls[];
+}
+
+export interface NameAndRolls {
+  name: string;
+  rolls: number[];
+}
+
 export default class DiceGroupsAndModifier {
   diceGroups: DiceGroup[];
   modifier: number;
@@ -17,21 +27,38 @@ export default class DiceGroupsAndModifier {
    * modifier once). This is valuable for calculating the damage from a critical
    * hit.
    * @returns the total value from rolling the dice groups described by this
-   * class and adding the given modifier to them
+   * class and adding the given modifier to them, alongside details of each roll.
    */
-  rollAndGetTotal(doubleDice: boolean): number {
-    let total = 0;
-    for (const dice of this.diceGroups) {
-      const sign = dice.shouldAdd() ? 1 : -1;
-      total += sign * dice.roll();
+  roll(doubleDice: boolean): GroupRollDetails {
+    const details: GroupRollDetails = {
+      total: 0,
+      rolls: [],
+    };
 
-      if (doubleDice) {
-        total += sign * dice.roll();
+    for (const dice of this.diceGroups) {
+      const rolls = [];
+      const sign = dice.shouldAdd() ? 1 : -1;
+
+      // Roll the dice once or twice, as instructed
+      const repetitions = doubleDice ? 2 : 1;
+      for (let i = 0; i < repetitions; i++) {
+        const roll = dice.roll();
+        details.total += sign * roll.total;
+        rolls.push(...roll.rolls);
       }
+
+      const signString = dice.shouldAdd() ? '' : '-';
+      const diceName = `${signString}${dice.prettyString(doubleDice)}`;
+      details.rolls.push({
+        name: diceName,
+        rolls: rolls,
+      });
     }
 
-    total += this.modifier;
-    return total;
+    // Once all dice are rolled, add the modifier to the total
+    details.total += this.modifier;
+
+    return details;
   }
 
   /**
