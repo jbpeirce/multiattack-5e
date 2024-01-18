@@ -14,11 +14,11 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       1,
     );
 
-    const fake1d6 = sinon.stub();
-    fake1d6.onCall(0).returns(3);
+    const fakeD6 = sinon.stub();
+    fakeD6.onCall(0).returns(3);
     const group1d6: DiceGroup | undefined = diceGroupAndModifier.diceGroups[0];
     if (group1d6) {
-      group1d6.die.roll = fake1d6;
+      group1d6.die.roll = fakeD6;
     }
 
     assert.strictEqual(

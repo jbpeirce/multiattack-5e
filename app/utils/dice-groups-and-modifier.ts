@@ -36,31 +36,29 @@ export default class DiceGroupsAndModifier {
     };
 
     for (const dice of this.diceGroups) {
-      this.rollAndUpdateDetails(dice, doubleDice, details);
+      const rolls = [];
+      const sign = dice.shouldAdd() ? 1 : -1;
 
-      if (doubleDice) {
-        this.rollAndUpdateDetails(dice, doubleDice, details);
+      // Roll the dice once or twice, as instructed
+      const repetitions = doubleDice ? 2 : 1;
+      for (let i = 0; i < repetitions; i++) {
+        const roll = dice.roll();
+        details.total += sign * roll.total;
+        rolls.push(...roll.rolls);
       }
+
+      const signString = dice.shouldAdd() ? '' : '-';
+      const diceName = `${signString}${dice.prettyString(doubleDice)}`;
+      details.rolls.push({
+        name: diceName,
+        rolls: rolls,
+      });
     }
 
+    // Once all dice are rolled, add the modifier to the total
+    details.total += this.modifier;
+
     return details.total;
-  }
-
-  rollAndUpdateDetails(
-    dice: DiceGroup,
-    doubleDice: boolean,
-    details: GroupRollDetails,
-  ) {
-    const sign = dice.shouldAdd() ? 1 : -1;
-    const roll = dice.roll();
-    details.total += sign * roll.total;
-
-    const signString = dice.shouldAdd() ? '' : '-';
-    const diceName = `${signString}${dice.prettyString(doubleDice)}`;
-    details.rolls.push({
-      name: diceName,
-      rolls: roll.rolls,
-    });
   }
 
   /**
