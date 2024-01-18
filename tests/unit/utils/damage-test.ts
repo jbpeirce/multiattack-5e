@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 import sinon from 'sinon';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
+import RandomnessService from 'multiattack-5e/services/randomness';
 import Damage from 'multiattack-5e/utils/damage';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 
@@ -10,7 +11,11 @@ module('Unit | Utils | damage', function (hooks) {
   setupTest(hooks);
 
   test('it rolls one dice', async function (assert) {
-    const damage = new Damage('1d6 + 1', DamageType.RADIANT.name);
+    const damage = new Damage(
+      '1d6 + 1',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,
@@ -41,7 +46,11 @@ module('Unit | Utils | damage', function (hooks) {
   });
 
   test('it rolls and adds multiple dice groups', async function (assert) {
-    const damage = new Damage('3d8 + 1 + 2d6', DamageType.RADIANT.name);
+    const damage = new Damage(
+      '3d8 + 1 + 2d6',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,
@@ -88,7 +97,11 @@ module('Unit | Utils | damage', function (hooks) {
   });
 
   test('it doubles all dice groups on a critical hit', async function (assert) {
-    const damage = new Damage('3d8 + 2 + 2d6', DamageType.RADIANT.name);
+    const damage = new Damage(
+      '3d8 + 2 + 2d6',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,
@@ -140,7 +153,12 @@ module('Unit | Utils | damage', function (hooks) {
   });
 
   test('it does not allow damage to be negative', async function (assert) {
-    const damage = new Damage('1d4 - 3', DamageType.RADIANT.name, true);
+    const damage = new Damage(
+      '1d4 - 3',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+      true,
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,
@@ -172,7 +190,12 @@ module('Unit | Utils | damage', function (hooks) {
   });
 
   test('it halves damage for resistant targets', async function (assert) {
-    const damage = new Damage('2d6 + 1', DamageType.RADIANT.name, true);
+    const damage = new Damage(
+      '2d6 + 1',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+      true,
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,
@@ -204,7 +227,13 @@ module('Unit | Utils | damage', function (hooks) {
   });
 
   test('it doubles damage for vulnerable targets', async function (assert) {
-    const damage = new Damage('2d6 + 1', DamageType.RADIANT.name, false, true);
+    const damage = new Damage(
+      '2d6 + 1',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+      false,
+      true,
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,
@@ -236,7 +265,13 @@ module('Unit | Utils | damage', function (hooks) {
   });
 
   test('it halves, then doubles, damage for resistant and vulnerable targets', async function (assert) {
-    const damage = new Damage('2d6 + 1', DamageType.RADIANT.name, true, true);
+    const damage = new Damage(
+      '2d6 + 1',
+      DamageType.RADIANT.name,
+      new RandomnessService(),
+      true,
+      true,
+    );
 
     assert.strictEqual(
       damage.damage.diceGroups.length,

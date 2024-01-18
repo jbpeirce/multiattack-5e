@@ -1,4 +1,5 @@
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
+import type RandomnessService from 'multiattack-5e/services/randomness';
 
 import Attack, { type AttackDetails } from './attack';
 import type Damage from './damage';
@@ -25,18 +26,22 @@ export default class RepeatedAttack {
   damageList: Damage[];
   advantageState: AdvantageState;
 
+  randomness: RandomnessService;
+
   constructor(
     numberOfAttacks: number,
     targetAC: number,
     toHit: string,
     damageList: Damage[],
     advantageState: AdvantageState,
+    randomness: RandomnessService,
   ) {
     this.numberOfAttacks = numberOfAttacks;
     this.targetAC = targetAC;
     this.toHit = toHit;
     this.damageList = damageList;
     this.advantageState = advantageState;
+    this.randomness = randomness;
   }
 
   /**
@@ -82,7 +87,11 @@ export default class RepeatedAttack {
     let totalNumberOfHits = 0;
     const attackDetailsList = [];
 
-    const attack = new Attack(this.toHit, this.damageList.toArray());
+    const attack = new Attack(
+      this.toHit,
+      this.damageList.toArray(),
+      this.randomness,
+    );
 
     for (let i = 0; i < this.numberOfAttacks; i++) {
       const attackDetails = attack.makeAttack(

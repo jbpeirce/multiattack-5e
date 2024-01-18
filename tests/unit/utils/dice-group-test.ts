@@ -2,6 +2,7 @@ import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
+import RandomnessService from 'multiattack-5e/services/randomness';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 
 module('Unit | Utils | dice-group', function (hooks) {
@@ -9,19 +10,19 @@ module('Unit | Utils | dice-group', function (hooks) {
 
   test('it rejects invalid input values', async function (assert) {
     assert.throws(
-      () => new DiceGroup(-1, 6),
+      () => new DiceGroup(-1, 6, new RandomnessService()),
       new Error('Number of dice in group must be non-negative'),
       'negative number of dice should throw an error',
     );
     assert.throws(
-      () => new DiceGroup(4, -1),
+      () => new DiceGroup(4, -1, new RandomnessService()),
       new Error('Die must have a positive number of sides'),
       'negative number of sides for dice should throw an error',
     );
   });
 
   test('it rolls and totals multiple dice', async function (assert) {
-    const noDice = new DiceGroup(0, 6);
+    const noDice = new DiceGroup(0, 6, new RandomnessService());
     assert.deepEqual(
       noDice.roll(),
       {
@@ -32,7 +33,7 @@ module('Unit | Utils | dice-group', function (hooks) {
     );
 
     // Create a group with a single die and mock its roll
-    const group1d8 = new DiceGroup(1, 8);
+    const group1d8 = new DiceGroup(1, 8, new RandomnessService());
     assert.strictEqual(
       group1d8.numDice,
       1,
@@ -56,7 +57,7 @@ module('Unit | Utils | dice-group', function (hooks) {
     );
 
     // Create a group with multiple dice and mock them
-    const group3d6 = new DiceGroup(3, 6, false);
+    const group3d6 = new DiceGroup(3, 6, new RandomnessService(), false);
     assert.strictEqual(
       group3d6.numDice,
       3,
@@ -91,22 +92,22 @@ module('Unit | Utils | dice-group', function (hooks) {
 
   test('it prints as expected', async function (assert) {
     assert.equal(
-      new DiceGroup(1, 6).prettyString(false),
+      new DiceGroup(1, 6, new RandomnessService()).prettyString(false),
       '1d6',
       'group being added should print as expected',
     );
     assert.equal(
-      new DiceGroup(3, 12, false).prettyString(false),
+      new DiceGroup(3, 12, new RandomnessService(), false).prettyString(false),
       '3d12',
       'whether a group is being subtracted should not affect its printing',
     );
     assert.equal(
-      new DiceGroup(2, 10, false).prettyString(true),
+      new DiceGroup(2, 10, new RandomnessService(), false).prettyString(true),
       '4d10',
       'the number of dice should be doubled when requested',
     );
     assert.equal(
-      new DiceGroup(0, 4, false).prettyString(true),
+      new DiceGroup(0, 4, new RandomnessService(), false).prettyString(true),
       '0d4',
       'zero dice should be handled without errors',
     );

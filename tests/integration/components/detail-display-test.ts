@@ -5,6 +5,7 @@ import { module, test } from 'qunit';
 
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
+import RandomnessService from 'multiattack-5e/services/randomness';
 import { type ElementContext } from 'multiattack-5e/tests/types/element-context';
 import Damage from 'multiattack-5e/utils/damage';
 
@@ -18,8 +19,20 @@ module('Integration | Component | detail-display', function (hooks) {
         targetAC: 15,
         toHit: '3 - 1d6',
         damageList: [
-          new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name, true, false),
-          new Damage('2d8', DamageType.RADIANT.name, false, true),
+          new Damage(
+            '2d6 + 5 + 1d4',
+            DamageType.PIERCING.name,
+            new RandomnessService(),
+            true,
+            false,
+          ),
+          new Damage(
+            '2d8',
+            DamageType.RADIANT.name,
+            new RandomnessService(),
+            false,
+            true,
+          ),
         ],
         advantageState: AdvantageState.DISADVANTAGE,
         totalDmg: 62,
@@ -347,8 +360,20 @@ module('Integration | Component | detail-display', function (hooks) {
         targetAC: 15,
         toHit: '-3',
         damageList: [
-          new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name, true, false),
-          new Damage('2d8', DamageType.RADIANT.name, false, true),
+          new Damage(
+            '2d6 + 5 + 1d4',
+            DamageType.PIERCING.name,
+            new RandomnessService(),
+            true,
+            false,
+          ),
+          new Damage(
+            '2d8',
+            DamageType.RADIANT.name,
+            new RandomnessService(),
+            false,
+            true,
+          ),
         ],
         advantageState: AdvantageState.STRAIGHT,
         totalDmg: 25,
@@ -469,8 +494,20 @@ module('Integration | Component | detail-display', function (hooks) {
         targetAC: 15,
         toHit: '-3',
         damageList: [
-          new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name, true, false),
-          new Damage('2d8', DamageType.RADIANT.name, false, true),
+          new Damage(
+            '2d6 + 5 + 1d4',
+            DamageType.PIERCING.name,
+            new RandomnessService(),
+            true,
+            false,
+          ),
+          new Damage(
+            '2d8',
+            DamageType.RADIANT.name,
+            new RandomnessService(),
+            false,
+            true,
+          ),
         ],
         advantageState: AdvantageState.STRAIGHT,
         totalDmg: 15,
@@ -548,7 +585,15 @@ module('Integration | Component | detail-display', function (hooks) {
         numberOfAttacks: 1,
         targetAC: 14,
         toHit: '3',
-        damageList: [new Damage('3d6', DamageType.ACID.name, true, true)],
+        damageList: [
+          new Damage(
+            '3d6',
+            DamageType.ACID.name,
+            new RandomnessService(),
+            true,
+            true,
+          ),
+        ],
         advantageState: AdvantageState.ADVANTAGE,
         totalDmg: 10,
         totalNumberOfHits: 1,
