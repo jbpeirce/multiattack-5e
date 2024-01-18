@@ -39,6 +39,13 @@ export default class DetailDisplayComponent extends Component {
     }
   };
 
+  /**
+   * Get a string displaying the given set of roll details.
+   * @param rollDetails information about the rolls from one or more groups of
+   * dice
+   * @returns a string pairing the name of each group of dice with the
+   * associated rolls
+   */
   getRollDetailString = (rollDetails: NameAndRolls[]) => {
     return rollDetails
       .map((roll) => `${roll.name}: ${roll.rolls.join(', ')}`)
