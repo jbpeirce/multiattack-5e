@@ -723,4 +723,78 @@ module('Integration | Component | detail-display', function (hooks) {
         .hasText('15 to hit');
     }
   });
+
+  test('it renders damage rolls without dice correctly', async function (this: ElementContext, assert) {
+    this.set('repeatedAttackDetails', [
+      {
+        numberOfAttacks: 1,
+        targetAC: 15,
+        toHit: '3',
+        damageList: [
+          new Damage(
+            '60',
+            DamageType.FORCE.name,
+            new RandomnessService(),
+            true,
+            false,
+          ),
+        ],
+        advantageState: AdvantageState.STRAIGHT,
+        totalDmg: 60,
+        totalNumberOfHits: 1,
+        attackDetailsList: [
+          {
+            roll: {
+              total: 21,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [18],
+                },
+              ],
+            },
+            hit: true,
+            crit: false,
+            nat1: false,
+            damage: 60,
+            damageDetails: [
+              {
+                type: 'force',
+                dice: '60',
+                roll: {
+                  total: 60,
+                  rolls: [],
+                },
+                resisted: false,
+                vulnerable: false,
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`,
+      );
+    });
+
+    await render(
+      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+    );
+
+    // The damage should not have been formatted as a link since there were no
+    // associated dice
+    assert
+      .dom('[data-test-damage-roll-detail="0-0-0"]')
+      .hasAttribute('title', '')
+      .hasText('60 force damage (60)');
+    assert
+      .dom('[data-test-damage-roll-collapse-link="0-0-0"]')
+      .doesNotExist(
+        'damage should not be formatted as a link with a collapsble pane if there were no damage dice',
+      );
+  });
 });

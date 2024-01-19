@@ -15,6 +15,11 @@
   <div class="col-scrollable rounded border">
     <ul class="p-4" data-test-attack-log>
       {{#each @repeatedAttackLog as |repeatedAttackDetails index|}}
+      {{#unless (eq index 0)}}
+      <hr>
+      <hr>
+      <hr>
+      {{/unless}}
       <h4 data-test-total-damage-header={{index}}>
         Total Damage: {{repeatedAttackDetails.totalDmg}} ({{repeatedAttackDetails.totalNumberOfHits}}
         {{this.getHitString repeatedAttackDetails.totalNumberOfHits}})
@@ -60,10 +65,15 @@
             <li>
               <span data-test-damage-roll-detail="{{index}}-{{index2}}-{{index3}}"
                 title="{{this.getRollDetailString damage.roll.rolls}}">
-                <a data-test-damage-roll-collapse-link="{{index}}-{{index2}}-{{index3}}" class="link link-dark collapsed"
-                  data-bs-toggle="collapse" href="#damage-detail-collapse-{{index}}-{{index2}}-{{index3}}" role="button"
-                  aria-expanded="false"
+                {{#if damage.roll.rolls}}
+                <a data-test-damage-roll-collapse-link="{{index}}-{{index2}}-{{index3}}"
+                  class="link link-dark collapsed" data-bs-toggle="collapse"
+                  href="#damage-detail-collapse-{{index}}-{{index2}}-{{index3}}" role="button" aria-expanded="false"
                   aria-controls="damage-detail-collapse-{{index}}-{{index2}}-{{index3}}">{{damage.roll.total}}</a>
+                {{/if}}
+                {{#unless damage.roll.rolls}}
+                {{damage.roll.total}}
+                {{/unless}}
                 {{damage.type}} damage
                 {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
                 {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
@@ -91,12 +101,14 @@
         <li class="li-miss">
           <span data-test-attack-roll-detail="{{index}}-{{index2}}"
             title="{{this.getRollDetailString attackDetails.roll.rolls}}">
-            <a data-test-attack-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed" data-bs-toggle="collapse" href="#attack-detail-collapse-{{index}}-{{index2}}"
-              role="button" aria-expanded="false" aria-controls="attack-detail-collapse-{{index}}-{{index2}}">
+            <a data-test-attack-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
+              data-bs-toggle="collapse" href="#attack-detail-collapse-{{index}}-{{index2}}" role="button"
+              aria-expanded="false" aria-controls="attack-detail-collapse-{{index}}-{{index2}}">
               {{attackDetails.roll.total}}</a> to hit
             {{#if attackDetails.nat1}} (NAT 1!){{/if}}
           </span>
-          <div data-test-attack-roll-collapse-pane="{{index}}-{{index2}}"  class="collapse" id="attack-detail-collapse-{{index}}-{{index2}}">
+          <div data-test-attack-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
+            id="attack-detail-collapse-{{index}}-{{index2}}">
             <ul>
               {{#each attackDetails.roll.rolls as |roll|}}
               <li class="text-muted">
@@ -110,9 +122,6 @@
 
         {{/each}}
       </ol>
-      <hr>
-      <hr>
-      <hr>
       {{/each}}
     </ul>
   </div>
