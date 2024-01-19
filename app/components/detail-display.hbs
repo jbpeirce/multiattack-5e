@@ -15,6 +15,11 @@
   <div class="col-scrollable rounded border">
     <ul class="p-4" data-test-attack-log>
       {{#each @repeatedAttackLog as |repeatedAttackDetails index|}}
+      {{#unless (eq index 0)}}
+      <hr>
+      <hr>
+      <hr>
+      {{/unless}}
       <h4 data-test-total-damage-header={{index}}>
         Total Damage: {{repeatedAttackDetails.totalDmg}} ({{repeatedAttackDetails.totalNumberOfHits}}
         {{this.getHitString repeatedAttackDetails.totalNumberOfHits}})
@@ -117,9 +122,6 @@
 
         {{/each}}
       </ol>
-      <hr>
-      <hr>
-      <hr>
       {{/each}}
     </ul>
   </div>
