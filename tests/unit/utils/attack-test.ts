@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 import sinon from 'sinon';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
+import RandomnessService from 'multiattack-5e/services/randomness';
 import Attack, { type DamageDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 
@@ -14,7 +15,7 @@ module('Unit | Utils | attack', function (hooks) {
     fakeD20.onCall(0).returns(3);
     fakeD20.onCall(1).returns(7);
 
-    const attack = new Attack('4', []);
+    const attack = new Attack('4', [], new RandomnessService());
     attack.die.roll = fakeD20;
 
     assert.strictEqual(
@@ -29,7 +30,7 @@ module('Unit | Utils | attack', function (hooks) {
     fakeD20.onCall(0).returns(3);
     fakeD20.onCall(1).returns(7);
 
-    const attack = new Attack('4', []);
+    const attack = new Attack('4', [], new RandomnessService());
     attack.die.roll = fakeD20;
 
     assert.strictEqual(
@@ -44,7 +45,7 @@ module('Unit | Utils | attack', function (hooks) {
     fakeD20.onCall(0).returns(3);
     fakeD20.onCall(1).returns(7);
 
-    const attack = new Attack('4', []);
+    const attack = new Attack('4', [], new RandomnessService());
     attack.die.roll = fakeD20;
 
     assert.strictEqual(
@@ -67,7 +68,7 @@ module('Unit | Utils | attack', function (hooks) {
     fakeD20.onCall(0).returns(3);
     fakeD20.onCall(1).returns(7);
 
-    const attack = new Attack('4', []);
+    const attack = new Attack('4', [], new RandomnessService());
     attack.die.roll = fakeD20;
 
     assert.strictEqual(
@@ -86,7 +87,7 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles an AC-based miss correctly', async function (assert) {
-    const attack = new Attack('4', []);
+    const attack = new Attack('4', [], new RandomnessService());
 
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(3);
@@ -111,7 +112,7 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles a nat1 miss correctly', async function (assert) {
-    const attack = new Attack('+20', []);
+    const attack = new Attack('+20', [], new RandomnessService());
 
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(1);
@@ -136,10 +137,18 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles a hit with a constant attack modifier correctly', async function (assert) {
-    const attack = new Attack('5', [
-      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
-      new Damage('2d8', DamageType.RADIANT.name),
-    ]);
+    const attack = new Attack(
+      '5',
+      [
+        new Damage(
+          '2d6 + 5 + 1d4',
+          DamageType.PIERCING.name,
+          new RandomnessService(),
+        ),
+        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
+      ],
+      new RandomnessService(),
+    );
 
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
@@ -165,10 +174,18 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles a hit with an attack modifier including dice correctly', async function (assert) {
-    const attack = new Attack('5 + 1d4', [
-      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
-      new Damage('2d8', DamageType.RADIANT.name),
-    ]);
+    const attack = new Attack(
+      '5 + 1d4',
+      [
+        new Damage(
+          '2d6 + 5 + 1d4',
+          DamageType.PIERCING.name,
+          new RandomnessService(),
+        ),
+        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
+      ],
+      new RandomnessService(),
+    );
 
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
@@ -210,10 +227,18 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles a hit with an attack modifier subtracting dice correctly', async function (assert) {
-    const attack = new Attack('5 - 1d6', [
-      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
-      new Damage('2d8', DamageType.RADIANT.name),
-    ]);
+    const attack = new Attack(
+      '5 - 1d6',
+      [
+        new Damage(
+          '2d6 + 5 + 1d4',
+          DamageType.PIERCING.name,
+          new RandomnessService(),
+        ),
+        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
+      ],
+      new RandomnessService(),
+    );
 
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
@@ -249,10 +274,18 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it adds damage dice as expected', async function (assert) {
-    const attack = new Attack('5', [
-      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
-      new Damage('2d8', DamageType.RADIANT.name),
-    ]);
+    const attack = new Attack(
+      '5',
+      [
+        new Damage(
+          '2d6 + 5 + 1d4',
+          DamageType.PIERCING.name,
+          new RandomnessService(),
+        ),
+        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
+      ],
+      new RandomnessService(),
+    );
 
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
@@ -337,10 +370,18 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles a critical hit as expected', async function (assert) {
-    const attack = new Attack('-5', [
-      new Damage('2d6 + 5 + 1d4', DamageType.PIERCING.name),
-      new Damage('2d8', DamageType.RADIANT.name),
-    ]);
+    const attack = new Attack(
+      '-5',
+      [
+        new Damage(
+          '2d6 + 5 + 1d4',
+          DamageType.PIERCING.name,
+          new RandomnessService(),
+        ),
+        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
+      ],
+      new RandomnessService(),
+    );
 
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();

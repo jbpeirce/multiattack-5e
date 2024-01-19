@@ -1,10 +1,12 @@
 import { A } from '@ember/array';
 import { assert } from '@ember/debug';
 import { action } from '@ember/object';
+import { service } from '@ember/service';
 import Component from '@glimmer/component';
 import type { EmptyObject } from '@glimmer/component/-private/component';
 import { tracked } from '@glimmer/tracking';
 
+import type RandomnessService from 'multiattack-5e/services/randomness';
 import type { AttackDetails } from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 import DiceStringParser from 'multiattack-5e/utils/dice-string-parser';
@@ -15,6 +17,8 @@ import AdvantageState from './advantage-state-enum';
 import DamageType from './damage-type-enum';
 
 export default class RepeatedAttackFormComponent extends Component {
+  @service('randomness') randomness: RandomnessService | undefined;
+
   @tracked numberOfAttacks = 5;
   @tracked targetAC = 15;
 
@@ -79,16 +83,28 @@ export default class RepeatedAttackFormComponent extends Component {
   }
 
   getDefaultDamage(): Damage {
-    return new Damage('2d6 + 3', DamageType.PIERCING.name);
+    if (!this.randomness) {
+      throw new Error(
+        'Unable to access randomness service; service injection failed?',
+      );
+    }
+    return new Damage('2d6 + 3', DamageType.PIERCING.name, this.randomness);
   }
 
   simulateRepeatedAttacks = () => {
+    if (!this.randomness) {
+      throw new Error(
+        'Unable to access randomness service; service injection failed?',
+      );
+    }
+
     const nextRepeatedAttack = new RepeatedAttack(
       this.numberOfAttacks,
       this.targetAC,
       this.toHit,
       this.damageList,
       this.advantageState,
+      this.randomness,
     );
 
     // Create a new array so that the page will re-render

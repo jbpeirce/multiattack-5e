@@ -1,3 +1,5 @@
+import type RandomnessService from 'multiattack-5e/services/randomness';
+
 import DiceGroup from './dice-group';
 import DiceGroupsAndModifier from './dice-groups-and-modifier';
 
@@ -45,7 +47,10 @@ export default class DiceStringParser {
    * @returns the list of described dice groups and all of the numbers added
    * together into a single modifier
    */
-  static parse(diceString: string): DiceGroupsAndModifier {
+  static parse(
+    diceString: string,
+    randomness: RandomnessService,
+  ): DiceGroupsAndModifier {
     // Check that the string matches the overall expected pattern, with no
     // additional text or missing signs
     if (!this.validateDiceString(diceString)) {
@@ -76,6 +81,7 @@ export default class DiceStringParser {
           new DiceGroup(
             Number(match.groups['numDice']),
             Number(match.groups['numSides']),
+            randomness,
             add,
           ),
         );

@@ -2,6 +2,8 @@ import { assert } from '@ember/debug';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
+import type RandomnessService from 'multiattack-5e/services/randomness';
+
 import DiceGroupsAndModifier, {
   type GroupRollDetails,
 } from './dice-groups-and-modifier';
@@ -17,12 +19,17 @@ export default class Damage {
   @tracked targetResistant: boolean;
   @tracked targetVulnerable: boolean;
 
+  randomness: RandomnessService;
+
   constructor(
     damageString: string,
     type: string,
+    randomness: RandomnessService,
     targetResistant = false,
     targetVulnerable = false,
   ) {
+    this.randomness = randomness;
+
     this.parseDamageString(damageString);
     this.damageString = damageString;
     this.type = type;
@@ -32,7 +39,7 @@ export default class Damage {
 
   parseDamageString(damageString: string) {
     try {
-      this.damage = DiceStringParser.parse(damageString);
+      this.damage = DiceStringParser.parse(damageString, this.randomness);
       this.damageParsingErrored = false;
     } catch (e) {
       this.damage = new DiceGroupsAndModifier([], 0);

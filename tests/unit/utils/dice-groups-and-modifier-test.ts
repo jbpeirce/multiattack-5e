@@ -2,6 +2,7 @@ import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
+import RandomnessService from 'multiattack-5e/services/randomness';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 import DiceGroupsAndModifier from 'multiattack-5e/utils/dice-groups-and-modifier';
 
@@ -10,7 +11,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
 
   test('it rolls one dice group', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
-      [new DiceGroup(1, 6)],
+      [new DiceGroup(1, 6, new RandomnessService())],
       1,
     );
 
@@ -38,7 +39,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
 
   test('it rolls double dice when instructed', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
-      [new DiceGroup(1, 6)],
+      [new DiceGroup(1, 6, new RandomnessService())],
       2,
     );
 
@@ -67,7 +68,10 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
 
   test('it rolls and adds multiple dice groups', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
-      [new DiceGroup(3, 8), new DiceGroup(2, 6, false)],
+      [
+        new DiceGroup(3, 8, new RandomnessService()),
+        new DiceGroup(2, 6, new RandomnessService(), false),
+      ],
       -3,
     );
 
@@ -111,7 +115,10 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
 
   test('it doubles all dice groups on a critical hit', async function (assert) {
     const diceGroupAndModifier = new DiceGroupsAndModifier(
-      [new DiceGroup(3, 8), new DiceGroup(2, 6)],
+      [
+        new DiceGroup(3, 8, new RandomnessService()),
+        new DiceGroup(2, 6, new RandomnessService()),
+      ],
       2,
     );
 
@@ -161,7 +168,10 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
   test('it prints as expected', async function (assert) {
     assert.equal(
       new DiceGroupsAndModifier(
-        [new DiceGroup(3, 8), new DiceGroup(2, 12)],
+        [
+          new DiceGroup(3, 8, new RandomnessService()),
+          new DiceGroup(2, 12, new RandomnessService()),
+        ],
         2,
       ).prettyString(false),
       '3d8 + 2d12 + 2',
@@ -169,7 +179,10 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
     );
     assert.equal(
       new DiceGroupsAndModifier(
-        [new DiceGroup(3, 8), new DiceGroup(2, 4, false)],
+        [
+          new DiceGroup(3, 8, new RandomnessService()),
+          new DiceGroup(2, 4, new RandomnessService(), false),
+        ],
         -5,
       ).prettyString(false),
       '3d8 - 2d4 - 5',
@@ -191,20 +204,27 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       '0 modifier should print if there are no accompanying dice groups',
     );
     assert.equal(
-      new DiceGroupsAndModifier([new DiceGroup(1, 4)], 0).prettyString(false),
+      new DiceGroupsAndModifier(
+        [new DiceGroup(1, 4, new RandomnessService())],
+        0,
+      ).prettyString(false),
       '1d4',
       'single dice group should print as expected',
     );
     assert.equal(
-      new DiceGroupsAndModifier([new DiceGroup(1, 4, false)], 0).prettyString(
-        false,
-      ),
+      new DiceGroupsAndModifier(
+        [new DiceGroup(1, 4, new RandomnessService(), false)],
+        0,
+      ).prettyString(false),
       '- 1d4',
       'single negative dice group should print as expected',
     );
     assert.equal(
       new DiceGroupsAndModifier(
-        [new DiceGroup(3, 8), new DiceGroup(2, 4, false)],
+        [
+          new DiceGroup(3, 8, new RandomnessService()),
+          new DiceGroup(2, 4, new RandomnessService(), false),
+        ],
         -5,
       ).prettyString(true),
       '6d8 - 4d4 - 5',

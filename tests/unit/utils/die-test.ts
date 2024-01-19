@@ -1,6 +1,7 @@
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 
+import RandomnessService from 'multiattack-5e/services/randomness';
 import Die from 'multiattack-5e/utils/die';
 
 module('Unit | Utils | die', function (hooks) {
@@ -8,12 +9,12 @@ module('Unit | Utils | die', function (hooks) {
 
   test('it rejects invalid numbers of sides', async function (assert) {
     assert.throws(
-      () => new Die(-1),
+      () => new Die(-1, new RandomnessService()),
       new Error('Die must have a positive number of sides'),
       'negative number of sides should throw error',
     );
     assert.throws(
-      () => new Die(0),
+      () => new Die(0, new RandomnessService()),
       new Error('Die must have a positive number of sides'),
       'zero sides should throw error',
     );
@@ -22,7 +23,7 @@ module('Unit | Utils | die', function (hooks) {
   test('it rolls dice in the expected range', async function (assert) {
     assert.expect(40);
     for (let sides = 1; sides < 21; sides++) {
-      const die = new Die(sides);
+      const die = new Die(sides, new RandomnessService());
       const roll: number = die.roll();
       assert.true(
         roll >= 1,
@@ -42,7 +43,7 @@ module('Unit | Utils | die', function (hooks) {
     let rolled20 = false;
     let rolled1 = false;
 
-    const die = new Die(20);
+    const die = new Die(20, new RandomnessService());
     for (let i = 0; i < 1000; i++) {
       const roll: number = die.roll();
       if (roll == 20) {

@@ -1,3 +1,4 @@
+import type RandomnessService from 'multiattack-5e/services/randomness';
 import Die from 'multiattack-5e/utils/die';
 
 export interface RollDetails {
@@ -10,13 +11,18 @@ export default class DiceGroup {
   die: Die;
   add: boolean;
 
-  constructor(numDice: number, numSides: number, add = true) {
+  constructor(
+    numDice: number,
+    numSides: number,
+    randomness: RandomnessService,
+    add = true,
+  ) {
     if (numDice < 0) {
       throw new Error('Number of dice in group must be non-negative');
     }
 
     this.numDice = numDice;
-    this.die = new Die(numSides);
+    this.die = new Die(numSides, randomness);
     this.add = add;
   }
 

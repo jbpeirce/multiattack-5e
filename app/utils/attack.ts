@@ -1,3 +1,5 @@
+import type RandomnessService from 'multiattack-5e/services/randomness';
+
 import Damage from './damage';
 import DiceGroupsAndModifier, {
   type GroupRollDetails,
@@ -24,7 +26,7 @@ export interface DamageDetails {
 }
 
 export default class Attack {
-  die = new Die(20);
+  die: Die;
 
   toHitModifier: DiceGroupsAndModifier;
 
@@ -38,8 +40,13 @@ export default class Attack {
    * @param damageTypes a list of the damage types inflicted by this attack,
    * with details for each
    */
-  constructor(toHit: string, damageTypes: Damage[]) {
-    this.toHitModifier = DiceStringParser.parse(toHit);
+  constructor(
+    toHit: string,
+    damageTypes: Damage[],
+    randomness: RandomnessService,
+  ) {
+    this.die = new Die(20, randomness);
+    this.toHitModifier = DiceStringParser.parse(toHit, randomness);
     this.damageTypes = damageTypes;
   }
 
