@@ -2,7 +2,7 @@ import type AdvantageState from 'multiattack-5e/components/advantage-state-enum'
 import type RandomnessService from 'multiattack-5e/services/randomness';
 
 import D20WithModifiers from './d20-with-modifiers';
-import Damage from './damage';
+import Damage, { type DamageDetails } from './damage';
 import { type GroupRollDetails } from './dice-groups-and-modifier';
 
 export interface AttackDetails {
@@ -13,14 +13,6 @@ export interface AttackDetails {
   damage: number;
   numberOfHits: number;
   damageDetails: DamageDetails[];
-}
-
-export interface DamageDetails {
-  type: string;
-  dice: string;
-  roll: GroupRollDetails;
-  resisted: boolean;
-  vulnerable: boolean;
 }
 
 export default class Attack {
@@ -73,15 +65,9 @@ export default class Attack {
     if (hit) {
       numberOfHits += 1;
       for (const damage of this.damageTypes) {
-        const rolledDmg = damage.roll(crit);
-        totalDmg += rolledDmg.total;
-        damageDetails.push({
-          type: `${damage.type}`,
-          dice: `${damage.prettyString(crit)}`,
-          roll: rolledDmg,
-          resisted: damage.targetResistant,
-          vulnerable: damage.targetVulnerable,
-        });
+        const dmg = damage.roll(crit);
+        totalDmg += dmg.roll.total;
+        damageDetails.push(dmg);
       }
     }
 
