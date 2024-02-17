@@ -1,19 +1,19 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
 
-.li-hit {
+.li-success {
   padding-inline-start: 1ch;
 }
 
-.li-hit::marker {
+.li-success::marker {
   color: green;
   content: "✓";
 }
 
-.li-miss {
+.li-fail {
   padding-inline-start: 1ch;
 }
 
-.li-miss::marker {
+.li-fail::marker {
   color: red;
   content: "✕";
 }

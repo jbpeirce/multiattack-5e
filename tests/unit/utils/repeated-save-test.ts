@@ -34,7 +34,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
 
       totalDmg: 0,
       totalNumberOfPasses: 1,
-      saveDetailsList: [
+      detailsList: [
         {
           roll: {
             total: 10, // meeting the DC passes the save
@@ -73,7 +73,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
 
       totalDmg: 0,
       totalNumberOfPasses: 0,
-      saveDetailsList: [
+      detailsList: [
         {
           roll: {
             total: 6,
@@ -119,7 +119,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
 
       totalDmg: 0,
       totalNumberOfPasses: 2,
-      saveDetailsList: [
+      detailsList: [
         {
           roll: {
             total: 6,

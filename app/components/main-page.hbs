@@ -1,0 +1,39 @@
+<div class="container-reasonable-width">
+  <div class="row align-items-center">
+    <div class="col col-lg-9 pt-5 pb-2">
+      <div class="container-readable-width">
+        <h1>Repeated Attack Simulator</h1>
+        <p>
+          Did a druid just summon a pack of wolves? Has a necromancer gathered a zombie horde? Is a marilith focusing on
+          a single opponent? This tool simulates repeated identical attacks on a single target and displays the total
+          damage alongside a breakdown of the attacks.
+        </p>
+        <p>
+          This uses a 20-sided die for attack rolls, as in D&D 5e and similar systems. If an attack is a critical hit
+          (rolls a 20), the damage dice are rolled twice. Rolling a 1 on the d20 always misses, and a 20 always hits.
+        </p>
+      </div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link active" id="nav-attacks-tab" data-bs-toggle="tab" data-bs-target="#nav-attacks"
+        type="button" role="tab" aria-controls="nav-attacks" aria-selected="true">Attacks</button>
+      <button class="nav-link" id="nav-saves-tab" data-bs-toggle="tab" data-bs-target="#nav-saves" type="button"
+        role="tab" aria-controls="nav-saves" aria-selected="false">Saves</button>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-attacks" role="tabpanel" aria-labelledby="nav-attacks-tab"
+      tabindex="0">
+      <div class="py-3">
+        <RepeatedAttackForm />
+      </div>
+    </div>
+    <div class="tab-pane fade" id="nav-saves" role="tabpanel" aria-labelledby="nav-saves-tab" tabindex="0">
+      <div class="py-3">
+        <RepeatedSaveForm />
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,7 +15,7 @@ export interface RepeatedAttackResult {
   // the results of executing the repeated attacks
   totalDmg: number;
   totalNumberOfHits: number;
-  attackDetailsList: AttackDetails[];
+  detailsList: AttackDetails[];
 }
 
 export default class RepeatedAttack {
@@ -111,7 +111,7 @@ export default class RepeatedAttack {
 
       totalDmg: totalDmg,
       totalNumberOfHits: totalNumberOfHits,
-      attackDetailsList: attackDetailsList,
+      detailsList: attackDetailsList,
     };
   }
 }

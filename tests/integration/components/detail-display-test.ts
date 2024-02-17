@@ -6,18 +6,22 @@ import { module, test } from 'qunit';
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
+import {
+  type RepeatedTestEventResult,
+  type TestEventDetails,
+} from 'multiattack-5e/tests/helpers/detail-display-helper';
 import { type ElementContext } from 'multiattack-5e/tests/types/element-context';
 import Damage from 'multiattack-5e/utils/damage';
 
 module('Integration | Component | detail-display', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders multiple hits and misses in a single repeated attack', async function (this: ElementContext, assert) {
-    this.set('repeatedAttackDetails', [
+  test('it renders both success and failure in a single repeated event', async function (this: ElementContext, assert) {
+    this.set('repeatedEventDetails', [
       {
-        numberOfAttacks: 4,
-        targetAC: 15,
-        toHit: '3 - 1d6',
+        numberOfRepetitions: 3,
+        threshold: 15,
+        d20Modifier: '3 - 1d6',
         damageList: [
           new Damage(
             '2d6 + 5 + 1d4',
@@ -36,8 +40,8 @@ module('Integration | Component | detail-display', function (hooks) {
         ],
         advantageState: AdvantageState.DISADVANTAGE,
         totalDmg: 62,
-        totalNumberOfHits: 2,
-        attackDetailsList: [
+        totalSuccesses: 2,
+        detailsList: [
           {
             roll: {
               total: 21,
@@ -52,9 +56,8 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: true,
-            crit: true,
-            nat1: false,
+            success: true,
+            majorSuccess: true,
             damage: 37,
             damageDetails: [
               {
@@ -107,9 +110,8 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: true,
-            crit: false,
-            nat1: false,
+            success: true,
+            majorSuccess: false,
             damage: 25,
             damageDetails: [
               {
@@ -150,25 +152,6 @@ module('Integration | Component | detail-display', function (hooks) {
           },
           {
             roll: {
-              total: 13,
-              rolls: [
-                {
-                  name: '1d20',
-                  rolls: [14],
-                },
-                {
-                  name: '-1d6',
-                  rolls: [4],
-                },
-              ],
-            },
-            hit: false,
-            crit: false,
-            nat1: false,
-            damage: 0,
-          },
-          {
-            roll: {
               total: -2,
               rolls: [
                 {
@@ -181,9 +164,8 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: false,
-            crit: false,
-            nat1: true,
+            success: false,
+            majorSuccess: false,
             damage: 0,
           },
         ],
@@ -197,95 +179,91 @@ module('Integration | Component | detail-display', function (hooks) {
       );
     });
 
+    setupDetailDisplayTest(this);
+
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @log={{this.repeatedEventDetails}} @clearLog={{this.doNotCall}} @getLogHeader={{this.getLogHeader}}
+      @getSuccessCountString={{this.getSuccessCountString}} @getRepCountString={{this.getRepCountString}}
+      @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
+      @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
+      @getD20RollString={{this.getD20RollString}}
+      @shouldBoldDice={{this.shouldBoldDice}} />`,
     );
 
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .hasText(
-        'Number of attacks: 4\n' +
-          'Target AC: 15\n' +
-          'Attack roll: 1d20 + 3 - 1d6 (disadvantage)\n',
-        'the details for the input damage should be displayed',
+        'Repetitions: 3\n' +
+          'Success threshold: 15\n' +
+          'Roll: 1d20 + 3 - 1d6 (disadvantage)\n',
+        'the details for the repeated sequence should be displayed',
       );
 
     assert
       .dom('[data-test-total-damage-header="0"]')
-      .isVisible('damage header should be displayed')
-      .hasText('Total Damage: 62 (2 hits)');
+      .isVisible('damage and success header should be displayed')
+      .hasText('Total Damage: 62 (2 successes)');
 
     assert
-      .dom('[data-test-attack-detail-list="0"]')
-      .isVisible('attack details should be displayed');
+      .dom('[data-test-detail-list="0"]')
+      .isVisible('details should be displayed');
 
     const detailsList = this.element.querySelector(
-      '[data-test-attack-detail-list="0"]',
+      '[data-test-detail-list="0"]',
     )?.children;
     assert.true(detailsList != null, 'detail list should be present');
 
     if (detailsList) {
       assert.equal(
         detailsList.length,
-        4,
-        '4 attacks should have been displayed',
+        3,
+        '3 repetitions should have been displayed',
       );
 
-      // critical hit
+      // success 1
       assert.equal(
         detailsList[0]?.className,
-        'li-hit',
-        'critical hit should have bullet point formatted as a hit',
+        'li-success',
+        'first success should have bullet point formatted as a success',
       );
       assert
-        .dom('[data-test-attack-roll-detail="0-0"]')
+        .dom('[data-test-roll-detail="0-0"]')
         .hasAttribute('title', '1d20: 20 | -1d6: 2')
-        .hasText('21 to hit (CRIT!)');
+        .hasText('21 from roll');
 
-      // regular hit
+      // success 2
       assert.equal(
         detailsList[1]?.className,
-        'li-hit',
-        'normal hit should have bullet point formatted as a hit',
+        'li-success',
+        'second success should have bullet point formatted as a success',
       );
       assert
-        .dom('[data-test-attack-roll-detail="0-1"]')
+        .dom('[data-test-roll-detail="0-1"]')
         .hasAttribute('title', '1d20: 18 | -1d6: 3')
-        .hasText('18 to hit');
+        .hasText('18 from roll');
 
-      // miss with double-digit attack roll
+      // failure
       assert.equal(
         detailsList[2]?.className,
-        'li-miss',
-        'double-digit attack roll with a miss should have bullet point formatted as a miss',
+        'li-fail',
+        'failure should have bullet point formatted as a failure',
       );
       assert
-        .dom('[data-test-attack-roll-detail="0-2"]')
-        .hasAttribute('title', '1d20: 14 | -1d6: 4')
-        .hasText('13 to hit');
-
-      //  miss with natural one
-      assert.equal(
-        detailsList[3]?.className,
-        'li-miss',
-        'natural one should have bullet point formatted as a miss',
-      );
-      assert
-        .dom('[data-test-attack-roll-detail="0-3"]')
+        .dom('[data-test-roll-detail="0-2"]')
         .hasAttribute('title', '1d20: 1 | -1d6: 6')
-        .hasText('-2 to hit (NAT 1!)');
+        .hasText('-2 from roll');
     }
 
-    // Inspect the detailed display of the critical hit's damage
-    const critDamageDetailsList = this.element.querySelector(
+    // Inspect the detailed display of the first success's damage
+    const firstDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0-0"]',
     )?.children;
     assert.true(
-      critDamageDetailsList != null,
+      firstDamageDetailsList != null,
       'damage detail list should be present',
     );
     assert.equal(
-      critDamageDetailsList?.length,
+      firstDamageDetailsList?.length,
       2,
       '2 types of damage should have been displayed',
     );
@@ -314,16 +292,16 @@ module('Integration | Component | detail-display', function (hooks) {
       .dom('[data-test-damage-roll-collapse-pane="0-0-1"]')
       .hasText('4d8: 2, 7, 1, 3');
 
-    // Inspect the detailed display of the regular hit's damage
-    const regularDamageDetailsList = this.element.querySelector(
+    // Inspect the detailed display of the second hit's damage
+    const secondDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0-1"]',
     )?.children;
     assert.true(
-      regularDamageDetailsList != null,
+      secondDamageDetailsList != null,
       'damage detail list should be present',
     );
     assert.equal(
-      regularDamageDetailsList?.length,
+      secondDamageDetailsList?.length,
       2,
       '2 types of damage should have been displayed',
     );
@@ -353,146 +331,12 @@ module('Integration | Component | detail-display', function (hooks) {
       .hasText('2d8: 3, 7');
   });
 
-  test('it renders a single hit correctly', async function (this: ElementContext, assert) {
-    this.set('repeatedAttackDetails', [
+  test('it renders multiple repeated events correctly', async function (this: ElementContext, assert) {
+    this.set('repeatedEventDetails', [
       {
-        numberOfAttacks: 2,
-        targetAC: 15,
-        toHit: '-3',
-        damageList: [
-          new Damage(
-            '2d6 + 5 + 1d4',
-            DamageType.PIERCING.name,
-            new RandomnessService(),
-            true,
-            false,
-          ),
-          new Damage(
-            '2d8',
-            DamageType.RADIANT.name,
-            new RandomnessService(),
-            false,
-            true,
-          ),
-        ],
-        advantageState: AdvantageState.STRAIGHT,
-        totalDmg: 25,
-        totalNumberOfHits: 1,
-        attackDetailsList: [
-          {
-            roll: {
-              total: 16,
-              rolls: [
-                {
-                  name: '1d20',
-                  rolls: [19],
-                },
-              ],
-            },
-            hit: true,
-            crit: false,
-            nat1: false,
-            damage: 25,
-            damageDetails: [
-              {
-                type: 'piercing',
-                dice: '2d6 + 1d4 + 5',
-                roll: {
-                  total: 5,
-                  rolls: [
-                    {
-                      name: '2d6',
-                      rolls: [2, 1],
-                    },
-                    {
-                      name: '1d4',
-                      rolls: [2],
-                    },
-                  ],
-                },
-                resisted: true,
-                vulnerable: false,
-              },
-              {
-                type: 'radiant',
-                dice: '2d8',
-                roll: {
-                  total: 20,
-                  rolls: [
-                    {
-                      name: '2d8',
-                      rolls: [2, 8],
-                    },
-                  ],
-                },
-                resisted: false,
-                vulnerable: true,
-              },
-            ],
-          },
-          {
-            roll: {
-              total: -1,
-              rolls: [
-                {
-                  name: '1d20',
-                  rolls: [2],
-                },
-              ],
-            },
-            hit: false,
-            crit: false,
-            nat1: false,
-            damage: 0,
-          },
-        ],
-      },
-    ]);
-
-    this.set('doNotCall', (actual: InputEvent) => {
-      assert.true(
-        false,
-        `this setter should not have been called but was called with ${actual}`,
-      );
-    });
-
-    await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
-    );
-
-    assert
-      .dom('[data-test-attack-data-list="0"]')
-      .hasText(
-        'Number of attacks: 2\nTarget AC: 15\nAttack roll: 1d20 -3\n',
-        'the details for the attack should be displayed',
-      );
-
-    assert
-      .dom('[data-test-total-damage-header="0"]')
-      .isVisible('damage header should be displayed');
-
-    assert
-      .dom('[data-test-total-damage-header="0"]')
-      .hasText('Total Damage: 25 (1 hit)');
-
-    assert
-      .dom('[data-test-attack-detail-list="0"]')
-      .isVisible('attack details should be displayed');
-
-    assert.equal(
-      this.element.querySelector('[data-test-attack-detail-list="0"]')?.children
-        .length,
-      2,
-      '2 attacks should have been displayed',
-    );
-  });
-
-  test('it renders multiple repeated attacks correctly', async function (this: ElementContext, assert) {
-    this.set('repeatedAttackDetails', [
-      {
-        numberOfAttacks: 2,
-        targetAC: 15,
-        toHit: '-3',
+        numberOfRepetitions: 2,
+        threshold: 15,
+        d20Modifier: '-3',
         damageList: [
           new Damage(
             '2d6 + 5 + 1d4',
@@ -511,8 +355,8 @@ module('Integration | Component | detail-display', function (hooks) {
         ],
         advantageState: AdvantageState.STRAIGHT,
         totalDmg: 15,
-        totalNumberOfHits: 1,
-        attackDetailsList: [
+        totalSuccesses: 1,
+        detailsList: [
           {
             roll: {
               total: 16,
@@ -523,9 +367,8 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: true,
-            crit: false,
-            nat1: false,
+            success: true,
+            majorSuccess: false,
             damage: 15,
             damageDetails: [
               {
@@ -574,17 +417,16 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: false,
-            crit: false,
-            nat1: false,
+            success: false,
+            majorSuccess: false,
             damage: 0,
           },
         ],
       },
       {
-        numberOfAttacks: 1,
-        targetAC: 14,
-        toHit: '3',
+        numberOfRepetitions: 1,
+        threshold: 14,
+        d20Modifier: '3',
         damageList: [
           new Damage(
             '3d6',
@@ -596,8 +438,8 @@ module('Integration | Component | detail-display', function (hooks) {
         ],
         advantageState: AdvantageState.ADVANTAGE,
         totalDmg: 10,
-        totalNumberOfHits: 1,
-        attackDetailsList: [
+        totalSuccesses: 1,
+        detailsList: [
           {
             roll: {
               total: 15,
@@ -608,9 +450,8 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: true,
-            crit: false,
-            nat1: false,
+            success: true,
+            majorSuccess: false,
             damage: 10,
             damageDetails: [
               {
@@ -641,95 +482,102 @@ module('Integration | Component | detail-display', function (hooks) {
       );
     });
 
+    setupDetailDisplayTest(this);
+
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @log={{this.repeatedEventDetails}} @clearLog={{this.doNotCall}} @getLogHeader={{this.getLogHeader}}
+      @getSuccessCountString={{this.getSuccessCountString}} @getRepCountString={{this.getRepCountString}}
+      @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
+      @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
+      @getD20RollString={{this.getD20RollString}}
+      @shouldBoldDice={{this.shouldBoldDice}} />`,
     );
 
-    // First attack
+    // First set of repeated events
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .hasText(
-        'Number of attacks: 2\nTarget AC: 15\nAttack roll: 1d20 -3\n',
-        'first attack: the details for the attack should be displayed',
+        'Repetitions: 2\nSuccess threshold: 15\nRoll: 1d20 -3\n',
+        'first event set: the details for the set of repeated events should be displayed',
       );
 
     assert
       .dom('[data-test-total-damage-header="0"]')
-      .hasText('Total Damage: 15 (1 hit)');
+      .hasText('Total Damage: 15 (1 success)');
 
     const detailsList1 = this.element.querySelector(
-      '[data-test-attack-detail-list="0"]',
+      '[data-test-detail-list="0"]',
     )?.children;
     assert.true(detailsList1 != null, 'detail list should be present');
     if (detailsList1) {
       assert.equal(
         detailsList1.length,
         2,
-        'first attack: 2 attacks should have been displayed',
+        'first event set: 2 events should have been displayed',
       );
 
       assert.equal(
         detailsList1[0]?.className,
-        'li-hit',
-        'first attack: hit should have bullet point formatted as a hit',
+        'li-success',
+        'first event set: success should have bullet point formatted as a success',
       );
       assert
-        .dom('[data-test-attack-roll-detail="0-0"]')
+        .dom('[data-test-roll-detail="0-0"]')
         .hasAttribute('title', '1d20: 19')
-        .hasText('16 to hit');
+        .hasText('16 from roll');
 
       assert.equal(
         detailsList1[1]?.className,
-        'li-miss',
-        'first attack: miss should have bullet point formatted as a miss',
+        'li-fail',
+        'first event set: failure should have bullet point formatted as a failure',
       );
       assert
-        .dom('[data-test-attack-roll-detail="0-1"]')
+        .dom('[data-test-roll-detail="0-1"]')
         .hasAttribute('title', '1d20: 2')
-        .hasText('-1 to hit');
+        .hasText('-1 from roll');
     }
 
-    // Second attack
+    // Second event set
     assert
-      .dom('[data-test-attack-data-list="1"]')
+      .dom('[data-test-data-list="1"]')
       .hasText(
-        'Number of attacks: 1\nTarget AC: 14\nAttack roll: 1d20 + 3 (advantage)\n',
-        'second attack: the details for the attack should be displayed',
+        'Repetitions: 1\nSuccess threshold: 14\nRoll: 1d20 + 3 (advantage)\n',
+        'second event set: the details for the event set should be displayed',
       );
 
     assert
       .dom('[data-test-total-damage-header="1"]')
-      .hasText('Total Damage: 10 (1 hit)');
+      .hasText('Total Damage: 10 (1 success)');
 
     const detailsList2 = this.element.querySelector(
-      '[data-test-attack-detail-list="1"]',
+      '[data-test-detail-list="1"]',
     )?.children;
     assert.true(detailsList2 != null, 'detail list should be present');
     if (detailsList2) {
       assert.equal(
         detailsList2.length,
         1,
-        'second attack: 1 attack should have been displayed',
+        'second event set: 1 event should have been displayed',
       );
 
       assert.equal(
         detailsList2[0]?.className,
-        'li-hit',
-        'second attack: hit should have bullet point formatted as a hit',
+        'li-success',
+        'second event set: success should have bullet point formatted as a success',
       );
       assert
-        .dom('[data-test-attack-roll-detail="1-0"]')
+        .dom('[data-test-roll-detail="1-0"]')
         .hasAttribute('title', '1d20: 12')
-        .hasText('15 to hit');
+        .hasText('15 from roll');
     }
   });
 
   test('it renders damage rolls without dice correctly', async function (this: ElementContext, assert) {
-    this.set('repeatedAttackDetails', [
+    this.set('repeatedEventDetails', [
       {
-        numberOfAttacks: 1,
-        targetAC: 15,
-        toHit: '3',
+        numberOfRepetitions: 1,
+        threshold: 15,
+        d20Modifier: '3',
         damageList: [
           new Damage(
             '60',
@@ -741,8 +589,8 @@ module('Integration | Component | detail-display', function (hooks) {
         ],
         advantageState: AdvantageState.STRAIGHT,
         totalDmg: 60,
-        totalNumberOfHits: 1,
-        attackDetailsList: [
+        totalSuccesses: 1,
+        detailsList: [
           {
             roll: {
               total: 21,
@@ -753,9 +601,8 @@ module('Integration | Component | detail-display', function (hooks) {
                 },
               ],
             },
-            hit: true,
-            crit: false,
-            nat1: false,
+            success: true,
+            majorSuccess: false,
             damage: 60,
             damageDetails: [
               {
@@ -781,8 +628,15 @@ module('Integration | Component | detail-display', function (hooks) {
       );
     });
 
+    setupDetailDisplayTest(this);
+
     await render(
-      hbs`<DetailDisplay @repeatedAttackLog={{this.repeatedAttackDetails}} @clearAttackLog={{this.doNotCall}} />`,
+      hbs`<DetailDisplay @log={{this.repeatedEventDetails}} @clearLog={{this.doNotCall}} @getLogHeader={{this.getLogHeader}}
+      @getSuccessCountString={{this.getSuccessCountString}} @getRepCountString={{this.getRepCountString}}
+      @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
+      @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
+      @getD20RollString={{this.getD20RollString}}
+      @shouldBoldDice={{this.shouldBoldDice}} />`,
     );
 
     // The damage should not have been formatted as a link since there were no
@@ -797,4 +651,217 @@ module('Integration | Component | detail-display', function (hooks) {
         'damage should not be formatted as a link with a collapsble pane if there were no damage dice',
       );
   });
+
+  test('it renders an event set without damage correctly', async function (this: ElementContext, assert) {
+    this.set('repeatedEventDetails', [
+      {
+        numberOfRepetitions: 1,
+        threshold: 15,
+        d20Modifier: '3',
+        damageList: [],
+        advantageState: AdvantageState.ADVANTAGE,
+        totalDmg: 0,
+        totalSuccesses: 1,
+        detailsList: [
+          {
+            roll: {
+              total: 21,
+              rolls: [
+                {
+                  name: '1d20',
+                  rolls: [18],
+                },
+              ],
+            },
+            success: true,
+            majorSuccess: false,
+            damage: 0,
+            damageDetails: [],
+          },
+        ],
+      },
+    ]);
+
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`,
+      );
+    });
+
+    setupDetailDisplayTest(this);
+
+    await render(
+      hbs`<DetailDisplay @log={{this.repeatedEventDetails}} @clearLog={{this.doNotCall}} @getLogHeader={{this.getLogHeader}}
+      @getSuccessCountString={{this.getSuccessCountString}} @getRepCountString={{this.getRepCountString}}
+      @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
+      @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
+      @getD20RollString={{this.getD20RollString}}
+      @shouldBoldDice={{this.shouldBoldDice}} />`,
+    );
+
+    assert
+      .dom('[data-test-data-list="0"]')
+      .hasText(
+        'Repetitions: 1\n' +
+          'Success threshold: 15\n' +
+          'Roll: 1d20 + 3 (advantage)\n',
+        'the details for the repeated sequence should be displayed',
+      );
+
+    assert
+      .dom('[data-test-total-damage-header="0"]')
+      .isVisible('damage and success header should be displayed')
+      .hasText('Total Damage: 0 (1 success)');
+
+    assert
+      .dom('[data-test-detail-list="0"]')
+      .isVisible('details should be displayed');
+
+    const detailsList = this.element.querySelector(
+      '[data-test-detail-list="0"]',
+    )?.children;
+    assert.true(detailsList != null, 'detail list should be present');
+
+    if (detailsList) {
+      assert.equal(
+        detailsList.length,
+        1,
+        '1 repetition should have been displayed',
+      );
+
+      // the roll for the success should have been displayed
+      assert.equal(
+        detailsList[0]?.className,
+        'li-success',
+        'first success should have bullet point formatted as a success',
+      );
+      assert
+        .dom('[data-test-roll-detail="0-0"]')
+        .hasAttribute('title', '1d20: 18')
+        .hasText('21 from roll');
+    }
+
+    // no damage is associated with this event
+    assert.dom('[data-test-damage-detail-list="0-0"]').exists();
+    assert.equal(
+      this.element.querySelector('[data-test-damage-detail-list="0-0"]')
+        ?.children.length,
+      0,
+      'no damage is present for this event',
+    );
+  });
+
+  test('it renders an event set with 0 repetitions (and no details) correctly', async function (this: ElementContext, assert) {
+    this.set('repeatedEventDetails', [
+      {
+        numberOfRepetitions: 0,
+        threshold: 10,
+        d20Modifier: '1d4',
+        damageList: [],
+        advantageState: AdvantageState.STRAIGHT,
+        totalDmg: 0,
+        totalSuccesses: 0,
+        detailsList: [],
+      },
+    ]);
+
+    this.set('doNotCall', (actual: InputEvent) => {
+      assert.true(
+        false,
+        `this setter should not have been called but was called with ${actual}`,
+      );
+    });
+
+    setupDetailDisplayTest(this);
+
+    await render(
+      hbs`<DetailDisplay @log={{this.repeatedEventDetails}} @clearLog={{this.doNotCall}} @getLogHeader={{this.getLogHeader}}
+      @getSuccessCountString={{this.getSuccessCountString}} @getRepCountString={{this.getRepCountString}}
+      @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
+      @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
+      @getD20RollString={{this.getD20RollString}}
+      @shouldBoldDice={{this.shouldBoldDice}} />`,
+    );
+
+    assert
+      .dom('[data-test-data-list="0"]')
+      .hasText(
+        'Repetitions: 0\nSuccess threshold: 10\nRoll: 1d20 + 1d4\n',
+        'the details for the repeated sequence should be displayed',
+      );
+
+    assert
+      .dom('[data-test-total-damage-header="0"]')
+      .isVisible('damage and success header should be displayed')
+      .hasText('Total Damage: 0 (0 successes)');
+
+    assert
+      .dom('[data-test-detail-list="0"]')
+      .exists('details should be displayed');
+
+    assert.equal(
+      this.element.querySelector('[data-test-detail-list="0"]')?.children
+        .length,
+      0,
+      'no details are present for this event set',
+    );
+  });
+
+  /**
+   * Set up a uniform set of helper functions for the detail display being
+   * tested.
+   * @param context the context of a specific test
+   */
+  function setupDetailDisplayTest(context: ElementContext) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    context.set('getLogHeader', (ignored: InputEvent) => {
+      return 'Header for Log';
+    });
+
+    context.set(
+      'getSuccessCountString',
+      (eventSetData: RepeatedTestEventResult) => {
+        if (eventSetData.totalSuccesses == 1) {
+          return `${eventSetData.totalSuccesses} success`;
+        }
+        return `${eventSetData.totalSuccesses} successes`;
+      },
+    );
+
+    context.set(
+      'getRepCountString',
+      (eventSetData: RepeatedTestEventResult) => {
+        return `Repetitions: ${eventSetData.numberOfRepetitions}`;
+      },
+    );
+
+    context.set(
+      'getThresholdString',
+      (eventSetData: RepeatedTestEventResult) => {
+        return `Success threshold: ${eventSetData.threshold}`;
+      },
+    );
+
+    context.set('getD20Modifier', (eventSetData: RepeatedTestEventResult) => {
+      return `${eventSetData.d20Modifier}`;
+    });
+
+    context.set('getRollString', (d20String: string) => {
+      return `Roll: ${d20String}`;
+    });
+
+    context.set('isSuccess', (eventData: TestEventDetails) => {
+      return eventData.success;
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    context.set('getD20RollString', (ignored: TestEventDetails) => {
+      return `from roll`;
+    });
+
+    context.set('shouldBoldDice', (eventData: TestEventDetails) => {
+      return eventData.majorSuccess;
+    });
+  }
 });

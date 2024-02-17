@@ -16,7 +16,7 @@ export interface RepeatedSaveResult {
   // the results of executing the repeated saves
   totalDmg: number;
   totalNumberOfPasses: number;
-  saveDetailsList: SaveDetails[];
+  detailsList: SaveDetails[];
 }
 
 export interface SaveDetails {
@@ -152,7 +152,7 @@ export default class RepeatedSave {
 
       totalDmg: totalDamage,
       totalNumberOfPasses: totalNumberOfPasses,
-      saveDetailsList: saveDetailsList,
+      detailsList: saveDetailsList,
     };
   }
 }

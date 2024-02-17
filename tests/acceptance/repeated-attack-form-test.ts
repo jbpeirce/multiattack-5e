@@ -52,7 +52,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
 
     assert
-      .dom('[data-test-attack-detail-list="0"]')
+      .dom('[data-test-detail-list="0"]')
       .isNotVisible(
         'attack detail list should not be displayed before the attack has been requested',
       );
@@ -61,7 +61,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await click('[data-test-button-getDamage]');
 
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .hasText(
         'Number of attacks: 8\n' +
           'Target AC: 15\n' +
@@ -78,11 +78,11 @@ module('Acceptance | repeated attack form', function (hooks) {
       .hasTextContaining('Total Damage');
 
     assert
-      .dom('[data-test-attack-detail-list="0"]')
+      .dom('[data-test-detail-list="0"]')
       .isVisible('attack details should be displayed');
 
     assert.equal(
-      this.element.querySelector('[data-test-attack-detail-list="0"]')?.children
+      this.element.querySelector('[data-test-detail-list="0"]')?.children
         .length,
       8,
       '8 attacks should have been displayed',
@@ -115,7 +115,7 @@ module('Acceptance | repeated attack form', function (hooks) {
 
     // The second attack should be displayed first
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .hasText(
         'Number of attacks: 4\n' +
           'Target AC: 15\n' +
@@ -124,11 +124,11 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
 
     assert
-      .dom('[data-test-attack-detail-list="0"]')
+      .dom('[data-test-detail-list="0"]')
       .isVisible('attack details should be displayed for the second attack');
 
     assert.equal(
-      this.element.querySelector('[data-test-attack-detail-list="0"]')?.children
+      this.element.querySelector('[data-test-detail-list="0"]')?.children
         .length,
       4,
       '4 attacks should have been displayed for the second set of attacks',
@@ -136,7 +136,7 @@ module('Acceptance | repeated attack form', function (hooks) {
 
     // The first repeated attack should still be visible
     assert
-      .dom('[data-test-attack-data-list="1"]')
+      .dom('[data-test-data-list="1"]')
       .hasText(
         'Number of attacks: 8\n' +
           'Target AC: 15\n' +
@@ -145,11 +145,11 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
 
     assert
-      .dom('[data-test-attack-detail-list="1"]')
+      .dom('[data-test-detail-list="1"]')
       .isVisible('attack details should be displayed for the first attack');
 
     assert.equal(
-      this.element.querySelector('[data-test-attack-detail-list="1"]')?.children
+      this.element.querySelector('[data-test-detail-list="1"]')?.children
         .length,
       8,
       '8 attacks should have been displayed for the first set of attacks',
@@ -283,10 +283,10 @@ module('Acceptance | repeated attack form', function (hooks) {
 
     // There should be one set of attack details displayed
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .exists('details should be displayed for one attack');
     assert
-      .dom('[data-test-attack-data-list="1"]')
+      .dom('[data-test-data-list="1"]')
       .doesNotExist('only one attack set should be displayed');
 
     // Attack twice more
@@ -295,28 +295,28 @@ module('Acceptance | repeated attack form', function (hooks) {
 
     // There should be three sets of attack details displayed
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .exists('details should be displayed for one attack');
     assert
-      .dom('[data-test-attack-data-list="1"]')
+      .dom('[data-test-data-list="1"]')
       .exists('details should be displayed for two attacks');
     assert
-      .dom('[data-test-attack-data-list="2"]')
-      .exists('details should be displayed for two attacks');
+      .dom('[data-test-data-list="2"]')
+      .exists('details should be displayed for three attacks');
     assert
-      .dom('[data-test-attack-data-list="3"]')
+      .dom('[data-test-data-list="3"]')
       .doesNotExist('details should not be displayed for a fourth attack');
 
     // Clear the attack log
-    await click('[data-test-button-clear-attack-log]');
+    await click('[data-test-button-clear-log]');
 
     // No attack details should be displayed
     assert
-      .dom('[data-test-attack-data-list="0"]')
+      .dom('[data-test-data-list="0"]')
       .doesNotExist('details should no longer be displayed');
 
     // Clicking again should not cause any errors
-    await click('[data-test-button-clear-attack-log]');
+    await click('[data-test-button-clear-log]');
   });
 
   test('invalidating malformatted fields', async function (this: ElementContext, assert) {

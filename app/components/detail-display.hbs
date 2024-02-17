@@ -1,58 +1,56 @@
 <div class="row align-items-center justify-content-between">
   <div class="col col-sm-8">
     <h2 data-test-log-header>
-      Attack Log
+      {{@getLogHeader}}
     </h2>
   </div>
   <div class="col col-sm-4 d-flex justify-content-end">
-    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearAttackLog}}
-      data-test-button-clear-attack-log>
+    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearLog}}
+      data-test-button-clear-log>
       Clear
     </button>
   </div>
 </div>
 <div class="pt-3">
   <div class="col-scrollable rounded border">
-    <ul class="p-4" data-test-attack-log>
-      {{#each @repeatedAttackLog as |repeatedAttackDetails index|}}
+    <ul class="p-4" data-test-log>
+      {{#each @log as |repeatedSetDetails index|}}
       {{#unless (eq index 0)}}
       <hr>
       <hr>
       <hr>
       {{/unless}}
       <h4 data-test-total-damage-header={{index}}>
-        Total Damage: {{repeatedAttackDetails.totalDmg}} ({{repeatedAttackDetails.totalNumberOfHits}}
-        {{this.getHitString repeatedAttackDetails.totalNumberOfHits}})
+        Total Damage: {{repeatedSetDetails.totalDmg}} ({{ @getSuccessCountString repeatedSetDetails}})
       </h4>
-      <ul data-test-attack-data-list={{index}} class="list-group">
-        <li class="li-no-bullets">Number of attacks: {{repeatedAttackDetails.numberOfAttacks}}</li>
-        <li class="li-no-bullets">Target AC: {{repeatedAttackDetails.targetAC}}</li>
-        <li class="li-no-bullets">Attack roll: {{this.getAttackString repeatedAttackDetails.toHit}}
-          {{#if (eq repeatedAttackDetails.advantageState.name "advantage") }}
+      <ul data-test-data-list={{index}} class="list-group">
+        <li class="li-no-bullets">{{@getRepCountString repeatedSetDetails}}</li>
+        <li class="li-no-bullets">{{@getThresholdString repeatedSetDetails}}</li>
+        <li class="li-no-bullets">{{@getRollString (this.getD20String (@getD20Modifier repeatedSetDetails)) }}
+          {{#if (eq repeatedSetDetails.advantageState.name "advantage") }}
           (advantage)
           {{/if}}
-          {{#if (eq repeatedAttackDetails.advantageState.name "disadvantage") }}
+          {{#if (eq repeatedSetDetails.advantageState.name "disadvantage") }}
           (disadvantage)
           {{/if}}
         </li>
       </ul>
-      <ol data-test-attack-detail-list={{index}}>
-        {{#each repeatedAttackDetails.attackDetailsList as |attackDetails index2|}}
+      <ol data-test-detail-list={{index}}>
+        {{#each repeatedSetDetails.detailsList as |details index2|}}
 
-        {{#if attackDetails.hit }}
-        <li class="li-hit">
-          <span data-test-attack-roll-detail="{{index}}-{{index2}}"
-            title="{{this.getRollDetailString attackDetails.roll.rolls}}">
-            <a data-test-attack-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
-              data-bs-toggle="collapse" href="#attack-detail-collapse-{{index}}-{{index2}}" role="button"
-              aria-expanded="false" aria-controls="attack-detail-collapse-{{index}}-{{index2}}">
-              {{attackDetails.roll.total}}</a> to hit
-            {{#if attackDetails.crit}} (CRIT!){{/if}}
+        {{#if (@isSuccess details) }}
+        <li class="li-success">
+          <span data-test-roll-detail="{{index}}-{{index2}}"
+            title="{{this.getRollDetailString details.roll.rolls}}">
+            <a data-test-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
+              data-bs-toggle="collapse" href="#roll-detail-collapse-{{index}}-{{index2}}" role="button"
+              aria-expanded="false" aria-controls="roll-detail-collapse-{{index}}-{{index2}}">
+              {{details.roll.total}}</a> {{@getD20RollString details}}
           </span>
-          <div data-test-attack-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
-            id="attack-detail-collapse-{{index}}-{{index2}}">
+          <div data-test-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
+            id="roll-detail-collapse-{{index}}-{{index2}}">
             <ul>
-              {{#each attackDetails.roll.rolls as |roll|}}
+              {{#each details.roll.rolls as |roll|}}
               <li class="text-muted">
                 {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
               </li>
@@ -61,7 +59,7 @@
           </div>
 
           <ul data-test-damage-detail-list="{{index}}-{{index2}}">
-            {{#each attackDetails.damageDetails as |damage index3|}}
+            {{#each details.damageDetails as |damage index3|}}
             <li>
               <span data-test-damage-roll-detail="{{index}}-{{index2}}-{{index3}}"
                 title="{{this.getRollDetailString damage.roll.rolls}}">
@@ -75,8 +73,8 @@
                 {{damage.roll.total}}
                 {{/unless}}
                 {{damage.type}} damage
-                {{#if attackDetails.crit}} (<b>{{damage.dice}}</b>){{/if}}
-                {{#unless attackDetails.crit}} ({{damage.dice}}){{/unless}}
+                {{#if (@shouldBoldDice details)}} (<b>{{damage.dice}}</b>){{/if}}
+                {{#unless (@shouldBoldDice details)}} ({{damage.dice}}){{/unless}}
                 {{#if damage.resisted}} (resisted){{/if}}
                 {{#if damage.vulnerable}} (vulnerable){{/if}}
               </span>
@@ -97,20 +95,19 @@
         </li>
         {{/if}}
 
-        {{#unless attackDetails.hit }}
-        <li class="li-miss">
-          <span data-test-attack-roll-detail="{{index}}-{{index2}}"
-            title="{{this.getRollDetailString attackDetails.roll.rolls}}">
-            <a data-test-attack-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
-              data-bs-toggle="collapse" href="#attack-detail-collapse-{{index}}-{{index2}}" role="button"
-              aria-expanded="false" aria-controls="attack-detail-collapse-{{index}}-{{index2}}">
-              {{attackDetails.roll.total}}</a> to hit
-            {{#if attackDetails.nat1}} (NAT 1!){{/if}}
+        {{#unless (@isSuccess details) }}
+        <li class="li-fail">
+          <span data-test-roll-detail="{{index}}-{{index2}}"
+            title="{{this.getRollDetailString details.roll.rolls}}">
+            <a data-test-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
+              data-bs-toggle="collapse" href="#roll-detail-collapse-{{index}}-{{index2}}" role="button"
+              aria-expanded="false" aria-controls="roll-detail-collapse-{{index}}-{{index2}}">
+              {{details.roll.total}}</a> {{@getD20RollString details}}
           </span>
-          <div data-test-attack-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
-            id="attack-detail-collapse-{{index}}-{{index2}}">
+          <div data-test-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
+            id="roll-detail-collapse-{{index}}-{{index2}}">
             <ul>
-              {{#each attackDetails.roll.rolls as |roll|}}
+              {{#each details.roll.rolls as |roll|}}
               <li class="text-muted">
                 {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
               </li>
