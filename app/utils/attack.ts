@@ -1,12 +1,9 @@
 import type AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import type RandomnessService from 'multiattack-5e/services/randomness';
 
-import D20WithAdvantageState from './d20-with-advantage-state';
+import D20WithModifiers from './d20-with-modifiers';
 import Damage from './damage';
-import DiceGroupsAndModifier, {
-  type GroupRollDetails,
-} from './dice-groups-and-modifier';
-import DiceStringParser from './dice-string-parser';
+import { type GroupRollDetails } from './dice-groups-and-modifier';
 
 export interface AttackDetails {
   roll: GroupRollDetails;
@@ -27,9 +24,7 @@ export interface DamageDetails {
 }
 
 export default class Attack {
-  die: D20WithAdvantageState;
-
-  toHitModifier: DiceGroupsAndModifier;
+  attackDie: D20WithModifiers;
 
   damageTypes: Damage[];
 
@@ -50,8 +45,7 @@ export default class Attack {
     damageTypes: Damage[],
     randomness: RandomnessService,
   ) {
-    this.die = new D20WithAdvantageState(advantageState, randomness);
-    this.toHitModifier = DiceStringParser.parse(toHit, randomness);
+    this.attackDie = new D20WithModifiers(advantageState, toHit, randomness);
     this.damageTypes = damageTypes;
   }
 
@@ -62,26 +56,12 @@ export default class Attack {
    * @returns the attack roll and the damage inflicted by the attack
    */
   makeAttack(targetAC: number): AttackDetails {
-    // Roll the attack d20 with advantage/disadvantage. In addition,
-    // roll any dice groups which modify the attack (such as a 1d4 from Bless or
-    // -1d6 from Synaptic Static) and apply the modifiers.
-    const attackRollDetails: GroupRollDetails = {
-      total: 0,
-      rolls: [],
-    };
-    const attackD20Roll = this.die.getD20Roll();
-    attackRollDetails.total = attackD20Roll;
-    attackRollDetails.rolls.push({
-      name: '1d20',
-      rolls: [attackD20Roll],
-    });
+    // Roll the attack d20 with advantage/disadvantage and any applicable
+    // modifiers
+    const attackRoll = this.attackDie.roll();
 
-    const modifierRollDetails = this.toHitModifier.roll(false);
-    attackRollDetails.total += modifierRollDetails.total;
-    attackRollDetails.rolls.push(...modifierRollDetails.rolls);
-
-    const crit = attackD20Roll == 20;
-    const nat1 = attackD20Roll == 1;
+    const crit = attackRoll.baseD20Roll == 20;
+    const nat1 = attackRoll.baseD20Roll == 1;
 
     let totalDmg = 0;
     let numberOfHits = 0;
@@ -89,7 +69,7 @@ export default class Attack {
 
     // Attacks always miss on a nat1, always hit on a crit, and otherwise hit if
     // the roll equals or exceeds the target AC.
-    const hit = !nat1 && (crit || attackRollDetails.total >= targetAC);
+    const hit = !nat1 && (crit || attackRoll.total >= targetAC);
     if (hit) {
       numberOfHits += 1;
       for (const damage of this.damageTypes) {
@@ -106,7 +86,10 @@ export default class Attack {
     }
 
     return {
-      roll: attackRollDetails,
+      roll: {
+        total: attackRoll.total,
+        rolls: attackRoll.rolls,
+      },
       hit: hit,
       crit: crit,
       nat1: nat1,
