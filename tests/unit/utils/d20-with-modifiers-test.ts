@@ -6,7 +6,7 @@ import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
 import D20WithModifiers from 'multiattack-5e/utils/d20-with-modifiers';
 
-module('Unit | Utils | d20-with-adv', function (hooks) {
+module('Unit | Utils | d20-with-mods', function (hooks) {
   setupTest(hooks);
 
   test('it rolls with advantage', async function (assert) {
