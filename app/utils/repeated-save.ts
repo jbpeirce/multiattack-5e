@@ -11,8 +11,7 @@ export interface RepeatedSaveResult {
   saveDC: number;
   modifier: string;
   advantageState: AdvantageState;
-  inflictsDamage: boolean;
-  damageList: Damage[] | null;
+  damageList: Damage[];
 
   // the results of executing the repeated saves
   totalDmg: number;
@@ -23,20 +22,19 @@ export interface RepeatedSaveResult {
 export interface SaveDetails {
   roll: GroupRollDetails;
   pass: boolean;
-  inflictsDamage: boolean;
-  damage: number | null;
-  damageDetails: DamageDetails[] | null;
+  damage: number;
+  damageDetails: DamageDetails[];
 }
 
 export default class RepeatedSave {
   numberOfSaves: number;
   saveDC: number;
 
-  // Some saves inflict damage if the save is failed; others do not
-  inflictsDamage: boolean;
-  rollDamageEverySave: boolean | null;
-  saveForHalf: boolean | null;
-  damageTypes: Damage[] | null;
+  // Some saves inflict damage if the save is failed; others do not, indicated
+  // by an empty damage list
+  rollDamageEverySave: boolean;
+  saveForHalf: boolean;
+  damageTypes: Damage[];
 
   die: D20WithModifiers;
 
@@ -52,18 +50,14 @@ export default class RepeatedSave {
    * disadvantage
    * @param randomness a service encapsulating random number generation,
    * present to enable testing with guaranteed behavior from the dice.
-   * @param inflictsDamage whether this save inflicts damage (if false, the
-   * rest of the parameters may be left null)
    * @param rollDamageEverySave whether to roll new damage corresponding to
-   * every saving throw. May be null if what triggers the saving throw inflicts
-   * no damage.
+   * every saving throw. Will be ignored if no damage types are provided.
    * @param saveForHalf if true, passing the save results in half damage being
    * inflicted. If false, passing the save results in no damage being
-   * inflicted. May be null if what triggers the saving throw inflicts no
-   * damage.
+   * inflicted. Will be ignored if no damage types are provided.
    * @param damageTypes a list of the damage types inflicted by this attack,
-   * with details for each. May be empty or null if what triggers the saving
-   * throw inflicts no damage.
+   * with details for each. Leave empty if what triggers the saving throw
+   * inflicts no damage.
    */
   constructor(
     numberOfSaves: number,
@@ -71,40 +65,27 @@ export default class RepeatedSave {
     rollModifier: string,
     advantageState: AdvantageState,
     randomness: RandomnessService,
-    inflictsDamage: boolean,
-    rollDamageEverySave: boolean | null = null,
-    saveForHalf: boolean | null = null,
-    damageTypes: Damage[] | null = null,
+    rollDamageEverySave: boolean = false,
+    saveForHalf: boolean = false,
+    damageTypes: Damage[] = [],
   ) {
     this.die = new D20WithModifiers(advantageState, rollModifier, randomness);
     this.numberOfSaves = numberOfSaves;
     this.saveDC = saveDC;
 
-    this.inflictsDamage = inflictsDamage;
     this.rollDamageEverySave = rollDamageEverySave;
     this.saveForHalf = saveForHalf;
     this.damageTypes = damageTypes;
   }
+
   /**
    * Check that all necessary fields for this set of repeated saves are set.
    * @returns whether this is a valid representation of repeated saves
    */
   valid(): boolean {
-    // If the save inflicts damage, the relevant fields must be set; otherwise
-    // they may be null.
-    if (this.inflictsDamage) {
-      if (
-        this.rollDamageEverySave == null ||
-        this.saveForHalf == null ||
-        this.damageTypes == null
-      ) {
+    for (const damage of this.damageTypes) {
+      if (!damage.valid()) {
         return false;
-      }
-
-      for (const damage of this.damageTypes) {
-        if (!damage.valid()) {
-          return false;
-        }
       }
     }
 
@@ -148,9 +129,8 @@ export default class RepeatedSave {
           rolls: saveRoll.rolls,
         },
         pass: false,
-        inflictsDamage: this.inflictsDamage,
-        damage: null,
-        damageDetails: null,
+        damage: 0,
+        damageDetails: [],
       };
 
       if (saveRoll.total >= this.saveDC) {
@@ -167,7 +147,6 @@ export default class RepeatedSave {
       numberOfSaves: this.numberOfSaves,
       saveDC: this.saveDC,
       modifier: this.die.modifier.prettyString(false),
-      inflictsDamage: this.inflictsDamage,
       damageList: this.damageTypes,
       advantageState: this.die.advantageState,
 

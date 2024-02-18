@@ -8,6 +8,8 @@ import Die from './die';
 
 export interface D20RollDetails {
   total: number;
+  // Tracks the number on the initial d20, distinct from any d20 which may be
+  // present in the modifiers
   baseD20Roll: number;
   rolls: NameAndRolls[];
 }
@@ -29,7 +31,8 @@ export default class D20WithModifiers {
 
   /**
    * Roll a d20 with advantage or disadvantage if applicable. In addition, roll
-   * any dice groups which modify the roll (such as a 1d4 from Bless or -1d6from Synaptic Static) and add them to the result.
+   * any dice groups which modify the roll (such as a 1d4 from Bless or -1d6
+   * from Synaptic Static) and add them to the result.
    * @returns the result of rolling a d20 with the specified modifiers and
    * advantage state
    */
@@ -40,7 +43,7 @@ export default class D20WithModifiers {
       rolls: [],
     };
 
-    // Roll the d20
+    // Roll the d20, with advantage or disadvantage as indicated
     const d20Roll = this.getD20Roll();
     rollDetails.total = d20Roll;
     rollDetails.baseD20Roll = d20Roll;
