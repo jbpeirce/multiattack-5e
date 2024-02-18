@@ -100,11 +100,11 @@ module('Unit | Utils | d20-with-mods', function (hooks) {
 
   test('it handles a negative constant modifier', async function (assert) {
     const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(7);
+    fakeD20.onCall(0).returns(7);
+    fakeD20.onCall(1).returns(3);
 
     const d20 = new D20WithModifiers(
-      AdvantageState.STRAIGHT,
+      AdvantageState.DISADVANTAGE,
       '-1',
       new RandomnessService(),
     );
