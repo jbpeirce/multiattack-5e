@@ -9,6 +9,14 @@ import DiceGroupsAndModifier, {
 } from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
 
+export interface DamageDetails {
+  type: string;
+  dice: string;
+  roll: GroupRollDetails;
+  resisted: boolean;
+  vulnerable: boolean;
+}
+
 export default class Damage {
   @tracked type: string;
 
@@ -113,7 +121,7 @@ export default class Damage {
    * @returns the total damage inflicted by an attack described by this class,
    * and the dice rolls involved
    */
-  roll(crit: boolean): GroupRollDetails {
+  roll(crit: boolean): DamageDetails {
     if (!this.valid()) {
       throw new Error('Damage did not have all necessary fields set');
     }
@@ -134,7 +142,13 @@ export default class Damage {
       damageRoll.total = damageRoll.total * 2;
     }
 
-    return damageRoll;
+    return {
+      type: this.type,
+      dice: this.damage.prettyString(crit),
+      roll: damageRoll,
+      resisted: this.targetResistant,
+      vulnerable: this.targetVulnerable,
+    };
   }
 
   /**

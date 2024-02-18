@@ -89,16 +89,13 @@ export default class RepeatedAttack {
 
     const attack = new Attack(
       this.toHit,
+      this.advantageState,
       this.damageList.toArray(),
       this.randomness,
     );
 
     for (let i = 0; i < this.numberOfAttacks; i++) {
-      const attackDetails = attack.makeAttack(
-        this.targetAC,
-        this.advantageState == AdvantageState.ADVANTAGE,
-        this.advantageState == AdvantageState.DISADVANTAGE,
-      );
+      const attackDetails = attack.makeAttack(this.targetAC);
 
       totalDmg += attackDetails.damage;
       totalNumberOfHits += attackDetails.numberOfHits;
@@ -108,7 +105,7 @@ export default class RepeatedAttack {
     return {
       numberOfAttacks: this.numberOfAttacks,
       targetAC: this.targetAC,
-      toHit: attack.toHitModifier.prettyString(false),
+      toHit: attack.attackDie.modifier.prettyString(false),
       damageList: this.damageList,
       advantageState: this.advantageState,
 

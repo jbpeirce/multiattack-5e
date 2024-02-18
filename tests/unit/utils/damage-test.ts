@@ -33,13 +33,19 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(false),
       {
-        total: 4,
-        rolls: [
-          {
-            name: '1d6',
-            rolls: [3],
-          },
-        ],
+        roll: {
+          total: 4,
+          rolls: [
+            {
+              name: '1d6',
+              rolls: [3],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '1d6 + 1',
+        resisted: false,
+        vulnerable: false,
       },
       'roll should inflict 3 + 1 = 4 total damage',
     );
@@ -80,17 +86,23 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(false),
       {
-        total: 21,
-        rolls: [
-          {
-            name: '3d8',
-            rolls: [3, 7, 5],
-          },
-          {
-            name: '2d6',
-            rolls: [1, 4],
-          },
-        ],
+        roll: {
+          total: 21,
+          rolls: [
+            {
+              name: '3d8',
+              rolls: [3, 7, 5],
+            },
+            {
+              name: '2d6',
+              rolls: [1, 4],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '3d8 + 2d6 + 1',
+        resisted: false,
+        vulnerable: false,
       },
       'roll should inflict (3 + 7 + 5) + (1 + 4) + 1 = 21 total damage',
     );
@@ -136,17 +148,23 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(true),
       {
-        total: 34,
-        rolls: [
-          {
-            name: '6d8',
-            rolls: [3, 7, 5, 5, 1, 2],
-          },
-          {
-            name: '4d6',
-            rolls: [1, 4, 2, 2],
-          },
-        ],
+        roll: {
+          total: 34,
+          rolls: [
+            {
+              name: '6d8',
+              rolls: [3, 7, 5, 5, 1, 2],
+            },
+            {
+              name: '4d6',
+              rolls: [1, 4, 2, 2],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '6d8 + 4d6 + 2',
+        resisted: false,
+        vulnerable: false,
       },
       'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
     );
@@ -157,7 +175,6 @@ module('Unit | Utils | damage', function (hooks) {
       '1d4 - 3',
       DamageType.RADIANT.name,
       new RandomnessService(),
-      true,
     );
 
     assert.strictEqual(
@@ -177,13 +194,19 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(false),
       {
-        total: 0,
-        rolls: [
-          {
-            name: '1d4',
-            rolls: [1],
-          },
-        ],
+        roll: {
+          total: 0,
+          rolls: [
+            {
+              name: '1d4',
+              rolls: [1],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '1d4 - 3',
+        resisted: false,
+        vulnerable: false,
       },
       'roll should inflict 1 - 3 = 0 total damage (damage cannot be negative)',
     );
@@ -214,13 +237,19 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(false),
       {
-        total: 4,
-        rolls: [
-          {
-            name: '2d6',
-            rolls: [3, 5],
-          },
-        ],
+        roll: {
+          total: 4,
+          rolls: [
+            {
+              name: '2d6',
+              rolls: [3, 5],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '2d6 + 1',
+        resisted: true,
+        vulnerable: false,
       },
       'roll should inflict (3 + 5 + 1) / 2 = 4 total damage',
     );
@@ -252,13 +281,19 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(false),
       {
-        total: 18,
-        rolls: [
-          {
-            name: '2d6',
-            rolls: [3, 5],
-          },
-        ],
+        roll: {
+          total: 18,
+          rolls: [
+            {
+              name: '2d6',
+              rolls: [3, 5],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '2d6 + 1',
+        resisted: false,
+        vulnerable: true,
       },
       'roll should inflict (3 + 5 + 1) * 2 = 18 total damage',
     );
@@ -290,13 +325,19 @@ module('Unit | Utils | damage', function (hooks) {
     assert.deepEqual(
       damage.roll(false),
       {
-        total: 8,
-        rolls: [
-          {
-            name: '2d6',
-            rolls: [3, 5],
-          },
-        ],
+        roll: {
+          total: 8,
+          rolls: [
+            {
+              name: '2d6',
+              rolls: [3, 5],
+            },
+          ],
+        },
+        type: DamageType.RADIANT.name,
+        dice: '2d6 + 1',
+        resisted: true,
+        vulnerable: true,
       },
       'roll should inflict ((3 + 5 + 1) / 2) * 2 = 8 total damage',
     );

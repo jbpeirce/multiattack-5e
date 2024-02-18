@@ -2,100 +2,29 @@ import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 
+import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
-import Attack, { type DamageDetails } from 'multiattack-5e/utils/attack';
-import Damage from 'multiattack-5e/utils/damage';
+import Attack from 'multiattack-5e/utils/attack';
+import Damage, { type DamageDetails } from 'multiattack-5e/utils/damage';
 
 module('Unit | Utils | attack', function (hooks) {
   setupTest(hooks);
 
-  test('it rolls with advantage', async function (assert) {
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(7);
-
-    const attack = new Attack('4', [], new RandomnessService());
-    attack.die.roll = fakeD20;
-
-    assert.strictEqual(
-      attack.getD20Roll(true, false),
-      7,
-      'attack should roll with advantage',
-    );
-  });
-
-  test('it rolls with disadvantage', async function (assert) {
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(7);
-
-    const attack = new Attack('4', [], new RandomnessService());
-    attack.die.roll = fakeD20;
-
-    assert.strictEqual(
-      attack.getD20Roll(false, true),
-      3,
-      'attack should roll with disadvantage',
-    );
-  });
-
-  test('it rolls a straight roll with both advantage and disadvantage set', async function (assert) {
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(7);
-
-    const attack = new Attack('4', [], new RandomnessService());
-    attack.die.roll = fakeD20;
-
-    assert.strictEqual(
-      attack.getD20Roll(true, true),
-      3,
-      'attack should choose the first roll with advantage=disadvantage=true',
-    );
-
-    fakeD20.onCall(2).returns(6);
-    fakeD20.onCall(3).returns(1);
-    assert.strictEqual(
-      attack.getD20Roll(true, true),
-      6,
-      'attack should choose the first roll with advantage=disadvantage=true',
-    );
-  });
-
-  test('it rolls a straight roll with neither advantage nor disadvantage set', async function (assert) {
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(7);
-
-    const attack = new Attack('4', [], new RandomnessService());
-    attack.die.roll = fakeD20;
-
-    assert.strictEqual(
-      attack.getD20Roll(false, false),
-      3,
-      'attack should choose the first roll with advantage=disadvantage=false',
-    );
-
-    fakeD20.onCall(2).returns(6);
-    fakeD20.onCall(3).returns(1);
-    assert.strictEqual(
-      attack.getD20Roll(false, false),
-      6,
-      'attack should choose the first roll with advantage=disadvantage=false',
-    );
-  });
-
   test('it handles an AC-based miss correctly', async function (assert) {
-    const attack = new Attack('4', [], new RandomnessService());
+    const attack = new Attack(
+      '4',
+      AdvantageState.STRAIGHT,
+      [],
+      new RandomnessService(),
+    );
 
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(20);
-    attack.die.roll = fakeD20;
+    attack.attackDie.getD20Roll = fakeD20;
 
     // This attack rolls 3 + 4 = 7, so it should miss
-    const attackData = attack.makeAttack(10, false, false);
+    const attackData = attack.makeAttack(10);
     assert.deepEqual(
       attackData.roll,
       { total: 7, rolls: [{ name: '1d20', rolls: [3] }] },
@@ -112,15 +41,19 @@ module('Unit | Utils | attack', function (hooks) {
   });
 
   test('it handles a nat1 miss correctly', async function (assert) {
-    const attack = new Attack('+20', [], new RandomnessService());
+    const attack = new Attack(
+      '+20',
+      AdvantageState.STRAIGHT,
+      [],
+      new RandomnessService(),
+    );
 
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(1);
-    fakeD20.onCall(1).returns(20);
-    attack.die.roll = fakeD20;
+    attack.attackDie.getD20Roll = fakeD20;
 
     // This attack rolls a nat 1, so it should miss even though 1 + 20 > 10
-    const attackData = attack.makeAttack(10, false, false);
+    const attackData = attack.makeAttack(10);
     assert.deepEqual(
       attackData.roll,
       { total: 21, rolls: [{ name: '1d20', rolls: [1] }] },
@@ -136,9 +69,10 @@ module('Unit | Utils | attack', function (hooks) {
     );
   });
 
-  test('it handles a hit with a constant attack modifier correctly', async function (assert) {
+  test('it handles a hit with a complex attack modifier correctly', async function (assert) {
     const attack = new Attack(
-      '5',
+      '5 - 1d6 + 1d4 - 1',
+      AdvantageState.STRAIGHT,
       [
         new Damage(
           '2d6 + 5 + 1d4',
@@ -153,51 +87,22 @@ module('Unit | Utils | attack', function (hooks) {
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(13);
-    fakeD20.onCall(1).returns(3);
-    attack.die.roll = fakeD20;
+    attack.attackDie.getD20Roll = fakeD20;
 
-    // Do not fake the damage dice; this test is focused on the hit
-
-    const attackData = attack.makeAttack(15, false, false);
-    assert.deepEqual(
-      attackData.roll,
-      { total: 18, rolls: [{ name: '1d20', rolls: [13] }] },
-      'attack should have rolled an 18 total (13 + 5)',
-    );
-    assert.true(attackData.hit, 'attack should have hit');
-    assert.false(attackData.crit, 'attack was not a crit');
-    assert.false(attackData.nat1, 'attack was not a nat 1');
-    assert.true(
-      attackData.damage > 0,
-      'some damage should have been inflicted',
-    );
-  });
-
-  test('it handles a hit with an attack modifier including dice correctly', async function (assert) {
-    const attack = new Attack(
-      '5 + 1d4',
-      [
-        new Damage(
-          '2d6 + 5 + 1d4',
-          DamageType.PIERCING.name,
-          new RandomnessService(),
-        ),
-        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
-      ],
-      new RandomnessService(),
-    );
-
-    // Fake the results of the d20 attack roll
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(13);
-    fakeD20.onCall(1).returns(3);
-    attack.die.roll = fakeD20;
+    const fake1d6 = sinon.fake.returns({
+      total: 6,
+      rolls: [6],
+    });
+    const attack1d6 = attack.attackDie.modifier.diceGroups[0];
+    if (attack1d6) {
+      attack1d6.roll = fake1d6;
+    }
 
     const fake1d4 = sinon.fake.returns({
-      total: 2,
-      rolls: [2],
+      total: 1,
+      rolls: [1],
     });
-    const attack1d4 = attack.toHitModifier.diceGroups[0];
+    const attack1d4 = attack.attackDie.modifier.diceGroups[1];
     if (attack1d4) {
       attack1d4.roll = fake1d4;
     }
@@ -205,60 +110,7 @@ module('Unit | Utils | attack', function (hooks) {
     // Do not mock the results of the damage dice since it's not the focus of
     // this test
 
-    const attackData = attack.makeAttack(15, false, false);
-    assert.deepEqual(
-      attackData.roll,
-      {
-        total: 20,
-        rolls: [
-          { name: '1d20', rolls: [13] },
-          { name: '1d4', rolls: [2] },
-        ],
-      },
-      'attack should have rolled a 20 total (13 + 5 + 2)',
-    );
-    assert.true(attackData.hit, 'attack should have hit');
-    assert.false(attackData.crit, 'attack was not a crit');
-    assert.false(attackData.nat1, 'attack was not a nat 1');
-    assert.true(
-      attackData.damage > 0,
-      'some damage should have been inflicted',
-    );
-  });
-
-  test('it handles a hit with an attack modifier subtracting dice correctly', async function (assert) {
-    const attack = new Attack(
-      '5 - 1d6',
-      [
-        new Damage(
-          '2d6 + 5 + 1d4',
-          DamageType.PIERCING.name,
-          new RandomnessService(),
-        ),
-        new Damage('2d8', DamageType.RADIANT.name, new RandomnessService()),
-      ],
-      new RandomnessService(),
-    );
-
-    // Fake the results of the d20 attack roll
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(13);
-    fakeD20.onCall(1).returns(3);
-    attack.die.roll = fakeD20;
-
-    const fake1d6 = sinon.fake.returns({
-      total: 6,
-      rolls: [6],
-    });
-    const attack1d6 = attack.toHitModifier.diceGroups[0];
-    if (attack1d6) {
-      attack1d6.roll = fake1d6;
-    }
-
-    // Do not mock the results of the damage dice since it's not the focus of
-    // this test
-
-    const attackData = attack.makeAttack(15, false, false);
+    const attackData = attack.makeAttack(15);
     assert.deepEqual(
       attackData.roll,
       {
@@ -266,9 +118,10 @@ module('Unit | Utils | attack', function (hooks) {
         rolls: [
           { name: '1d20', rolls: [13] },
           { name: '-1d6', rolls: [6] },
+          { name: '1d4', rolls: [1] },
         ],
       },
-      'attack should have rolled a 20 total (13 + 5 + 2)',
+      'attack should have rolled a 20 total (13 + 5 + 2 + 1 - 1)',
     );
     assert.false(attackData.hit, 'attack should not have hit');
   });
@@ -276,6 +129,7 @@ module('Unit | Utils | attack', function (hooks) {
   test('it adds damage dice as expected', async function (assert) {
     const attack = new Attack(
       '5',
+      AdvantageState.STRAIGHT,
       [
         new Damage(
           '2d6 + 5 + 1d4',
@@ -290,33 +144,44 @@ module('Unit | Utils | attack', function (hooks) {
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(13);
-    fakeD20.onCall(1).returns(3);
-    attack.die.roll = fakeD20;
+    attack.attackDie.getD20Roll = fakeD20;
 
     // Fake the results of the damage dice
     const fakePiercingDamageDetails = {
-      total: 13,
-      rolls: [
-        {
-          name: '2d6',
-          rolls: [3, 4],
-        },
-        {
-          name: '1d4',
-          rolls: [1],
-        },
-      ],
+      roll: {
+        total: 13,
+        rolls: [
+          {
+            name: '2d6',
+            rolls: [3, 4],
+          },
+          {
+            name: '1d4',
+            rolls: [1],
+          },
+        ],
+      },
+      type: DamageType.PIERCING.name,
+      dice: '2d6 + 1d4 + 5',
+      resisted: false,
+      vulnerable: false,
     };
     const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
 
     const fakeRadiantDamageDetails = {
-      total: 7,
-      rolls: [
-        {
-          name: '2d8',
-          rolls: [6, 1],
-        },
-      ],
+      roll: {
+        total: 7,
+        rolls: [
+          {
+            name: '2d8',
+            rolls: [6, 1],
+          },
+        ],
+      },
+      type: DamageType.RADIANT.name,
+      dice: '2d8',
+      resisted: false,
+      vulnerable: false,
     };
     const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
 
@@ -330,7 +195,7 @@ module('Unit | Utils | attack', function (hooks) {
       radiant.roll = fakeRadiant;
     }
 
-    const attackData = attack.makeAttack(15, false, false);
+    const attackData = attack.makeAttack(15);
     fakePiercing.alwaysCalledWith(false);
     fakeRadiant.alwaysCalledWith(false);
     assert.deepEqual(
@@ -347,20 +212,8 @@ module('Unit | Utils | attack', function (hooks) {
       '20 damage should have been inflicted',
     );
     const expectedDmg: DamageDetails[] = [
-      {
-        type: 'piercing',
-        dice: '2d6 + 1d4 + 5',
-        roll: fakePiercingDamageDetails,
-        resisted: false,
-        vulnerable: false,
-      },
-      {
-        type: 'radiant',
-        dice: '2d8',
-        roll: fakeRadiantDamageDetails,
-        resisted: false,
-        vulnerable: false,
-      },
+      fakePiercingDamageDetails,
+      fakeRadiantDamageDetails,
     ];
     assert.deepEqual(
       attackData.damageDetails,
@@ -372,6 +225,7 @@ module('Unit | Utils | attack', function (hooks) {
   test('it handles a critical hit as expected', async function (assert) {
     const attack = new Attack(
       '-5',
+      AdvantageState.STRAIGHT,
       [
         new Damage(
           '2d6 + 5 + 1d4',
@@ -386,33 +240,44 @@ module('Unit | Utils | attack', function (hooks) {
     // Fake the results of the d20 attack roll
     const fakeD20 = sinon.stub();
     fakeD20.onCall(0).returns(20);
-    fakeD20.onCall(1).returns(3);
-    attack.die.roll = fakeD20;
+    attack.attackDie.getD20Roll = fakeD20;
 
     // Fake the results of the damage dice
     const fakePiercingDamageDetails = {
-      total: 25,
-      rolls: [
-        {
-          name: '4d6',
-          rolls: [3, 4, 6, 2],
-        },
-        {
-          name: '2d4',
-          rolls: [1, 4],
-        },
-      ],
+      roll: {
+        total: 25,
+        rolls: [
+          {
+            name: '4d6',
+            rolls: [3, 4, 6, 2],
+          },
+          {
+            name: '2d4',
+            rolls: [1, 4],
+          },
+        ],
+      },
+      type: DamageType.PIERCING.name,
+      dice: '4d6 + 2d4 + 5',
+      resisted: false,
+      vulnerable: false,
     };
     const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
 
     const fakeRadiantDamageDetails = {
-      total: 14,
-      rolls: [
-        {
-          name: '4d8',
-          rolls: [3, 1, 8, 2],
-        },
-      ],
+      roll: {
+        total: 14,
+        rolls: [
+          {
+            name: '4d8',
+            rolls: [3, 1, 8, 2],
+          },
+        ],
+      },
+      type: DamageType.PIERCING.name,
+      dice: '4d8',
+      resisted: false,
+      vulnerable: false,
     };
     const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
 
@@ -426,7 +291,7 @@ module('Unit | Utils | attack', function (hooks) {
       radiant.roll = fakeRadiant;
     }
 
-    const attackData = attack.makeAttack(25, false, false);
+    const attackData = attack.makeAttack(25);
     fakePiercing.alwaysCalledWith(true);
     fakeRadiant.alwaysCalledWith(true);
     assert.deepEqual(
@@ -446,20 +311,8 @@ module('Unit | Utils | attack', function (hooks) {
       '39 damage should have been inflicted (25 + 14)',
     );
     const expectedDmg: DamageDetails[] = [
-      {
-        type: 'piercing',
-        dice: '4d6 + 2d4 + 5',
-        roll: fakePiercingDamageDetails,
-        resisted: false,
-        vulnerable: false,
-      },
-      {
-        type: 'radiant',
-        dice: '4d8',
-        roll: fakeRadiantDamageDetails,
-        resisted: false,
-        vulnerable: false,
-      },
+      fakePiercingDamageDetails,
+      fakeRadiantDamageDetails,
     ];
     assert.deepEqual(
       attackData.damageDetails,
