@@ -3,7 +3,7 @@
     <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
       <h2>Set Up Saves</h2>
       <div class="row align-items-center py-2">
-        <label for="numberOfSaves" class="col-6 col-form-label">Number of Saves</label>
+        <label data-test-save-form-label for="numberOfSaves" class="col-6 col-form-label">Number of Saves</label>
         <div class="col-6">
           <Input data-test-input-numberOfSaves class="form-control" id="numberOfSaves" name="numberOfSaves"
             @type="number" @value={{this.numberOfSaves}} min="0" title="Number of saves cannot be negative"
@@ -45,7 +45,7 @@
         @addNewDamageType={{this.addNewDamageType}} />
 
       <div class="row align-items-center mx-auto mb-5">
-        <button data-test-button-simulateSaves class="btn btn-primary btn-lg w-70 d-block" type="submit" id="saveBtn"
+        <button data-test-button-rollSaves class="btn btn-primary btn-lg w-70 d-block" type="submit" id="saveBtn"
           {{on "click" this.simulateRepeatedSaves}}>Roll Saves!</button>
       </div>
     </form>

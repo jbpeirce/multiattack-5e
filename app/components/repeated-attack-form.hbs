@@ -3,7 +3,7 @@
     <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
       <h2>Set Up Attacks</h2>
       <div class="row align-items-center py-2">
-        <label for="numberOfAttacks" class="col-6 col-form-label">Number of Attacks</label>
+        <label data-test-attack-form-label for="numberOfAttacks" class="col-6 col-form-label">Number of Attacks</label>
         <div class="col-6">
           <Input data-test-input-numberOfAttacks class="form-control" id="numberOfAttacks" name="numberOfAttacks"
             @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative"

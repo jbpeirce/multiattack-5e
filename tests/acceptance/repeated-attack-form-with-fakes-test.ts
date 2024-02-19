@@ -8,7 +8,7 @@ import type RandomnessService from 'multiattack-5e/services/randomness';
 
 import { type ElementContext } from '../types/element-context';
 
-module('Acceptance | repeated attack form', function (hooks) {
+module('Acceptance | repeated attack form with fake dice', function (hooks) {
   setupApplicationTest(hooks);
 
   test('it displays an attack set with maximized dice', async function (this: ElementContext, assert) {
