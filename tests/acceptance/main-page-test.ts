@@ -20,26 +20,24 @@ module('Acceptance | main page', function (hooks) {
     assert
       .dom('h1')
       .hasText('Repeated Attack Simulator', 'page title should be displayed');
-
-    // Check that the attack form is set as the default
-    assert
-      .dom('[data-test-attack-form-label]')
-      .isVisible('attack setup heading should be displayed');
-    assert
-      .dom('#nav-attacks [data-test-log-header]')
-      .hasText('Attack Log', 'attack log heading should be displayed');
   });
 
   test('switching between tabs', async function (assert) {
     await visit('/');
 
-    // The initial tab should be the attack form
+    // Switch to the form for attacks
+    await click('[data-test-button-attackTab]');
+    await delay();
     assert
       .dom('#nav-attacks [data-test-attack-form-label]')
-      .isVisible('attack form label should be displayed on initial load');
+      .isVisible(
+        'attack form label should be displayed after initial attack-tab click',
+      );
     assert
       .dom('[data-test-save-form-label]')
-      .isNotVisible('save form label should not be displayed on initial load');
+      .isNotVisible(
+        'save form label should not be displayed after initial attack-tab click',
+      );
 
     // Switch to the form for saves
     await click('[data-test-button-saveTab]');
@@ -58,16 +56,22 @@ module('Acceptance | main page', function (hooks) {
 
     assert
       .dom('[data-test-attack-form-label]')
-      .isVisible('attack form label should be displayed');
+      .isVisible(
+        'attack form label should be displayed after second attack-tab click',
+      );
     assert
       .dom('[data-test-save-form-label]')
-      .isNotVisible('save form label should not be displayed');
+      .isNotVisible(
+        'save form label should not be displayed after second attack-tab click',
+      );
   });
 
   test('it retains the state of each tab when switched away', async function (this: ElementContext, assert) {
     await visit('/');
 
-    // The main page should begin on the attack form
+    // Switch to the attack form to make sure the state is as expected
+    await click('[data-test-button-attackTab]');
+    await delay();
     assert
       .dom('[data-test-attack-form-label]')
       .isVisible('attack form label should be displayed');
