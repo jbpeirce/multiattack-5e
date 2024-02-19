@@ -1,5 +1,6 @@
 import type AdvantageState from 'multiattack-5e/components/advantage-state-enum';
-import Damage, { type DamageDetails } from 'multiattack-5e/utils/damage';
+import Damage from 'multiattack-5e/utils/damage';
+import { type InflictedDamageDetails } from 'multiattack-5e/utils/damage-details';
 import type { GroupRollDetails } from 'multiattack-5e/utils/dice-groups-and-modifier';
 
 export interface RepeatedTestEventResult {
@@ -18,5 +19,5 @@ export interface TestEventDetails {
   success: boolean;
   majorSuccess: boolean;
   damage: number;
-  damageDetails: DamageDetails[];
+  damageDetails: InflictedDamageDetails[];
 }

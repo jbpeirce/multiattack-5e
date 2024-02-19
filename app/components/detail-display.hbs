@@ -5,8 +5,7 @@
     </h2>
   </div>
   <div class="col col-sm-4 d-flex justify-content-end">
-    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearLog}}
-      data-test-button-clear-log>
+    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearLog}} data-test-button-clear-log>
       Clear
     </button>
   </div>
@@ -40,8 +39,7 @@
 
         {{#if (@isSuccess details) }}
         <li class="li-success">
-          <span data-test-roll-detail="{{index}}-{{index2}}"
-            title="{{this.getRollDetailString details.roll.rolls}}">
+          <span data-test-roll-detail="{{index}}-{{index2}}" title="{{this.getRollDetailString details.roll.rolls}}">
             <a data-test-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
               data-bs-toggle="collapse" href="#roll-detail-collapse-{{index}}-{{index2}}" role="button"
               aria-expanded="false" aria-controls="roll-detail-collapse-{{index}}-{{index2}}">
@@ -58,47 +56,15 @@
             </ul>
           </div>
 
-          <ul data-test-damage-detail-list="{{index}}-{{index2}}">
-            {{#each details.damageDetails as |damage index3|}}
-            <li>
-              <span data-test-damage-roll-detail="{{index}}-{{index2}}-{{index3}}"
-                title="{{this.getRollDetailString damage.roll.rolls}}">
-                {{#if damage.roll.rolls}}
-                <a data-test-damage-roll-collapse-link="{{index}}-{{index2}}-{{index3}}"
-                  class="link link-dark collapsed" data-bs-toggle="collapse"
-                  href="#damage-detail-collapse-{{index}}-{{index2}}-{{index3}}" role="button" aria-expanded="false"
-                  aria-controls="damage-detail-collapse-{{index}}-{{index2}}-{{index3}}">{{damage.roll.total}}</a>
-                {{/if}}
-                {{#unless damage.roll.rolls}}
-                {{damage.roll.total}}
-                {{/unless}}
-                {{damage.type}} damage
-                {{#if (@shouldBoldDice details)}} (<b>{{damage.dice}}</b>){{/if}}
-                {{#unless (@shouldBoldDice details)}} ({{damage.dice}}){{/unless}}
-                {{#if damage.resisted}} (resisted){{/if}}
-                {{#if damage.vulnerable}} (vulnerable){{/if}}
-              </span>
-
-              <div data-test-damage-roll-collapse-pane="{{index}}-{{index2}}-{{index3}}" class="collapse"
-                id="damage-detail-collapse-{{index}}-{{index2}}-{{index3}}">
-                <ul>
-                  {{#each damage.roll.rolls as |roll|}}
-                  <li class="text-muted">
-                    {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
-                  </li>
-                  {{/each}}
-                </ul>
-              </div>
-            </li>
-            {{/each}}
-          </ul>
+          <DetailDamageDisplay @damageDetails={{details.damageDetails}} @index={{index}} @index2={{index2}}
+            @getRollDetailString={{this.getRollDetailString}} @shouldBoldDice={{@shouldBoldDice}}
+            @setDetails={{details}} @getStringWithSpaces={{this.getStringWithSpaces}} />
         </li>
         {{/if}}
 
         {{#unless (@isSuccess details) }}
         <li class="li-fail">
-          <span data-test-roll-detail="{{index}}-{{index2}}"
-            title="{{this.getRollDetailString details.roll.rolls}}">
+          <span data-test-roll-detail="{{index}}-{{index2}}" title="{{this.getRollDetailString details.roll.rolls}}">
             <a data-test-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
               data-bs-toggle="collapse" href="#roll-detail-collapse-{{index}}-{{index2}}" role="button"
               aria-expanded="false" aria-controls="roll-detail-collapse-{{index}}-{{index2}}">
@@ -114,6 +80,10 @@
               {{/each}}
             </ul>
           </div>
+
+          <DetailDamageDisplay @damageDetails={{details.damageDetails}} @index={{index}} @index2={{index2}}
+            @getRollDetailString={{this.getRollDetailString}} @shouldBoldDice={{@shouldBoldDice}}
+            @setDetails={{details}} @getStringWithSpaces={{this.getStringWithSpaces}} />
         </li>
         {{/unless}}
 

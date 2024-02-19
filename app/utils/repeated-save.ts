@@ -2,7 +2,11 @@ import type AdvantageState from 'multiattack-5e/components/advantage-state-enum'
 import type RandomnessService from 'multiattack-5e/services/randomness';
 
 import D20WithModifiers from './d20-with-modifiers';
-import Damage, { type DamageDetails } from './damage';
+import Damage from './damage';
+import {
+  type DamageDetails,
+  type InflictedDamageDetails,
+} from './damage-details';
 import { type GroupRollDetails } from './dice-groups-and-modifier';
 
 export interface RepeatedSaveResult {
@@ -23,7 +27,7 @@ export interface SaveDetails {
   roll: GroupRollDetails;
   pass: boolean;
   damage: number;
-  damageDetails: DamageDetails[];
+  damageDetails: InflictedDamageDetails[];
 }
 
 export default class RepeatedSave {
@@ -117,9 +121,21 @@ export default class RepeatedSave {
     }
 
     let totalNumberOfPasses = 0;
-    const totalDamage = 0;
-    const saveDetailsList = [];
+    const saveDetailsList: SaveDetails[] = [];
 
+    let totalDamage = 0;
+    const cachedDamageDetails: DamageDetails[] = [];
+
+    // Precompute the damage if it will not be rolled every save. This will not
+    // throw errors if the damage list is empty; it will simply return 0 damage
+    // and an empty list of details.
+    if (!this.rollDamageEverySave) {
+      for (const damage of this.damageTypes) {
+        cachedDamageDetails.push(damage.roll(false));
+      }
+    }
+
+    // Roll all saves
     for (let i = 0; i < this.numberOfSaves; i++) {
       const saveRoll = this.die.roll();
 
@@ -137,7 +153,26 @@ export default class RepeatedSave {
         saveDetail.pass = true;
         totalNumberOfPasses += 1;
 
-        // TODO: Handle damage, including half damage inflicted on a pass
+        // Some saving throws inflict half damage when a save is passed
+        if (this.saveForHalf) {
+          const totalInflictedBySave = this.getTotalInflictedDamage(
+            cachedDamageDetails,
+            saveDetail.damageDetails,
+            0.5,
+          );
+
+          totalDamage += totalInflictedBySave;
+          saveDetail.damage = totalInflictedBySave;
+        }
+      } else {
+        // When a save is failed, inflict full damage (if applicable)
+        const totalInflictedBySave = this.getTotalInflictedDamage(
+          cachedDamageDetails,
+          saveDetail.damageDetails,
+        );
+
+        totalDamage += totalInflictedBySave;
+        saveDetail.damage = totalInflictedBySave;
       }
 
       saveDetailsList.push(saveDetail);
@@ -154,5 +189,34 @@ export default class RepeatedSave {
       totalNumberOfPasses: totalNumberOfPasses,
       detailsList: saveDetailsList,
     };
+  }
+
+  /**
+   * Calculate the damage inflicted by damageList, adding the details to
+   * listToUpdate and returning the total. Apply the optional modifier, along
+   * with any resistance and vulnerability defined in the damage details, to
+   * each damage in the list.
+   * @param damageList a list of details for pre-rolled damage
+   * @param listToUpdate a list to which the damage inflicted by each entry in
+   * damageList will be appended
+   * @param [modifier=1] a modifier to apply to each damage in damageList
+   * before applying resistance or vulnerability
+   * @returns the total amount of damage inflicted by the damages in damageList
+   */
+  getTotalInflictedDamage(
+    damageList: DamageDetails[],
+    listToUpdate: InflictedDamageDetails[],
+    modifier = 1,
+  ): number {
+    let totalInflicted = 0;
+    for (const dmg of damageList) {
+      const inflicted = dmg.getInflictedDamage(modifier);
+      totalInflicted += inflicted;
+      listToUpdate.push({
+        inflicted: inflicted,
+        details: dmg,
+      });
+    }
+    return totalInflicted;
   }
 }

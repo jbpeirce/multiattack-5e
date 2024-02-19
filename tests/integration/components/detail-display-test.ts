@@ -61,38 +61,44 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 37,
             damageDetails: [
               {
-                type: 'piercing',
-                dice: '4d6 + 2d4 + 5',
-                roll: {
-                  total: 11,
-                  rolls: [
-                    {
-                      name: '4d6',
-                      rolls: [4, 5, 2, 2],
-                    },
-                    {
-                      name: '2d4',
-                      rolls: [3, 2],
-                    },
-                  ],
+                inflicted: 11,
+                details: {
+                  type: 'piercing',
+                  dice: '4d6 + 2d4 + 5',
+                  roll: {
+                    total: 11,
+                    rolls: [
+                      {
+                        name: '4d6',
+                        rolls: [4, 5, 2, 2],
+                      },
+                      {
+                        name: '2d4',
+                        rolls: [3, 2],
+                      },
+                    ],
+                  },
+                  resisted: true,
+                  vulnerable: false,
                 },
-                resisted: true,
-                vulnerable: false,
               },
               {
-                type: 'radiant',
-                dice: '4d8',
-                roll: {
-                  total: 26,
-                  rolls: [
-                    {
-                      name: '4d8',
-                      rolls: [2, 7, 1, 3],
-                    },
-                  ],
+                inflicted: 26,
+                details: {
+                  type: 'radiant',
+                  dice: '4d8',
+                  roll: {
+                    total: 26,
+                    rolls: [
+                      {
+                        name: '4d8',
+                        rolls: [2, 7, 1, 3],
+                      },
+                    ],
+                  },
+                  resisted: false,
+                  vulnerable: true,
                 },
-                resisted: false,
-                vulnerable: true,
               },
             ],
           },
@@ -115,38 +121,44 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 25,
             damageDetails: [
               {
-                type: 'piercing',
-                dice: '2d6 + 1d4 + 5',
-                roll: {
-                  total: 5,
-                  rolls: [
-                    {
-                      name: '2d6',
-                      rolls: [2, 1],
-                    },
-                    {
-                      name: '1d4',
-                      rolls: [2],
-                    },
-                  ],
+                inflicted: 5,
+                details: {
+                  type: 'piercing',
+                  dice: '2d6 + 1d4 + 5',
+                  roll: {
+                    total: 10,
+                    rolls: [
+                      {
+                        name: '2d6',
+                        rolls: [2, 1],
+                      },
+                      {
+                        name: '1d4',
+                        rolls: [2],
+                      },
+                    ],
+                  },
+                  resisted: true,
+                  vulnerable: false,
                 },
-                resisted: true,
-                vulnerable: false,
               },
               {
-                type: 'radiant',
-                dice: '2d8',
-                roll: {
-                  total: 20,
-                  rolls: [
-                    {
-                      name: '2d8',
-                      rolls: [3, 7],
-                    },
-                  ],
+                inflicted: 20,
+                details: {
+                  type: 'radiant',
+                  dice: '2d8',
+                  roll: {
+                    total: 10,
+                    rolls: [
+                      {
+                        name: '2d8',
+                        rolls: [3, 7],
+                      },
+                    ],
+                  },
+                  resisted: false,
+                  vulnerable: true,
                 },
-                resisted: false,
-                vulnerable: true,
               },
             ],
           },
@@ -363,38 +375,44 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 15,
             damageDetails: [
               {
-                type: 'piercing',
-                dice: '2d6 + 1d4 + 5',
-                roll: {
-                  total: 5,
-                  rolls: [
-                    {
-                      name: '2d6',
-                      rolls: [2, 1],
-                    },
-                    {
-                      name: '1d4',
-                      rolls: [2],
-                    },
-                  ],
+                inflicted: 5,
+                details: {
+                  type: 'piercing',
+                  dice: '2d6 + 1d4 + 5',
+                  roll: {
+                    total: 10,
+                    rolls: [
+                      {
+                        name: '2d6',
+                        rolls: [2, 1],
+                      },
+                      {
+                        name: '1d4',
+                        rolls: [2],
+                      },
+                    ],
+                  },
+                  resisted: true,
+                  vulnerable: false,
                 },
-                resisted: true,
-                vulnerable: false,
               },
               {
-                type: 'radiant',
-                dice: '2d8',
-                roll: {
-                  total: 10,
-                  rolls: [
-                    {
-                      name: '2d8',
-                      rolls: [2, 8],
-                    },
-                  ],
+                inflicted: 10,
+                details: {
+                  type: 'radiant',
+                  dice: '2d8',
+                  roll: {
+                    total: 10,
+                    rolls: [
+                      {
+                        name: '2d8',
+                        rolls: [2, 8],
+                      },
+                    ],
+                  },
+                  resisted: false,
+                  vulnerable: false,
                 },
-                resisted: false,
-                vulnerable: false,
               },
             ],
           },
@@ -446,19 +464,22 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 10,
             damageDetails: [
               {
-                type: 'acid',
-                dice: '3d6',
-                roll: {
-                  total: 10,
-                  rolls: [
-                    {
-                      name: '3d6',
-                      rolls: [2, 5, 4],
-                    },
-                  ],
+                inflicted: 10,
+                details: {
+                  type: 'acid',
+                  dice: '3d6',
+                  roll: {
+                    total: 11,
+                    rolls: [
+                      {
+                        name: '3d6',
+                        rolls: [2, 5, 4],
+                      },
+                    ],
+                  },
+                  resisted: true,
+                  vulnerable: true,
                 },
-                resisted: true,
-                vulnerable: true,
               },
             ],
           },
@@ -593,14 +614,17 @@ module('Integration | Component | detail-display', function (hooks) {
             damage: 60,
             damageDetails: [
               {
-                type: 'force',
-                dice: '60',
-                roll: {
-                  total: 60,
-                  rolls: [],
+                inflicted: 60,
+                details: {
+                  type: 'force',
+                  dice: '60',
+                  roll: {
+                    total: 60,
+                    rolls: [],
+                  },
+                  resisted: false,
+                  vulnerable: false,
                 },
-                resisted: false,
-                vulnerable: false,
               },
             ],
           },

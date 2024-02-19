@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
 import Damage from 'multiattack-5e/utils/damage';
+import { DamageDetails } from 'multiattack-5e/utils/damage-details';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 
 module('Unit | Utils | damage', function (hooks) {
@@ -32,8 +33,10 @@ module('Unit | Utils | damage', function (hooks) {
 
     assert.deepEqual(
       damage.roll(false),
-      {
-        roll: {
+      new DamageDetails(
+        DamageType.RADIANT.name,
+        '1d6 + 1',
+        {
           total: 4,
           rolls: [
             {
@@ -42,11 +45,9 @@ module('Unit | Utils | damage', function (hooks) {
             },
           ],
         },
-        type: DamageType.RADIANT.name,
-        dice: '1d6 + 1',
-        resisted: false,
-        vulnerable: false,
-      },
+        false,
+        false,
+      ),
       'roll should inflict 3 + 1 = 4 total damage',
     );
   });
@@ -85,8 +86,10 @@ module('Unit | Utils | damage', function (hooks) {
 
     assert.deepEqual(
       damage.roll(false),
-      {
-        roll: {
+      new DamageDetails(
+        DamageType.RADIANT.name,
+        '3d8 + 2d6 + 1',
+        {
           total: 21,
           rolls: [
             {
@@ -99,11 +102,9 @@ module('Unit | Utils | damage', function (hooks) {
             },
           ],
         },
-        type: DamageType.RADIANT.name,
-        dice: '3d8 + 2d6 + 1',
-        resisted: false,
-        vulnerable: false,
-      },
+        false,
+        false,
+      ),
       'roll should inflict (3 + 7 + 5) + (1 + 4) + 1 = 21 total damage',
     );
   });
@@ -147,8 +148,10 @@ module('Unit | Utils | damage', function (hooks) {
 
     assert.deepEqual(
       damage.roll(true),
-      {
-        roll: {
+      new DamageDetails(
+        DamageType.RADIANT.name,
+        '6d8 + 4d6 + 2',
+        {
           total: 34,
           rolls: [
             {
@@ -161,11 +164,9 @@ module('Unit | Utils | damage', function (hooks) {
             },
           ],
         },
-        type: DamageType.RADIANT.name,
-        dice: '6d8 + 4d6 + 2',
-        resisted: false,
-        vulnerable: false,
-      },
+        false,
+        false,
+      ),
       'roll should inflict 22 + (5 + 1 + 2) + (2 + 2) = 34 total damage',
     );
   });
@@ -193,8 +194,10 @@ module('Unit | Utils | damage', function (hooks) {
 
     assert.deepEqual(
       damage.roll(false),
-      {
-        roll: {
+      new DamageDetails(
+        DamageType.RADIANT.name,
+        '1d4 - 3',
+        {
           total: 0,
           rolls: [
             {
@@ -203,16 +206,14 @@ module('Unit | Utils | damage', function (hooks) {
             },
           ],
         },
-        type: DamageType.RADIANT.name,
-        dice: '1d4 - 3',
-        resisted: false,
-        vulnerable: false,
-      },
+        false,
+        false,
+      ),
       'roll should inflict 1 - 3 = 0 total damage (damage cannot be negative)',
     );
   });
 
-  test('it halves damage for resistant targets', async function (assert) {
+  test('it passes resistance to the output details', async function (assert) {
     const damage = new Damage(
       '2d6 + 1',
       DamageType.RADIANT.name,
@@ -220,42 +221,18 @@ module('Unit | Utils | damage', function (hooks) {
       true,
     );
 
-    assert.strictEqual(
-      damage.damage.diceGroups.length,
-      1,
-      'damage should roll one group of dice',
+    const result = damage.roll(false);
+    assert.true(
+      result.resisted,
+      'output details should have resistance marked',
     );
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(3);
-    fakeD6.onCall(1).returns(5);
-    const group2d6: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
-
-    assert.deepEqual(
-      damage.roll(false),
-      {
-        roll: {
-          total: 4,
-          rolls: [
-            {
-              name: '2d6',
-              rolls: [3, 5],
-            },
-          ],
-        },
-        type: DamageType.RADIANT.name,
-        dice: '2d6 + 1',
-        resisted: true,
-        vulnerable: false,
-      },
-      'roll should inflict (3 + 5 + 1) / 2 = 4 total damage',
+    assert.false(
+      result.vulnerable,
+      'output details should not have vulnerability marked',
     );
   });
 
-  test('it doubles damage for vulnerable targets', async function (assert) {
+  test('it passes vulnerability to the output details', async function (assert) {
     const damage = new Damage(
       '2d6 + 1',
       DamageType.RADIANT.name,
@@ -263,83 +240,14 @@ module('Unit | Utils | damage', function (hooks) {
       false,
       true,
     );
-
-    assert.strictEqual(
-      damage.damage.diceGroups.length,
-      1,
-      'damage should roll one group of dice',
+    const result = damage.roll(false);
+    assert.false(
+      result.resisted,
+      'output details should not have resistance marked',
     );
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(3);
-    fakeD6.onCall(1).returns(5);
-    const group2d6: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
-
-    assert.deepEqual(
-      damage.roll(false),
-      {
-        roll: {
-          total: 18,
-          rolls: [
-            {
-              name: '2d6',
-              rolls: [3, 5],
-            },
-          ],
-        },
-        type: DamageType.RADIANT.name,
-        dice: '2d6 + 1',
-        resisted: false,
-        vulnerable: true,
-      },
-      'roll should inflict (3 + 5 + 1) * 2 = 18 total damage',
-    );
-  });
-
-  test('it halves, then doubles, damage for resistant and vulnerable targets', async function (assert) {
-    const damage = new Damage(
-      '2d6 + 1',
-      DamageType.RADIANT.name,
-      new RandomnessService(),
-      true,
-      true,
-    );
-
-    assert.strictEqual(
-      damage.damage.diceGroups.length,
-      1,
-      'damage should roll one group of dice',
-    );
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(3);
-    fakeD6.onCall(1).returns(5);
-    const group2d6: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
-
-    assert.deepEqual(
-      damage.roll(false),
-      {
-        roll: {
-          total: 8,
-          rolls: [
-            {
-              name: '2d6',
-              rolls: [3, 5],
-            },
-          ],
-        },
-        type: DamageType.RADIANT.name,
-        dice: '2d6 + 1',
-        resisted: true,
-        vulnerable: true,
-      },
-      'roll should inflict ((3 + 5 + 1) / 2) * 2 = 8 total damage',
+    assert.true(
+      result.vulnerable,
+      'output details should have vulnerability marked',
     );
   });
 });
