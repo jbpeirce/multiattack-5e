@@ -36,13 +36,15 @@ module('Acceptance | main page', function (hooks) {
     // The initial tab should be the attack form
     assert
       .dom('#nav-attacks [data-test-attack-form-label]')
-      .isVisible('attack form label should be displayed');
+      .isVisible('attack form label should be displayed on initial load');
     assert
       .dom('[data-test-save-form-label]')
-      .isNotVisible('save form label should not be displayed');
+      .isNotVisible('save form label should not be displayed on initial load');
 
     // Switch to the form for saves
     await click('[data-test-button-saveTab]');
+    await delay();
+
     assert
       .dom('[data-test-attack-form-label]')
       .isNotVisible('attack form label should not be displayed');
@@ -52,6 +54,8 @@ module('Acceptance | main page', function (hooks) {
 
     // Switch back to the form for attacks
     await click('[data-test-button-attackTab]');
+    await delay();
+
     assert
       .dom('[data-test-attack-form-label]')
       .isVisible('attack form label should be displayed');
@@ -98,6 +102,7 @@ module('Acceptance | main page', function (hooks) {
 
     // Switch to the form for saves
     await click('[data-test-button-saveTab]');
+    await delay();
     assert
       .dom('[data-test-save-form-label]')
       .isVisible('save form label should be displayed');
@@ -126,6 +131,7 @@ module('Acceptance | main page', function (hooks) {
 
     // Switch back to the form for attacks
     await click('[data-test-button-attackTab]');
+    await delay();
     assert
       .dom('[data-test-attack-form-label]')
       .isVisible('attack form label should be displayed');
@@ -144,4 +150,10 @@ module('Acceptance | main page', function (hooks) {
         'second attack damage header should still be present',
       );
   });
+
+  function delay() {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 100);
+    });
+  }
 });
