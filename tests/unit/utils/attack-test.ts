@@ -6,7 +6,8 @@ import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
 import Attack from 'multiattack-5e/utils/attack';
-import Damage, { type DamageDetails } from 'multiattack-5e/utils/damage';
+import Damage from 'multiattack-5e/utils/damage';
+import { DamageDetails } from 'multiattack-5e/utils/damage-details';
 
 module('Unit | Utils | attack', function (hooks) {
   setupTest(hooks);
@@ -147,8 +148,10 @@ module('Unit | Utils | attack', function (hooks) {
     attack.attackDie.getD20Roll = fakeD20;
 
     // Fake the results of the damage dice
-    const fakePiercingDamageDetails = {
-      roll: {
+    const fakePiercingDamageDetails = new DamageDetails(
+      DamageType.PIERCING.name,
+      '2d6 + 1d4 + 5',
+      {
         total: 13,
         rolls: [
           {
@@ -161,15 +164,15 @@ module('Unit | Utils | attack', function (hooks) {
           },
         ],
       },
-      type: DamageType.PIERCING.name,
-      dice: '2d6 + 1d4 + 5',
-      resisted: false,
-      vulnerable: false,
-    };
+      false,
+      false,
+    );
     const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
 
-    const fakeRadiantDamageDetails = {
-      roll: {
+    const fakeRadiantDamageDetails = new DamageDetails(
+      DamageType.RADIANT.name,
+      '2d8',
+      {
         total: 7,
         rolls: [
           {
@@ -178,22 +181,13 @@ module('Unit | Utils | attack', function (hooks) {
           },
         ],
       },
-      type: DamageType.RADIANT.name,
-      dice: '2d8',
-      resisted: false,
-      vulnerable: false,
-    };
+      false,
+      false,
+    );
     const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
 
-    const piercing: Damage | undefined = attack.damageTypes[0];
-    if (piercing) {
-      piercing.roll = fakePiercing;
-    }
-
-    const radiant: Damage | undefined = attack.damageTypes[1];
-    if (radiant) {
-      radiant.roll = fakeRadiant;
-    }
+    attack.damageTypes[0]!.roll = fakePiercing;
+    attack.damageTypes[1]!.roll = fakeRadiant;
 
     const attackData = attack.makeAttack(15);
     fakePiercing.alwaysCalledWith(false);
@@ -211,14 +205,16 @@ module('Unit | Utils | attack', function (hooks) {
       20,
       '20 damage should have been inflicted',
     );
-    const expectedDmg: DamageDetails[] = [
-      fakePiercingDamageDetails,
-      fakeRadiantDamageDetails,
-    ];
+
     assert.deepEqual(
-      attackData.damageDetails,
-      expectedDmg,
-      'damage details should match expectations',
+      attackData.damageDetails[0]?.details,
+      fakePiercingDamageDetails,
+      'piercing damage details should match expectations',
+    );
+    assert.deepEqual(
+      attackData.damageDetails[1]?.details,
+      fakeRadiantDamageDetails,
+      'radiant damage details should match expectations',
     );
   });
 
@@ -243,8 +239,10 @@ module('Unit | Utils | attack', function (hooks) {
     attack.attackDie.getD20Roll = fakeD20;
 
     // Fake the results of the damage dice
-    const fakePiercingDamageDetails = {
-      roll: {
+    const fakePiercingDamageDetails = new DamageDetails(
+      DamageType.PIERCING.name,
+      '4d6 + 2d4 + 5',
+      {
         total: 25,
         rolls: [
           {
@@ -257,15 +255,15 @@ module('Unit | Utils | attack', function (hooks) {
           },
         ],
       },
-      type: DamageType.PIERCING.name,
-      dice: '4d6 + 2d4 + 5',
-      resisted: false,
-      vulnerable: false,
-    };
+      false,
+      false,
+    );
     const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
 
-    const fakeRadiantDamageDetails = {
-      roll: {
+    const fakeRadiantDamageDetails = new DamageDetails(
+      DamageType.PIERCING.name,
+      '4d8',
+      {
         total: 14,
         rolls: [
           {
@@ -274,22 +272,13 @@ module('Unit | Utils | attack', function (hooks) {
           },
         ],
       },
-      type: DamageType.PIERCING.name,
-      dice: '4d8',
-      resisted: false,
-      vulnerable: false,
-    };
+      false,
+      false,
+    );
     const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
 
-    const piercing: Damage | undefined = attack.damageTypes[0];
-    if (piercing) {
-      piercing.roll = fakePiercing;
-    }
-
-    const radiant: Damage | undefined = attack.damageTypes[1];
-    if (radiant) {
-      radiant.roll = fakeRadiant;
-    }
+    attack.damageTypes[0]!.roll = fakePiercing;
+    attack.damageTypes[1]!.roll = fakeRadiant;
 
     const attackData = attack.makeAttack(25);
     fakePiercing.alwaysCalledWith(true);
@@ -310,14 +299,16 @@ module('Unit | Utils | attack', function (hooks) {
       39,
       '39 damage should have been inflicted (25 + 14)',
     );
-    const expectedDmg: DamageDetails[] = [
-      fakePiercingDamageDetails,
-      fakeRadiantDamageDetails,
-    ];
+
     assert.deepEqual(
-      attackData.damageDetails,
-      expectedDmg,
-      'damage details should match expectations',
+      attackData.damageDetails[0]?.details,
+      fakePiercingDamageDetails,
+      'piercing damage details should match expectations',
+    );
+    assert.deepEqual(
+      attackData.damageDetails[1]?.details,
+      fakeRadiantDamageDetails,
+      'radiant damage details should match expectations',
     );
   });
 });

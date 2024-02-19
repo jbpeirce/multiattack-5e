@@ -69,7 +69,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .dom('#nav-attacks [data-test-detail-list="0"]')
       .isVisible('individual attack details should be displayed');
 
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelector('#nav-attacks [data-test-detail-list="0"]')!
         .children.length,
       8,
@@ -111,7 +111,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .dom('#nav-attacks [data-test-detail-list="0"]')
       .isVisible('attack details should be displayed for the second attack');
 
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelector('#nav-attacks [data-test-detail-list="0"]')!
         .children.length,
       4,
@@ -132,7 +132,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       .dom('#nav-attacks [data-test-detail-list="1"]')
       .isVisible('attack details should be displayed for the first attack');
 
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelector('#nav-attacks [data-test-detail-list="1"]')!
         .children.length,
       8,

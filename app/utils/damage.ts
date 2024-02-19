@@ -4,18 +4,9 @@ import { tracked } from '@glimmer/tracking';
 
 import type RandomnessService from 'multiattack-5e/services/randomness';
 
-import DiceGroupsAndModifier, {
-  type GroupRollDetails,
-} from './dice-groups-and-modifier';
+import { DamageDetails } from './damage-details';
+import DiceGroupsAndModifier from './dice-groups-and-modifier';
 import DiceStringParser from './dice-string-parser';
-
-export interface DamageDetails {
-  type: string;
-  dice: string;
-  roll: GroupRollDetails;
-  resisted: boolean;
-  vulnerable: boolean;
-}
 
 export default class Damage {
   @tracked type: string;
@@ -132,23 +123,13 @@ export default class Damage {
     // negative damage modifier)
     damageRoll.total = Math.max(damageRoll.total, 0);
 
-    // Take resistance and vulnerability (which are not mutually exclusive)
-    // into account.
-    if (this.targetResistant) {
-      damageRoll.total = Math.floor(damageRoll.total / 2);
-    }
-
-    if (this.targetVulnerable) {
-      damageRoll.total = damageRoll.total * 2;
-    }
-
-    return {
-      type: this.type,
-      dice: this.damage.prettyString(crit),
-      roll: damageRoll,
-      resisted: this.targetResistant,
-      vulnerable: this.targetVulnerable,
-    };
+    return new DamageDetails(
+      this.type,
+      this.damage.prettyString(crit),
+      damageRoll,
+      this.targetResistant,
+      this.targetVulnerable,
+    );
   }
 
   /**

@@ -41,6 +41,23 @@
 
       <hr>
 
+      <div class="form-check">
+        <Input data-test-input-half-damage class="form-check-input" @type="checkbox"
+          id="saveForHalfDamage" name="saveForHalfDamage" @checked={{this.saveForHalfDamage}} />
+        <label class="form-check-label" for="saveForHalfDamage">
+          Save for half damage
+        </label>
+      </div>
+      {{!-- <div class="form-check">
+        <Input data-test-input-roll-dmg-every-save class="form-check-input" @type="checkbox" id="rollDamageEverySave"
+          name="rollDamageEverySave" @checked={{this.rollDamageEverySave}} />
+        <label class="form-check-label" for="rollDamageEverySave">
+          Roll new damage with every save
+        </label>
+      </div> --}}
+
+      <hr>
+
       <DamagePane @damageList={{this.damageList}} @removeDamageType={{this.removeDamageType}}
         @addNewDamageType={{this.addNewDamageType}} />
 
@@ -55,7 +72,7 @@
     <DetailDisplay @log={{this.saveResultLog}} @clearLog={{this.clearSaveLog}} @getLogHeader={{this.getLogHeader}}
       @getSuccessCountString={{this.getPassCountString}} @getRepCountString={{this.getSaveCountString}}
       @getThresholdString={{this.getSaveDCString}} @getD20Modifier={{this.getSaveModifier}}
-      @getRollString={{this.getSavingThrowString}} @isSuccess={{this.isPass}} @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />
+      @getRollString={{this.getSavingThrowString}} @isSuccess={{this.isPass}}
+      @getD20RollString={{this.getD20RollString}} @shouldBoldDice={{this.shouldBoldDice}} />
   </div>
 </div>

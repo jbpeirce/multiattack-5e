@@ -2,7 +2,8 @@ import type AdvantageState from 'multiattack-5e/components/advantage-state-enum'
 import type RandomnessService from 'multiattack-5e/services/randomness';
 
 import D20WithModifiers from './d20-with-modifiers';
-import Damage, { type DamageDetails } from './damage';
+import Damage from './damage';
+import { type InflictedDamageDetails } from './damage-details';
 import { type GroupRollDetails } from './dice-groups-and-modifier';
 
 export interface AttackDetails {
@@ -12,7 +13,7 @@ export interface AttackDetails {
   nat1: boolean;
   damage: number;
   numberOfHits: number;
-  damageDetails: DamageDetails[];
+  damageDetails: InflictedDamageDetails[];
 }
 
 export default class Attack {
@@ -57,7 +58,7 @@ export default class Attack {
 
     let totalDmg = 0;
     let numberOfHits = 0;
-    const damageDetails: DamageDetails[] = [];
+    const damageDetails: InflictedDamageDetails[] = [];
 
     // Attacks always miss on a nat1, always hit on a crit, and otherwise hit if
     // the roll equals or exceeds the target AC.
@@ -66,8 +67,11 @@ export default class Attack {
       numberOfHits += 1;
       for (const damage of this.damageTypes) {
         const dmg = damage.roll(crit);
-        totalDmg += dmg.roll.total;
-        damageDetails.push(dmg);
+        totalDmg += dmg.getInflictedDamage();
+        damageDetails.push({
+          inflicted: dmg.getInflictedDamage(),
+          details: dmg,
+        });
       }
     }
 

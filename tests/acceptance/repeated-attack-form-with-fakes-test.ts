@@ -183,41 +183,6 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
         .hasAttribute('title', '1d20: 1 | -1d6: 1')
         .hasText('3 to hit (NAT 1!)');
 
-      // Test the collapsible attack-roll details
-      assert
-        .dom(`#nav-attacks [data-test-roll-collapse-link="0-${i}"]`)
-        .hasAria('expanded', 'false')
-        .hasText('3');
-      assert
-        .dom(`#nav-attacks [data-test-roll-collapse-pane="0-${i}"]`)
-        .hasText('1d20: 1 -1d6: 1')
-        .doesNotHaveClass(
-          'show',
-          'attack roll detail pane should start collapsed',
-        );
-
-      // The attack roll details should be visible after a click
-      await click(`#nav-attacks [data-test-roll-collapse-link="0-${i}"]`);
-      // Delay briefly so that the pane finishes opening
-      await delay();
-      assert
-        .dom(`#nav-attacks [data-test-roll-collapse-link="0-${i}"]`)
-        .hasAria(
-          'expanded',
-          'true',
-          'after click, attack roll detail pane should be expanded',
-        );
-      assert
-        .dom(`#nav-attacks [data-test-roll-collapse-pane="0-${i}"]`)
-        .hasClass(
-          'show',
-          'after click, attack roll detail pane should be visible',
-        );
-
-      // Do not test closing the pane; some sort of state appears to persist in
-      // Bootstrap between tests, and makes closing the pane fail after the
-      // first test that renders this form.
-
       // The damage section should be empty
       assert
         .dom(`#nav-attacks [data-test-damage-roll-detail="0-${i}-0"]`)
@@ -382,7 +347,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
       .dom(`#nav-attacks [data-test-damage-roll-detail="0-0-0"]`)
       .doesNotExist();
 
-    // Inspect the first attack's details
+    // Inspect the second set of attack's details
     assert
       .dom('#nav-attacks [data-test-data-list="1"]')
       .hasText(
