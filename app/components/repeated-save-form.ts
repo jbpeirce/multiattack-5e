@@ -136,7 +136,7 @@ export default class RepeatedSaveFormComponent extends Component {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getSaveRollString = (ignored: SaveDetails) => {
+  getD20RollString = (ignored: SaveDetails) => {
     return 'to save';
   };
 

@@ -26,7 +26,7 @@ module('Acceptance | main page', function (hooks) {
       .dom('[data-test-attack-form-label]')
       .isVisible('attack setup heading should be displayed');
     assert
-      .dom('[data-test-log-header]')
+      .dom('#nav-attacks [data-test-log-header]')
       .hasText('Attack Log', 'attack log heading should be displayed');
   });
 

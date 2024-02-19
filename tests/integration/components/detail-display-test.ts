@@ -210,60 +210,54 @@ module('Integration | Component | detail-display', function (hooks) {
 
     const detailsList = this.element.querySelector(
       '[data-test-detail-list="0"]',
-    )?.children;
-    assert.true(detailsList != null, 'detail list should be present');
+    )!.children;
 
-    if (detailsList) {
-      assert.equal(
-        detailsList.length,
-        3,
-        '3 repetitions should have been displayed',
-      );
+    assert.equal(
+      detailsList.length,
+      3,
+      '3 repetitions should have been displayed',
+    );
 
-      // success 1
-      assert.equal(
-        detailsList[0]?.className,
-        'li-success',
-        'first success should have bullet point formatted as a success',
-      );
-      assert
-        .dom('[data-test-roll-detail="0-0"]')
-        .hasAttribute('title', '1d20: 20 | -1d6: 2')
-        .hasText('21 from roll');
+    // success 1
+    assert.equal(
+      detailsList[0]!.className,
+      'li-success',
+      'first success should have bullet point formatted as a success',
+    );
+    assert
+      .dom('[data-test-roll-detail="0-0"]')
+      .hasAttribute('title', '1d20: 20 | -1d6: 2')
+      .hasText('21 from roll');
 
-      // success 2
-      assert.equal(
-        detailsList[1]?.className,
-        'li-success',
-        'second success should have bullet point formatted as a success',
-      );
-      assert
-        .dom('[data-test-roll-detail="0-1"]')
-        .hasAttribute('title', '1d20: 18 | -1d6: 3')
-        .hasText('18 from roll');
+    // success 2
+    assert.equal(
+      detailsList[1]!.className,
+      'li-success',
+      'second success should have bullet point formatted as a success',
+    );
+    assert
+      .dom('[data-test-roll-detail="0-1"]')
+      .hasAttribute('title', '1d20: 18 | -1d6: 3')
+      .hasText('18 from roll');
 
-      // failure
-      assert.equal(
-        detailsList[2]?.className,
-        'li-fail',
-        'failure should have bullet point formatted as a failure',
-      );
-      assert
-        .dom('[data-test-roll-detail="0-2"]')
-        .hasAttribute('title', '1d20: 1 | -1d6: 6')
-        .hasText('-2 from roll');
-    }
+    // failure
+    assert.equal(
+      detailsList[2]!.className,
+      'li-fail',
+      'failure should have bullet point formatted as a failure',
+    );
+    assert
+      .dom('[data-test-roll-detail="0-2"]')
+      .hasAttribute('title', '1d20: 1 | -1d6: 6')
+      .hasText('-2 from roll');
 
     // Inspect the detailed display of the first success's damage
     const firstDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0-0"]',
-    )?.children;
-    assert.true(
-      firstDamageDetailsList != null,
-      'damage detail list should be present',
-    );
+    )!.children;
+
     assert.equal(
-      firstDamageDetailsList?.length,
+      firstDamageDetailsList!.length,
       2,
       '2 types of damage should have been displayed',
     );
@@ -295,13 +289,10 @@ module('Integration | Component | detail-display', function (hooks) {
     // Inspect the detailed display of the second hit's damage
     const secondDamageDetailsList = this.element.querySelector(
       '[data-test-damage-detail-list="0-1"]',
-    )?.children;
-    assert.true(
-      secondDamageDetailsList != null,
-      'damage detail list should be present',
-    );
+    )!.children;
+
     assert.equal(
-      secondDamageDetailsList?.length,
+      secondDamageDetailsList!.length,
       2,
       '2 types of damage should have been displayed',
     );
@@ -507,35 +498,33 @@ module('Integration | Component | detail-display', function (hooks) {
 
     const detailsList1 = this.element.querySelector(
       '[data-test-detail-list="0"]',
-    )?.children;
-    assert.true(detailsList1 != null, 'detail list should be present');
-    if (detailsList1) {
-      assert.equal(
-        detailsList1.length,
-        2,
-        'first event set: 2 events should have been displayed',
-      );
+    )!.children;
 
-      assert.equal(
-        detailsList1[0]?.className,
-        'li-success',
-        'first event set: success should have bullet point formatted as a success',
-      );
-      assert
-        .dom('[data-test-roll-detail="0-0"]')
-        .hasAttribute('title', '1d20: 19')
-        .hasText('16 from roll');
+    assert.equal(
+      detailsList1.length,
+      2,
+      'first event set: 2 events should have been displayed',
+    );
 
-      assert.equal(
-        detailsList1[1]?.className,
-        'li-fail',
-        'first event set: failure should have bullet point formatted as a failure',
-      );
-      assert
-        .dom('[data-test-roll-detail="0-1"]')
-        .hasAttribute('title', '1d20: 2')
-        .hasText('-1 from roll');
-    }
+    assert.equal(
+      detailsList1[0]!.className,
+      'li-success',
+      'first event set: success should have bullet point formatted as a success',
+    );
+    assert
+      .dom('[data-test-roll-detail="0-0"]')
+      .hasAttribute('title', '1d20: 19')
+      .hasText('16 from roll');
+
+    assert.equal(
+      detailsList1[1]!.className,
+      'li-fail',
+      'first event set: failure should have bullet point formatted as a failure',
+    );
+    assert
+      .dom('[data-test-roll-detail="0-1"]')
+      .hasAttribute('title', '1d20: 2')
+      .hasText('-1 from roll');
 
     // Second event set
     assert
@@ -551,25 +540,23 @@ module('Integration | Component | detail-display', function (hooks) {
 
     const detailsList2 = this.element.querySelector(
       '[data-test-detail-list="1"]',
-    )?.children;
-    assert.true(detailsList2 != null, 'detail list should be present');
-    if (detailsList2) {
-      assert.equal(
-        detailsList2.length,
-        1,
-        'second event set: 1 event should have been displayed',
-      );
+    )!.children;
 
-      assert.equal(
-        detailsList2[0]?.className,
-        'li-success',
-        'second event set: success should have bullet point formatted as a success',
-      );
-      assert
-        .dom('[data-test-roll-detail="1-0"]')
-        .hasAttribute('title', '1d20: 12')
-        .hasText('15 from roll');
-    }
+    assert.equal(
+      detailsList2.length,
+      1,
+      'second event set: 1 event should have been displayed',
+    );
+
+    assert.equal(
+      detailsList2[0]!.className,
+      'li-success',
+      'second event set: success should have bullet point formatted as a success',
+    );
+    assert
+      .dom('[data-test-roll-detail="1-0"]')
+      .hasAttribute('title', '1d20: 12')
+      .hasText('15 from roll');
   });
 
   test('it renders damage rolls without dice correctly', async function (this: ElementContext, assert) {
@@ -720,33 +707,30 @@ module('Integration | Component | detail-display', function (hooks) {
 
     const detailsList = this.element.querySelector(
       '[data-test-detail-list="0"]',
-    )?.children;
-    assert.true(detailsList != null, 'detail list should be present');
+    )!.children;
 
-    if (detailsList) {
-      assert.equal(
-        detailsList.length,
-        1,
-        '1 repetition should have been displayed',
-      );
+    assert.equal(
+      detailsList.length,
+      1,
+      '1 repetition should have been displayed',
+    );
 
-      // the roll for the success should have been displayed
-      assert.equal(
-        detailsList[0]?.className,
-        'li-success',
-        'first success should have bullet point formatted as a success',
-      );
-      assert
-        .dom('[data-test-roll-detail="0-0"]')
-        .hasAttribute('title', '1d20: 18')
-        .hasText('21 from roll');
-    }
+    // the roll for the success should have been displayed
+    assert.equal(
+      detailsList[0]!.className,
+      'li-success',
+      'first success should have bullet point formatted as a success',
+    );
+    assert
+      .dom('[data-test-roll-detail="0-0"]')
+      .hasAttribute('title', '1d20: 18')
+      .hasText('21 from roll');
 
     // no damage is associated with this event
     assert.dom('[data-test-damage-detail-list="0-0"]').exists();
     assert.equal(
-      this.element.querySelector('[data-test-damage-detail-list="0-0"]')
-        ?.children.length,
+      this.element.querySelector('[data-test-damage-detail-list="0-0"]')!
+        .children.length,
       0,
       'no damage is present for this event',
     );
@@ -801,7 +785,7 @@ module('Integration | Component | detail-display', function (hooks) {
       .exists('details should be displayed');
 
     assert.equal(
-      this.element.querySelector('[data-test-detail-list="0"]')?.children
+      this.element.querySelector('[data-test-detail-list="0"]')!.children
         .length,
       0,
       'no details are present for this event set',

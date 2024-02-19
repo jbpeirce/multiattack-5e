@@ -4,7 +4,7 @@ import type { NameAndRolls } from 'multiattack-5e/utils/dice-groups-and-modifier
 
 import AdvantageState from './advantage-state-enum';
 
-export default class kDetailDisplayComponent extends Component {
+export default class DetailDisplayComponent extends Component {
   AdvantageState = AdvantageState;
 
   /**
