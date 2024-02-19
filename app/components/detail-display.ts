@@ -8,34 +8,19 @@ export default class DetailDisplayComponent extends Component {
   AdvantageState = AdvantageState;
 
   /**
-   * Use the given toHit modifier to represent a 1d20 roll with this modifier.
+   * Use the given modifier to represent a 1d20 roll with this modifier.
    * If the input modifier has no sign at the start of the string, it will be
    * assumed to be positive.
-   * @param toHit a string representing a group of dice and/or numbers added
+   * @param modifier a string representing a group of dice and/or numbers added
    * together
-   * @returns a string representing the toHit string added to 1d20
+   * @returns a string representing the modifier string added to 1d20
    */
-  getAttackString = (toHit: string) => {
-    toHit = toHit.trim();
-    if (toHit.startsWith('+') || toHit.startsWith('-')) {
-      return `1d20 ${toHit}`;
+  getD20String = (modifier: string) => {
+    modifier = modifier.trim();
+    if (modifier.startsWith('+') || modifier.startsWith('-')) {
+      return `1d20 ${modifier}`;
     } else {
-      return `1d20 + ${toHit}`;
-    }
-  };
-
-  /**
-   * Use the given number of hits to return either "hits" or "hit" as
-   * appropriate
-   * @param numberOfHits the number of hits involved
-   * @returns "hit" or "hits" depending on whether numberOfHits is greater than
-   * one
-   */
-  getHitString = (numberOfHits: number) => {
-    if (numberOfHits == 1) {
-      return 'hit';
-    } else {
-      return 'hits';
+      return `1d20 + ${modifier}`;
     }
   };
 

@@ -91,6 +91,64 @@ export default class RepeatedAttackFormComponent extends Component {
     return new Damage('2d6 + 3', DamageType.PIERCING.name, this.randomness);
   }
 
+  /**
+   * Customize the attack detail log
+   * @returns the desired header for the attack detail log
+   */
+  getLogHeader = () => {
+    return 'Attack Log';
+  };
+
+  /**
+   * Use the attack's number of hits to return either "N hits" or "1 hit" as
+   * appropriate
+   * @param repeatedAttack the result of a repeated set of attacks, which
+   * specifies the total number of hits in the set of attacks
+   * @returns "1 hit" or "numberOfHits hits" depending on whether the number of
+   * hits in the input data is one.
+   */
+  getHitCountString = (repeatedAttack: RepeatedAttackResult) => {
+    if (repeatedAttack.totalNumberOfHits == 1) {
+      return `${repeatedAttack.totalNumberOfHits} hit`;
+    } else {
+      return `${repeatedAttack.totalNumberOfHits} hits`;
+    }
+  };
+
+  getAttackCountString = (repeatedAttack: RepeatedAttackResult) => {
+    return `Number of attacks: ${repeatedAttack.numberOfAttacks}`;
+  };
+
+  getTargetACString = (repeatedAttack: RepeatedAttackResult) => {
+    return `Target AC: ${repeatedAttack.targetAC}`;
+  };
+
+  getToHitModifier = (repeatedAttack: RepeatedAttackResult) => {
+    return repeatedAttack.toHit;
+  };
+
+  getAttackRollString = (toHitString: string) => {
+    return `Attack roll: ${toHitString}`;
+  };
+
+  getD20RollString = (attack: AttackDetails) => {
+    if (attack.crit) {
+      return `to hit (CRIT!)`;
+    }
+    if (attack.nat1) {
+      return `to hit (NAT 1!)`;
+    }
+    return `to hit`;
+  };
+
+  shouldBoldDice = (attack: AttackDetails) => {
+    return attack.crit;
+  };
+
+  isHit = (attack: AttackDetails) => {
+    return attack.hit;
+  };
+
   simulateRepeatedAttacks = () => {
     if (!this.randomness) {
       throw new Error(
