@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
+import { stubReturning } from 'multiattack-5e/tests/helpers/dice-helper';
 import Attack from 'multiattack-5e/utils/attack';
 import Damage from 'multiattack-5e/utils/damage';
 import { DamageDetails } from 'multiattack-5e/utils/damage-details';
@@ -19,10 +20,7 @@ module('Unit | Utils | attack', function (hooks) {
       [],
       new RandomnessService(),
     );
-
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    attack.attackDie.getD20Roll = fakeD20;
+    attack.attackDie.getD20Roll = stubReturning(3);
 
     // This attack rolls 3 + 4 = 7, so it should miss
     const attackData = attack.makeAttack(10);
@@ -48,10 +46,7 @@ module('Unit | Utils | attack', function (hooks) {
       [],
       new RandomnessService(),
     );
-
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(1);
-    attack.attackDie.getD20Roll = fakeD20;
+    attack.attackDie.getD20Roll = stubReturning(1);
 
     // This attack rolls a nat 1, so it should miss even though 1 + 20 > 10
     const attackData = attack.makeAttack(10);
@@ -85,28 +80,16 @@ module('Unit | Utils | attack', function (hooks) {
       new RandomnessService(),
     );
 
-    // Fake the results of the d20 attack roll
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(13);
-    attack.attackDie.getD20Roll = fakeD20;
-
-    const fake1d6 = sinon.fake.returns({
+    // Fake the results of the attack-roll dice
+    attack.attackDie.getD20Roll = stubReturning(13);
+    attack.attackDie.modifier.diceGroups[0]!.roll = stubReturning({
       total: 6,
       rolls: [6],
     });
-    const attack1d6 = attack.attackDie.modifier.diceGroups[0];
-    if (attack1d6) {
-      attack1d6.roll = fake1d6;
-    }
-
-    const fake1d4 = sinon.fake.returns({
+    attack.attackDie.modifier.diceGroups[1]!.roll = stubReturning({
       total: 1,
       rolls: [1],
     });
-    const attack1d4 = attack.attackDie.modifier.diceGroups[1];
-    if (attack1d4) {
-      attack1d4.roll = fake1d4;
-    }
 
     // Do not mock the results of the damage dice since it's not the focus of
     // this test
@@ -143,9 +126,7 @@ module('Unit | Utils | attack', function (hooks) {
     );
 
     // Fake the results of the d20 attack roll
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(13);
-    attack.attackDie.getD20Roll = fakeD20;
+    attack.attackDie.getD20Roll = stubReturning(13);
 
     // Fake the results of the damage dice
     const fakePiercingDamageDetails = new DamageDetails(
@@ -234,9 +215,7 @@ module('Unit | Utils | attack', function (hooks) {
     );
 
     // Fake the results of the d20 attack roll
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(20);
-    attack.attackDie.getD20Roll = fakeD20;
+    attack.attackDie.getD20Roll = stubReturning(20);
 
     // Fake the results of the damage dice
     const fakePiercingDamageDetails = new DamageDetails(

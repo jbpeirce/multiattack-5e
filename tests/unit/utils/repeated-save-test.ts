@@ -1,10 +1,10 @@
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
 
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
+import { stubReturning } from 'multiattack-5e/tests/helpers/dice-helper';
 import Damage from 'multiattack-5e/utils/damage';
 import RepeatedSave from 'multiattack-5e/utils/repeated-save';
 
@@ -20,10 +20,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
       new RandomnessService(),
     );
 
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(7);
-    repeatedSave.die.die.roll = fakeD20;
+    repeatedSave.die.die.roll = stubReturning(3, 7);
 
     const result = repeatedSave.simulateRepeatedSaves();
     assert.deepEqual(result, {
@@ -58,10 +55,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
       new RandomnessService(),
     );
 
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(15);
-    repeatedSave.die.die.roll = fakeD20;
+    repeatedSave.die.die.roll = stubReturning(3, 15);
 
     const result = repeatedSave.simulateRepeatedSaves();
     assert.deepEqual(result, {
@@ -96,17 +90,8 @@ module('Unit | Utils | repeated-save', function (hooks) {
       new RandomnessService(),
     );
 
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(2); // ignored
-
-    fakeD20.onCall(2).returns(15);
-    fakeD20.onCall(3).returns(2); // ignored
-
-    fakeD20.onCall(4).returns(7);
-    fakeD20.onCall(5).returns(2); // ignored
-
-    repeatedSave.die.die.roll = fakeD20;
+    // the 2's are all ignored, since this is configured to use a straight roll
+    repeatedSave.die.die.roll = stubReturning(3, 2, 15, 2, 7, 2);
 
     const result = repeatedSave.simulateRepeatedSaves();
     assert.deepEqual(result, {
@@ -162,15 +147,11 @@ module('Unit | Utils | repeated-save', function (hooks) {
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(15);
-    repeatedSave.die.getD20Roll = fakeD20; //stubReturning(3, 15);
-
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(4);
-    fakeD8.onCall(1).returns(5);
-    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = fakeD8;
+    repeatedSave.die.getD20Roll = stubReturning(3, 15);
+    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
+      4,
+      5,
+    );
 
     const result = repeatedSave.simulateRepeatedSaves();
 
@@ -271,15 +252,11 @@ module('Unit | Utils | repeated-save', function (hooks) {
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(15);
-    repeatedSave.die.getD20Roll = fakeD20; //stubReturning(3, 15);
-
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(4);
-    fakeD8.onCall(1).returns(5);
-    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = fakeD8;
+    repeatedSave.die.getD20Roll = stubReturning(3, 15);
+    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
+      4,
+      5,
+    );
 
     const result = repeatedSave.simulateRepeatedSaves();
 
@@ -373,21 +350,16 @@ module('Unit | Utils | repeated-save', function (hooks) {
       ],
     );
 
-    const fakeD20 = sinon.stub();
-    fakeD20.onCall(0).returns(3);
-    fakeD20.onCall(1).returns(15);
-    repeatedSave.die.getD20Roll = fakeD20; //stubReturning(3, 15);
-
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(4);
-    fakeD8.onCall(1).returns(5);
-    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = fakeD8;
-
-    const fakeD4 = sinon.stub();
-    fakeD4.onCall(0).returns(4);
-    fakeD4.onCall(1).returns(2);
-    fakeD4.onCall(2).returns(1);
-    repeatedSave.damageTypes[1]!.damage.diceGroups[0]!.die.roll = fakeD4;
+    repeatedSave.die.getD20Roll = stubReturning(3, 15);
+    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
+      4,
+      5,
+    );
+    repeatedSave.damageTypes[1]!.damage.diceGroups[0]!.die.roll = stubReturning(
+      4,
+      2,
+      1,
+    );
 
     const result = repeatedSave.simulateRepeatedSaves();
 

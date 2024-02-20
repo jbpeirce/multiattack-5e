@@ -1,8 +1,8 @@
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
 
 import RandomnessService from 'multiattack-5e/services/randomness';
+import { stubReturning } from 'multiattack-5e/tests/helpers/dice-helper';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 
 module('Unit | Utils | dice-group', function (hooks) {
@@ -46,7 +46,7 @@ module('Unit | Utils | dice-group', function (hooks) {
     );
     assert.true(group1d8.shouldAdd(), 'dice group should be added by default');
 
-    group1d8.die.roll = sinon.fake.returns(3);
+    group1d8.die.roll = stubReturning(3);
     assert.deepEqual(
       group1d8.roll(),
       {
@@ -73,12 +73,7 @@ module('Unit | Utils | dice-group', function (hooks) {
       'dice group should track whether to add value to a larger total',
     );
 
-    const fakeDie = sinon.stub();
-    fakeDie.onCall(0).returns(3);
-    fakeDie.onCall(1).returns(1);
-    fakeDie.onCall(2).returns(5);
-
-    group3d6.die.roll = fakeDie;
+    group3d6.die.roll = stubReturning(3, 1, 5);
     // 3 + 1 + 5 = 9 expected sum
     assert.deepEqual(
       group3d6.roll(),
