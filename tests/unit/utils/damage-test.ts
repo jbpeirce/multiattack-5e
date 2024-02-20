@@ -1,12 +1,11 @@
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
+import { stubReturning } from 'multiattack-5e/tests/helpers/dice-helper';
 import Damage from 'multiattack-5e/utils/damage';
 import { DamageDetails } from 'multiattack-5e/utils/damage-details';
-import DiceGroup from 'multiattack-5e/utils/dice-group';
 
 module('Unit | Utils | damage', function (hooks) {
   setupTest(hooks);
@@ -24,12 +23,7 @@ module('Unit | Utils | damage', function (hooks) {
       'damage should roll one group of dice',
     );
 
-    const fake1d6 = sinon.stub();
-    fake1d6.onCall(0).returns(3);
-    const group1d6: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group1d6) {
-      group1d6.die.roll = fake1d6;
-    }
+    damage.damage.diceGroups[0]!.die.roll = stubReturning(3);
 
     assert.deepEqual(
       damage.roll(false),
@@ -65,24 +59,8 @@ module('Unit | Utils | damage', function (hooks) {
       'damage should roll two groups of dice',
     );
 
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(3);
-    fakeD8.onCall(1).returns(7);
-    fakeD8.onCall(2).returns(5);
-
-    const group3d8: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group3d8) {
-      group3d8.die.roll = fakeD8;
-    }
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(1);
-    fakeD6.onCall(1).returns(4);
-
-    const group2d6: DiceGroup | undefined = damage.damage.diceGroups[1];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
+    damage.damage.diceGroups[0]!.die.roll = stubReturning(3, 7, 5);
+    damage.damage.diceGroups[1]!.die.roll = stubReturning(1, 4);
 
     assert.deepEqual(
       damage.roll(false),
@@ -122,29 +100,8 @@ module('Unit | Utils | damage', function (hooks) {
       'damage should roll two groups of dice',
     );
 
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(3);
-    fakeD8.onCall(1).returns(7);
-    fakeD8.onCall(2).returns(5);
-    fakeD8.onCall(3).returns(5);
-    fakeD8.onCall(4).returns(1);
-    fakeD8.onCall(5).returns(2);
-
-    const group3d8: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group3d8) {
-      group3d8.die.roll = fakeD8;
-    }
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(1);
-    fakeD6.onCall(1).returns(4);
-    fakeD6.onCall(2).returns(2);
-    fakeD6.onCall(3).returns(2);
-
-    const group2d6: DiceGroup | undefined = damage.damage.diceGroups[1];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
+    damage.damage.diceGroups[0]!.die.roll = stubReturning(3, 7, 5, 5, 1, 2);
+    damage.damage.diceGroups[1]!.die.roll = stubReturning(1, 4, 2, 2);
 
     assert.deepEqual(
       damage.roll(true),
@@ -184,13 +141,7 @@ module('Unit | Utils | damage', function (hooks) {
       'damage should roll one group of dice',
     );
 
-    const fakeD4 = sinon.stub();
-    fakeD4.onCall(0).returns(1);
-    fakeD4.onCall(1).returns(2);
-    const group1d4: DiceGroup | undefined = damage.damage.diceGroups[0];
-    if (group1d4) {
-      group1d4.die.roll = fakeD4;
-    }
+    damage.damage.diceGroups[0]!.die.roll = stubReturning(1, 2);
 
     assert.deepEqual(
       damage.roll(false),

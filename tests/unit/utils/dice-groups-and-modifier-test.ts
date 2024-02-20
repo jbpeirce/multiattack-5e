@@ -1,8 +1,8 @@
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
 
 import RandomnessService from 'multiattack-5e/services/randomness';
+import { stubReturning } from 'multiattack-5e/tests/helpers/dice-helper';
 import DiceGroup from 'multiattack-5e/utils/dice-group';
 import DiceGroupsAndModifier from 'multiattack-5e/utils/dice-groups-and-modifier';
 
@@ -15,12 +15,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       1,
     );
 
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(3);
-    const group1d6: DiceGroup | undefined = diceGroupAndModifier.diceGroups[0];
-    if (group1d6) {
-      group1d6.die.roll = fakeD6;
-    }
+    diceGroupAndModifier.diceGroups[0]!.die.roll = stubReturning(3);
 
     assert.deepEqual(
       diceGroupAndModifier.roll(false),
@@ -43,13 +38,7 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       2,
     );
 
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(3);
-    fakeD6.onCall(1).returns(4);
-    const group1d6: DiceGroup | undefined = diceGroupAndModifier.diceGroups[0];
-    if (group1d6) {
-      group1d6.die.roll = fakeD6;
-    }
+    diceGroupAndModifier.diceGroups[0]!.die.roll = stubReturning(3, 4);
 
     assert.deepEqual(
       diceGroupAndModifier.roll(true),
@@ -75,24 +64,8 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       -3,
     );
 
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(3);
-    fakeD8.onCall(1).returns(7);
-    fakeD8.onCall(2).returns(5);
-
-    const group3d8: DiceGroup | undefined = diceGroupAndModifier.diceGroups[0];
-    if (group3d8) {
-      group3d8.die.roll = fakeD8;
-    }
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(1);
-    fakeD6.onCall(1).returns(4);
-
-    const group2d6: DiceGroup | undefined = diceGroupAndModifier.diceGroups[1];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
+    diceGroupAndModifier.diceGroups[0]!.die.roll = stubReturning(3, 7, 5);
+    diceGroupAndModifier.diceGroups[1]!.die.roll = stubReturning(1, 4);
 
     assert.deepEqual(
       diceGroupAndModifier.roll(false),
@@ -122,29 +95,15 @@ module('Unit | Utils | diceGroupAndModifier', function (hooks) {
       2,
     );
 
-    const fakeD8 = sinon.stub();
-    fakeD8.onCall(0).returns(3);
-    fakeD8.onCall(1).returns(7);
-    fakeD8.onCall(2).returns(5);
-    fakeD8.onCall(3).returns(5);
-    fakeD8.onCall(4).returns(1);
-    fakeD8.onCall(5).returns(2);
-
-    const group3d8: DiceGroup | undefined = diceGroupAndModifier.diceGroups[0];
-    if (group3d8) {
-      group3d8.die.roll = fakeD8;
-    }
-
-    const fakeD6 = sinon.stub();
-    fakeD6.onCall(0).returns(1);
-    fakeD6.onCall(1).returns(4);
-    fakeD6.onCall(2).returns(2);
-    fakeD6.onCall(3).returns(2);
-
-    const group2d6: DiceGroup | undefined = diceGroupAndModifier.diceGroups[1];
-    if (group2d6) {
-      group2d6.die.roll = fakeD6;
-    }
+    diceGroupAndModifier.diceGroups[0]!.die.roll = stubReturning(
+      3,
+      7,
+      5,
+      5,
+      1,
+      2,
+    );
+    diceGroupAndModifier.diceGroups[1]!.die.roll = stubReturning(1, 4, 2, 2);
 
     assert.deepEqual(
       diceGroupAndModifier.roll(true),
