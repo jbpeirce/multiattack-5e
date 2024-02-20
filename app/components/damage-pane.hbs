@@ -1,20 +1,35 @@
-{{#each @damageList as |damage index| }}
-<DamageType data-test-damage-type={{index}} @index={{index}} @setDamage={{damage.setDamage}}
-  @setDamageType={{damage.setDamageType}} @setResistant={{damage.setResistant}}
-  @setVulnerable={{damage.setVulnerable}} @initialDamage={{damage.damageString}}
-  @initialDamageType={{damage.type}} @initialResistant={{damage.targetResistant}}
-  @initialVulnerable={{damage.targetVulnerable}} />
-<div class="row align-items-center">
-  <div class="col-sm">
-    <button data-test-button-remove-damage-type={{index}} class="btn btn-danger my-2" type="button" {{on "click"
-      (fn @removeDamageType index)}}>Remove Damage Type</button>
+{{#each @damageList as |damage index|}}
+  <DamageType
+    data-test-damage-type={{index}}
+    @index={{index}}
+    @setDamage={{damage.setDamage}}
+    @setDamageType={{damage.setDamageType}}
+    @setResistant={{damage.setResistant}}
+    @setVulnerable={{damage.setVulnerable}}
+    @initialDamage={{damage.damageString}}
+    @initialDamageType={{damage.type}}
+    @initialResistant={{damage.targetResistant}}
+    @initialVulnerable={{damage.targetVulnerable}}
+  />
+  <div class='row align-items-center'>
+    <div class='col-sm'>
+      <button
+        data-test-button-remove-damage-type={{index}}
+        class='btn btn-danger my-2'
+        type='button'
+        {{on 'click' (fn @removeDamageType index)}}
+      >Remove Damage Type</button>
+    </div>
   </div>
-</div>
-<hr>
+  <hr />
 {{/each}}
-<div class="row align-items-center">
-  <div class="col-sm">
-    <button data-test-button-add-damage-type class="btn btn-info my-3" type="button" {{on "click"
-      @addNewDamageType}}>New Damage Type</button>
+<div class='row align-items-center'>
+  <div class='col-sm'>
+    <button
+      data-test-button-add-damage-type
+      class='btn btn-info my-3'
+      type='button'
+      {{on 'click' @addNewDamageType}}
+    >New Damage Type</button>
   </div>
 </div>

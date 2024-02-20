@@ -1,94 +1,147 @@
-<div class="row align-items-center justify-content-between">
-  <div class="col col-sm-8">
+<div class='row align-items-center justify-content-between'>
+  <div class='col col-sm-8'>
     <h2 data-test-log-header>
       {{@getLogHeader}}
     </h2>
   </div>
-  <div class="col col-sm-4 d-flex justify-content-end">
-    <button class="btn btn-danger btn-sm" type="button" {{on "click" @clearLog}} data-test-button-clear-log>
+  <div class='col col-sm-4 d-flex justify-content-end'>
+    <button
+      class='btn btn-danger btn-sm'
+      type='button'
+      {{on 'click' @clearLog}}
+      data-test-button-clear-log
+    >
       Clear
     </button>
   </div>
 </div>
-<div class="pt-3">
-  <div class="col-scrollable rounded border">
-    <ul class="p-4" data-test-log>
+<div class='pt-3'>
+  <div class='col-scrollable rounded border'>
+    <ul class='p-4' data-test-log>
       {{#each @log as |repeatedSetDetails index|}}
-      {{#unless (eq index 0)}}
-      <hr>
-      <hr>
-      <hr>
-      {{/unless}}
-      <h4 data-test-total-damage-header={{index}}>
-        Total Damage: {{repeatedSetDetails.totalDmg}} ({{ @getSuccessCountString repeatedSetDetails}})
-      </h4>
-      <ul data-test-data-list={{index}} class="list-group">
-        <li class="li-no-bullets">{{@getRepCountString repeatedSetDetails}}</li>
-        <li class="li-no-bullets">{{@getThresholdString repeatedSetDetails}}</li>
-        <li class="li-no-bullets">{{@getRollString (this.getD20String (@getD20Modifier repeatedSetDetails)) }}
-          {{#if (eq repeatedSetDetails.advantageState.name "advantage") }}
-          (advantage)
-          {{/if}}
-          {{#if (eq repeatedSetDetails.advantageState.name "disadvantage") }}
-          (disadvantage)
-          {{/if}}
-        </li>
-      </ul>
-      <ol data-test-detail-list={{index}}>
-        {{#each repeatedSetDetails.detailsList as |details index2|}}
-
-        {{#if (@isSuccess details) }}
-        <li class="li-success">
-          <span data-test-roll-detail="{{index}}-{{index2}}" title="{{this.getRollDetailString details.roll.rolls}}">
-            <a data-test-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
-              data-bs-toggle="collapse" href="#roll-detail-collapse-{{index}}-{{index2}}" role="button"
-              aria-expanded="false" aria-controls="roll-detail-collapse-{{index}}-{{index2}}">
-              {{details.roll.total}}</a> {{@getD20RollString details}}
-          </span>
-          <div data-test-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
-            id="roll-detail-collapse-{{index}}-{{index2}}">
-            <ul>
-              {{#each details.roll.rolls as |roll|}}
-              <li class="text-muted">
-                {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
-              </li>
-              {{/each}}
-            </ul>
-          </div>
-
-          <DetailDamageDisplay @damageDetails={{details.damageDetails}} @index={{index}} @index2={{index2}}
-            @getRollDetailString={{this.getRollDetailString}} @shouldBoldDice={{@shouldBoldDice}}
-            @setDetails={{details}} @getStringWithSpaces={{this.getStringWithSpaces}} />
-        </li>
-        {{/if}}
-
-        {{#unless (@isSuccess details) }}
-        <li class="li-fail">
-          <span data-test-roll-detail="{{index}}-{{index2}}" title="{{this.getRollDetailString details.roll.rolls}}">
-            <a data-test-roll-collapse-link="{{index}}-{{index2}}" class="link link-dark collapsed"
-              data-bs-toggle="collapse" href="#roll-detail-collapse-{{index}}-{{index2}}" role="button"
-              aria-expanded="false" aria-controls="roll-detail-collapse-{{index}}-{{index2}}">
-              {{details.roll.total}}</a> {{@getD20RollString details}}
-          </span>
-          <div data-test-roll-collapse-pane="{{index}}-{{index2}}" class="collapse"
-            id="roll-detail-collapse-{{index}}-{{index2}}">
-            <ul>
-              {{#each details.roll.rolls as |roll|}}
-              <li class="text-muted">
-                {{roll.name}}: {{this.getStringWithSpaces roll.rolls}}
-              </li>
-              {{/each}}
-            </ul>
-          </div>
-
-          <DetailDamageDisplay @damageDetails={{details.damageDetails}} @index={{index}} @index2={{index2}}
-            @getRollDetailString={{this.getRollDetailString}} @shouldBoldDice={{@shouldBoldDice}}
-            @setDetails={{details}} @getStringWithSpaces={{this.getStringWithSpaces}} />
-        </li>
+        {{#unless (eq index 0)}}
+          <hr />
+          <hr />
+          <hr />
         {{/unless}}
+        <h4 data-test-total-damage-header={{index}}>
+          Total Damage:
+          {{repeatedSetDetails.totalDmg}}
+          ({{@getSuccessCountString repeatedSetDetails}})
+        </h4>
+        <ul data-test-data-list={{index}} class='list-group'>
+          <li class='li-no-bullets'>{{@getRepCountString
+              repeatedSetDetails
+            }}</li>
+          <li class='li-no-bullets'>{{@getThresholdString
+              repeatedSetDetails
+            }}</li>
+          <li class='li-no-bullets'>{{@getRollString
+              (this.getD20String (@getD20Modifier repeatedSetDetails))
+            }}
+            {{#if (eq repeatedSetDetails.advantageState.name 'advantage')}}
+              (advantage)
+            {{/if}}
+            {{#if (eq repeatedSetDetails.advantageState.name 'disadvantage')}}
+              (disadvantage)
+            {{/if}}
+          </li>
+        </ul>
+        <ol data-test-detail-list={{index}}>
+          {{#each repeatedSetDetails.detailsList as |details index2|}}
 
-        {{/each}}
-      </ol>
+            {{#if (@isSuccess details)}}
+              <li class='li-success'>
+                <span
+                  data-test-roll-detail='{{index}}-{{index2}}'
+                  title='{{this.getRollDetailString details.roll.rolls}}'
+                >
+                  <a
+                    data-test-roll-collapse-link='{{index}}-{{index2}}'
+                    class='link link-dark collapsed'
+                    data-bs-toggle='collapse'
+                    href='#roll-detail-collapse-{{index}}-{{index2}}'
+                    role='button'
+                    aria-expanded='false'
+                    aria-controls='roll-detail-collapse-{{index}}-{{index2}}'
+                  >
+                    {{details.roll.total}}</a>
+                  {{@getD20RollString details}}
+                </span>
+                <div
+                  data-test-roll-collapse-pane='{{index}}-{{index2}}'
+                  class='collapse'
+                  id='roll-detail-collapse-{{index}}-{{index2}}'
+                >
+                  <ul>
+                    {{#each details.roll.rolls as |roll|}}
+                      <li class='text-muted'>
+                        {{roll.name}}:
+                        {{this.getStringWithSpaces roll.rolls}}
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
+
+                <DetailDamageDisplay
+                  @damageDetails={{details.damageDetails}}
+                  @index={{index}}
+                  @index2={{index2}}
+                  @getRollDetailString={{this.getRollDetailString}}
+                  @shouldBoldDice={{@shouldBoldDice}}
+                  @setDetails={{details}}
+                  @getStringWithSpaces={{this.getStringWithSpaces}}
+                />
+              </li>
+            {{/if}}
+
+            {{#unless (@isSuccess details)}}
+              <li class='li-fail'>
+                <span
+                  data-test-roll-detail='{{index}}-{{index2}}'
+                  title='{{this.getRollDetailString details.roll.rolls}}'
+                >
+                  <a
+                    data-test-roll-collapse-link='{{index}}-{{index2}}'
+                    class='link link-dark collapsed'
+                    data-bs-toggle='collapse'
+                    href='#roll-detail-collapse-{{index}}-{{index2}}'
+                    role='button'
+                    aria-expanded='false'
+                    aria-controls='roll-detail-collapse-{{index}}-{{index2}}'
+                  >
+                    {{details.roll.total}}</a>
+                  {{@getD20RollString details}}
+                </span>
+                <div
+                  data-test-roll-collapse-pane='{{index}}-{{index2}}'
+                  class='collapse'
+                  id='roll-detail-collapse-{{index}}-{{index2}}'
+                >
+                  <ul>
+                    {{#each details.roll.rolls as |roll|}}
+                      <li class='text-muted'>
+                        {{roll.name}}:
+                        {{this.getStringWithSpaces roll.rolls}}
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
+
+                <DetailDamageDisplay
+                  @damageDetails={{details.damageDetails}}
+                  @index={{index}}
+                  @index2={{index2}}
+                  @getRollDetailString={{this.getRollDetailString}}
+                  @shouldBoldDice={{@shouldBoldDice}}
+                  @setDetails={{details}}
+                  @getStringWithSpaces={{this.getStringWithSpaces}}
+                />
+              </li>
+            {{/unless}}
+
+          {{/each}}
+        </ol>
       {{/each}}
     </ul>
   </div>

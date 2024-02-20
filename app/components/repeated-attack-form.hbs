@@ -1,61 +1,103 @@
-<div class="row align-items-top justify-content-between">
-  <div class="col-md-4">
-    <form class="needs-validation" onsubmit={{this.suppressPageRefresh}}>
+<div class='row align-items-top justify-content-between'>
+  <div class='col-md-4'>
+    <form class='needs-validation' onsubmit={{this.suppressPageRefresh}}>
       <h2>Set Up Attacks</h2>
-      <div class="row align-items-center py-2">
-        <label data-test-attack-form-label for="numberOfAttacks" class="col-6 col-form-label">Number of Attacks</label>
-        <div class="col-6">
-          <Input data-test-input-numberOfAttacks class="form-control" id="numberOfAttacks" name="numberOfAttacks"
-            @type="number" @value={{this.numberOfAttacks}} min="0" title="Number of attacks cannot be negative"
-            required="required" />
+      <div class='row align-items-center py-2'>
+        <label
+          data-test-attack-form-label
+          for='numberOfAttacks'
+          class='col-6 col-form-label'
+        >Number of Attacks</label>
+        <div class='col-6'>
+          <Input
+            data-test-input-numberOfAttacks
+            class='form-control'
+            id='numberOfAttacks'
+            name='numberOfAttacks'
+            @type='number'
+            @value={{this.numberOfAttacks}}
+            min='0'
+            title='Number of attacks cannot be negative'
+            required='required'
+          />
         </div>
       </div>
 
-      <div class="row align-items-center py-2">
-        <label for="targetAC" class="col-6 col-form-label">Target AC</label>
-        <div class="col-6">
-          <Input data-test-input-targetAC class="form-control" id="targetAC" name="targetAC" @type="number"
-            @value={{this.targetAC}} required="required" />
+      <div class='row align-items-center py-2'>
+        <label for='targetAC' class='col-6 col-form-label'>Target AC</label>
+        <div class='col-6'>
+          <Input
+            data-test-input-targetAC
+            class='form-control'
+            id='targetAC'
+            name='targetAC'
+            @type='number'
+            @value={{this.targetAC}}
+            required='required'
+          />
         </div>
       </div>
 
-      <div class="row align-items-center py-2">
-        <label for="toHit" class="col-6 col-form-label">To Hit Modifier</label>
-        <div class="col-6">
-          <div class="input-group">
-            <div class="input-group-text">1d20 +</div>
-            <Input data-test-input-toHit class="form-control" @type="text" id="toHit" name="toHit" @value={{this.toHit}}
-              aria-describedby="toHitDescription" required="required" pattern={{this.diceGroupsRegex}}
-              title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'" />
+      <div class='row align-items-center py-2'>
+        <label for='toHit' class='col-6 col-form-label'>To Hit Modifier</label>
+        <div class='col-6'>
+          <div class='input-group'>
+            <div class='input-group-text'>1d20 +</div>
+            <Input
+              data-test-input-toHit
+              class='form-control'
+              @type='text'
+              id='toHit'
+              name='toHit'
+              @value={{this.toHit}}
+              required='required'
+              pattern={{this.diceGroupsRegex}}
+              title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'"
+            />
           </div>
         </div>
       </div>
 
-      <div class="row align-items-center py-2">
-        <label class="col-6 col-form-label">Rolls With</label>
-        <div class="col-6">
+      <div class='row align-items-center py-2'>
+        <label class='col-6 col-form-label'>Rolls With</label>
+        <div class='col-6'>
           <AdvantageRadio @updateState={{this.setAdvantageState}} />
         </div>
       </div>
 
-      <hr>
+      <hr />
 
-      <DamagePane @damageList={{this.damageList}} @removeDamageType={{this.removeDamageType}}
-        @addNewDamageType={{this.addNewDamageType}} />
+      <DamagePane
+        @damageList={{this.damageList}}
+        @removeDamageType={{this.removeDamageType}}
+        @addNewDamageType={{this.addNewDamageType}}
+      />
 
-      <div class="row align-items-center mx-auto mb-5">
-        <button data-test-button-getDamage class="btn btn-primary btn-lg w-70 d-block" type="submit" id="attackBtn"
-          {{on "click" this.simulateRepeatedAttacks}}>Attack!</button>
+      <div class='row align-items-center mx-auto mb-5'>
+        <button
+          data-test-button-getDamage
+          class='btn btn-primary btn-lg w-70 d-block'
+          type='submit'
+          id='attackBtn'
+          {{on 'click' this.simulateRepeatedAttacks}}
+        >Attack!</button>
       </div>
     </form>
   </div>
 
-  <div class="col-md-7">
-    <DetailDisplay @log={{this.attackResultLog}} @clearLog={{this.clearAttackLog}} @getLogHeader={{this.getLogHeader}}
-      @getSuccessCountString={{this.getHitCountString}} @getRepCountString={{this.getAttackCountString}}
-      @getThresholdString={{this.getTargetACString}} @getD20Modifier={{this.getToHitModifier}}
-      @getRollString={{this.getAttackRollString}} @isSuccess={{this.isHit}}
+  <div class='col-md-7'>
+    <DetailDisplay
+      @log={{this.attackResultLog}}
+      @clearLog={{this.clearAttackLog}}
+      @getLogHeader={{this.getLogHeader}}
+      @getSuccessCountString={{this.getHitCountString}}
+      @getRepCountString={{this.getAttackCountString}}
+      @getThresholdString={{this.getTargetACString}}
+      @getD20Modifier={{this.getToHitModifier}}
+      @getRollString={{this.getAttackRollString}}
+      @isSuccess={{this.isHit}}
       @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />
+      @shouldBoldDice={{this.shouldBoldDice}}
+    />
   </div>
 </div>
