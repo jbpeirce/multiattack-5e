@@ -77,8 +77,8 @@ module('Acceptance | main page', function (hooks) {
       .isVisible('attack form label should be displayed');
 
     // Trigger two attacks (with the default configuration)
-    await click('[data-test-button-getDamage]');
-    await click('[data-test-button-getDamage]');
+    await click('[data-test-button-rollAttacks]');
+    await click('[data-test-button-rollAttacks]');
 
     // Check and save the first damage header
     assert

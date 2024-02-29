@@ -33,7 +33,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     await click('#nav-attacks [data-test-input-resistant="0"]');
 
     // Calculate the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     assert
       .dom('#nav-attacks [data-test-data-list="0"]')
@@ -158,7 +158,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     );
 
     // Calculate the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     assert
       .dom('#nav-attacks [data-test-data-list="0"]')
@@ -210,7 +210,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     await click('#nav-attacks [data-test-value="advantage"]');
 
     // Calculate the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     assert
       .dom('#nav-attacks [data-test-data-list="0"]')
@@ -275,7 +275,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     );
 
     // Trigger the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // Change the attack details so that the next set of attacks will miss
     await fillIn('#nav-attacks [data-test-input-numberOfAttacks]', '1');
@@ -283,7 +283,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     await click('#nav-attacks [data-test-value="straight"]');
 
     // Trigger the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // Inspect the second attack's details, which will be displayed first
     assert
@@ -515,19 +515,19 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     await click('#nav-attacks [data-test-input-resistant="0"]');
 
     // Roll the attacks
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // Add vulnerability
     await click('#nav-attacks [data-test-input-vulnerable="0"]');
 
     // Roll a second set of attacks
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // Remove damage resistance
     await click('#nav-attacks [data-test-input-resistant="0"]');
 
     // Roll a third set of attacks
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // Most recent attack: vulnerability only
     assert
