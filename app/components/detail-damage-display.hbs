@@ -21,10 +21,13 @@
         {{/unless}}
         {{damage.details.type}}
         damage
-        {{#if (@shouldBoldDice @setDetails)}}
-          (<b>{{damage.details.dice}}</b>){{/if}}
-        {{#unless (@shouldBoldDice @setDetails)}}
-          ({{damage.details.dice}}){{/unless}}
+        {{#if (@shouldBoldDice @contextDetails)}}
+          (<b>{{damage.details.dice}}</b>)
+        {{/if}}
+        {{#unless (@shouldBoldDice @contextDetails)}}
+          ({{damage.details.dice}})
+        {{/unless}}
+        {{@getDamageModifications @contextDetails}}
         {{#if damage.details.resisted}} (resisted){{/if}}
         {{#if damage.details.vulnerable}} (vulnerable){{/if}}
       </span>

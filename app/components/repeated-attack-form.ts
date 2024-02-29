@@ -149,6 +149,11 @@ export default class RepeatedAttackFormComponent extends Component {
     return attack.hit;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getDamageModifications = (ignored: AttackDetails) => {
+    return '';
+  };
+
   simulateRepeatedAttacks = () => {
     if (!this.randomness) {
       throw new Error(

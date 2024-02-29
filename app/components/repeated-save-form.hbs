@@ -80,10 +80,16 @@
           Save for half damage
         </label>
       </div>
-      <div class="form-check">
-        <Input data-test-input-roll-dmg-every-save class="form-check-input" @type="checkbox" id="rollDamageEverySave"
-          name="rollDamageEverySave" @checked={{this.rollDamageEverySave}} />
-        <label class="form-check-label" for="rollDamageEverySave">
+      <div class='form-check'>
+        <Input
+          data-test-input-roll-dmg-every-save
+          class='form-check-input'
+          @type='checkbox'
+          id='rollDamageEverySave'
+          name='rollDamageEverySave'
+          @checked={{this.rollDamageEverySave}}
+        />
+        <label class='form-check-label' for='rollDamageEverySave'>
           Roll new damage for every save
         </label>
       </div>
@@ -121,6 +127,7 @@
       @isSuccess={{this.isPass}}
       @getD20RollString={{this.getD20RollString}}
       @shouldBoldDice={{this.shouldBoldDice}}
+      @getDamageModifications={{this.getDamageModifications}}
     />
   </div>
 </div>

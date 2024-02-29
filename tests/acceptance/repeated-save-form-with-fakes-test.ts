@@ -19,6 +19,8 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     random.random = fakeRandom;
 
     await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
 
     // Fill in some details for the saves
     await fillIn('#nav-saves [data-test-input-numberOfSaves]', '1');
@@ -101,6 +103,8 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     random.random = fakeRandom;
 
     await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
 
     // Fill in some details for the saves
     await fillIn('#nav-saves [data-test-input-numberOfSaves]', '3');
@@ -205,6 +209,8 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     random.random = fakeRandom;
 
     await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
 
     // Fill in some details for the saves
     await fillIn('#nav-saves [data-test-input-numberOfSaves]', '2');
@@ -254,7 +260,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
       .dom(`#nav-saves [data-test-damage-roll-detail="0-0-0"]`)
       .hasAttribute('title', '1d8: 8')
       .hasText(
-        '4 fire damage (1d8)',
+        '4 fire damage (1d8) (halved)',
         'newly-rolled maximized damage should have been halved by a passed save',
       );
 
@@ -278,6 +284,80 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
       .hasText(
         '5 fire damage (1d8)',
         'new-rolled half+ damage should have been inflicted on the failed save',
+      );
+  });
+
+  test('it handles resistance and vulnerability', async function (this: ElementContext, assert) {
+    // Mock randomness so that dice roll minimum values
+    let fakeRandom = sinon.fake.returns(0);
+    let random = this.owner.lookup('service:randomness') as RandomnessService;
+    random.random = fakeRandom;
+
+    await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
+
+    // Fill in some details for the saves
+    await fillIn('#nav-saves [data-test-input-numberOfSaves]', '1');
+    await fillIn('#nav-saves [data-test-input-saveDC]', '14');
+    await fillIn('#nav-saves [data-test-input-saveMod]', '0');
+    await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8 + 1');
+    await select(
+      '#nav-saves [data-test-damage-dropdown="0"]',
+      DamageType.FIRE.name,
+    );
+
+    // Configure the damage to be resisted
+    await click('#nav-saves [data-test-input-resistant="0"]');
+
+    // Roll the saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    // Change the randomness to roll maximum on all dice
+    fakeRandom = sinon.fake.returns(0.99999999999);
+    random = this.owner.lookup('service:randomness') as RandomnessService;
+    random.random = fakeRandom;
+
+    // Add vulnerability
+    await click('#nav-saves [data-test-input-vulnerable="0"]');
+
+    // Add half damage on passes since all saves will pass
+    await click('#nav-saves [data-test-input-half-damage]');
+
+    // Roll a second set of saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    // Remove damage resistance
+    await click('#nav-saves [data-test-input-resistant="0"]');
+
+    // Roll a third set of saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    // Most recent save: vulnerability and half-damage only
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-0-0"]`)
+      .hasAttribute('title', '1d8: 8')
+      .hasText(
+        '8 fire damage (1d8 + 1) (halved) (vulnerable)',
+        'first save should be marked as vulnerable with half-damage',
+      );
+
+    // Second save: resistance, vulnerability, and half damage
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="1-0-0"]`)
+      .hasAttribute('title', '1d8: 8')
+      .hasText(
+        '4 fire damage (1d8 + 1) (halved) (resisted) (vulnerable)',
+        'second save should be marked as both resistant and vulnerable with half-damage',
+      );
+
+    // Third save: resistance and minimized dice
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="2-0-0"]`)
+      .hasAttribute('title', '1d8: 1')
+      .hasText(
+        '1 fire damage (1d8 + 1) (resisted)',
+        'third save should be marked as resisted with minimized dice',
       );
   });
 
