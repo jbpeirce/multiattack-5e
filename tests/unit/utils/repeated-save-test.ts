@@ -469,4 +469,78 @@ module('Unit | Utils | repeated-save', function (hooks) {
       "passed save's second damage type should have rolled 7 total damage",
     );
   });
+
+  test('it rolls new damage for each save when configured', async function (assert) {
+    const repeatedSave = new RepeatedSave(
+      2,
+      10,
+      '3',
+      AdvantageState.STRAIGHT,
+      new RandomnessService(),
+      true,
+      true,
+      [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
+    );
+
+    // Both saves should fail
+    repeatedSave.die.getD20Roll = stubReturning(3, 4);
+    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
+      4,
+      5,
+      6,
+      6,
+    );
+
+    const result = repeatedSave.simulateRepeatedSaves();
+
+    assert.strictEqual(
+      result.totalDmg,
+      21,
+      'both saves should have inflicted damage (9 + 12)',
+    );
+
+    // Inspect the first save
+    const firstSaveDetails = result.detailsList[0];
+    assert.false(
+      firstSaveDetails?.pass,
+      'the first save should not have passed',
+    );
+    assert.strictEqual(
+      firstSaveDetails?.damage,
+      9,
+      'first save should inflict 9 damage (4 + 5 on the d8s)',
+    );
+    assert.deepEqual(
+      firstSaveDetails?.damageDetails[0]!.details.roll.rolls,
+      [
+        {
+          name: '2d8',
+          rolls: [4, 5],
+        },
+      ],
+      "first save's damage should use the first two mocked die rolls",
+    );
+
+    // Inspect the second save
+    const secondSaveDetails = result.detailsList[1];
+    assert.false(
+      secondSaveDetails?.pass,
+      'the second save should also have failed',
+    );
+    assert.strictEqual(
+      secondSaveDetails?.damage,
+      12,
+      'second save should have inflicted 12 damage (6 + 6 on the d8s)',
+    );
+    assert.deepEqual(
+      secondSaveDetails?.damageDetails[0]!.details.roll.rolls,
+      [
+        {
+          name: '2d8',
+          rolls: [6, 6],
+        },
+      ],
+      "second save's damage should use the second two mocked die rolls",
+    );
+  });
 });
