@@ -49,7 +49,7 @@ module('Acceptance | repeated attack form', function (hooks) {
       );
 
     // Calculate the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     assert
       .dom('#nav-attacks [data-test-data-list="0"]')
@@ -87,7 +87,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await click('#nav-attacks [data-test-value="disadvantage"]');
 
     // Calculate the attack
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // Change some attack details
     await fillIn('#nav-attacks [data-test-input-numberOfAttacks]', '4');
@@ -95,7 +95,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await fillIn('#nav-attacks [data-test-input-toHit]', '3');
 
     // Attack again
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // The second attack should be displayed first
     assert
@@ -266,7 +266,7 @@ module('Acceptance | repeated attack form', function (hooks) {
     await visit('/');
 
     // Attack (using the default setup)
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // There should be one set of attack details displayed
     assert
@@ -277,8 +277,8 @@ module('Acceptance | repeated attack form', function (hooks) {
       .doesNotExist('only one attack set should be displayed');
 
     // Attack twice more
-    await click('#nav-attacks [data-test-button-getDamage]');
-    await click('#nav-attacks [data-test-button-getDamage]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
+    await click('#nav-attacks [data-test-button-rollAttacks]');
 
     // There should be three sets of attack details displayed
     assert
