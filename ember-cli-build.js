@@ -15,6 +15,7 @@ module.exports = function (defaults) {
         },
       },
     },
+    'ember-cli-babel': { enableTypeScriptTransform: true },
   });
 
   return app.toTree();
