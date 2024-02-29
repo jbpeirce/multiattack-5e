@@ -493,6 +493,70 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     }
   });
 
+  test('it handles resistance and vulnerability', async function (this: ElementContext, assert) {
+    // Mock randomness so that dice roll maximum values
+    const fakeRandom = sinon.fake.returns(0.9999999999999);
+    const random = this.owner.lookup('service:randomness') as RandomnessService;
+    random.random = fakeRandom;
+
+    await visit('/');
+
+    // Fill in some details for the attacks
+    await fillIn('#nav-attacks [data-test-input-numberOfAttacks]', '1');
+    await fillIn('#nav-attacks [data-test-input-targetAC]', '14');
+    await fillIn('#nav-attacks [data-test-input-toHit]', '0');
+    await fillIn('#nav-attacks [data-test-input-damage="0"]', '1d8 + 1');
+    await select(
+      '#nav-attacks [data-test-damage-dropdown="0"]',
+      DamageType.FIRE.name,
+    );
+
+    // Configure the damage to be resisted
+    await click('#nav-attacks [data-test-input-resistant="0"]');
+
+    // Roll the attacks
+    await click('#nav-attacks [data-test-button-getDamage]');
+
+    // Add vulnerability
+    await click('#nav-attacks [data-test-input-vulnerable="0"]');
+
+    // Roll a second set of attacks
+    await click('#nav-attacks [data-test-button-getDamage]');
+
+    // Remove damage resistance
+    await click('#nav-attacks [data-test-input-resistant="0"]');
+
+    // Roll a third set of attacks
+    await click('#nav-attacks [data-test-button-getDamage]');
+
+    // Most recent attack: vulnerability only
+    assert
+      .dom(`#nav-attacks [data-test-damage-roll-detail="0-0-0"]`)
+      .hasAttribute('title', '2d8: 8, 8')
+      .hasText(
+        '34 fire damage (2d8 + 1) (vulnerable)',
+        'first attack should be marked as vulnerable',
+      );
+
+    // Second attack: resistance and vulnerability
+    assert
+      .dom(`#nav-attacks [data-test-damage-roll-detail="1-0-0"]`)
+      .hasAttribute('title', '2d8: 8, 8')
+      .hasText(
+        '16 fire damage (2d8 + 1) (resisted) (vulnerable)',
+        'second attack should be marked as both resistant and vulnerable',
+      );
+
+    // Third attack: resistance only
+    assert
+      .dom(`#nav-attacks [data-test-damage-roll-detail="2-0-0"]`)
+      .hasAttribute('title', '2d8: 8, 8')
+      .hasText(
+        '8 fire damage (2d8 + 1) (resisted)',
+        'third attack should be marked as resisted',
+      );
+  });
+
   function delay() {
     return new Promise((resolve) => {
       setTimeout(resolve, 500);

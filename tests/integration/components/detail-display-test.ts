@@ -199,7 +199,7 @@ module('Integration | Component | detail-display', function (hooks) {
       @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
       @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
       @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />`,
+      @shouldBoldDice={{this.shouldBoldDice}} @getDamageModifications={{this.getDamageModifications}} />`,
     );
 
     assert
@@ -239,7 +239,7 @@ module('Integration | Component | detail-display', function (hooks) {
     assert
       .dom('[data-test-roll-detail="0-0"]')
       .hasAttribute('title', '1d20: 20 | -1d6: 2')
-      .hasText('21 from roll');
+      .hasText('21 from roll (major success)');
 
     // success 2
     assert.equal(
@@ -277,7 +277,7 @@ module('Integration | Component | detail-display', function (hooks) {
     assert
       .dom('[data-test-damage-roll-detail="0-0-0"]')
       .hasAttribute('title', '4d6: 4, 5, 2, 2 | 2d4: 3, 2')
-      .hasText('11 piercing damage (4d6 + 2d4 + 5) (resisted)');
+      .hasText('11 piercing damage (4d6 + 2d4 + 5) (major success) (resisted)');
     assert
       .dom('[data-test-damage-roll-collapse-link="0-0-0"]')
       .hasAria('expanded', 'false')
@@ -289,7 +289,7 @@ module('Integration | Component | detail-display', function (hooks) {
     assert
       .dom('[data-test-damage-roll-detail="0-0-1"]')
       .hasAttribute('title', '4d8: 2, 7, 1, 3')
-      .hasText('26 radiant damage (4d8) (vulnerable)');
+      .hasText('26 radiant damage (4d8) (major success) (vulnerable)');
     assert
       .dom('[data-test-damage-roll-collapse-link="0-0-1"]')
       .hasAria('expanded', 'false')
@@ -502,7 +502,7 @@ module('Integration | Component | detail-display', function (hooks) {
       @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
       @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
       @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />`,
+      @shouldBoldDice={{this.shouldBoldDice}} @getDamageModifications={{this.getDamageModifications}} />`,
     );
 
     // First set of repeated events
@@ -647,7 +647,7 @@ module('Integration | Component | detail-display', function (hooks) {
       @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
       @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
       @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />`,
+      @shouldBoldDice={{this.shouldBoldDice}} @getDamageModifications={{this.getDamageModifications}} />`,
     );
 
     // The damage should not have been formatted as a link since there were no
@@ -708,7 +708,7 @@ module('Integration | Component | detail-display', function (hooks) {
       @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
       @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
       @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />`,
+      @shouldBoldDice={{this.shouldBoldDice}} @getDamageModifications={{this.getDamageModifications}} />`,
     );
 
     assert
@@ -789,7 +789,7 @@ module('Integration | Component | detail-display', function (hooks) {
       @getThresholdString={{this.getThresholdString}} @getD20Modifier={{this.getD20Modifier}}
       @getRollString={{this.getRollString}} @isSuccess={{this.isSuccess}}
       @getD20RollString={{this.getD20RollString}}
-      @shouldBoldDice={{this.shouldBoldDice}} />`,
+      @shouldBoldDice={{this.shouldBoldDice}} @getDamageModifications={{this.getDamageModifications}} />`,
     );
 
     assert
@@ -863,13 +863,22 @@ module('Integration | Component | detail-display', function (hooks) {
       return eventData.success;
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    context.set('getD20RollString', (ignored: TestEventDetails) => {
-      return `from roll`;
+    context.set('getD20RollString', (eventData: TestEventDetails) => {
+      if (eventData.majorSuccess) {
+        return 'from roll (major success)';
+      }
+      return 'from roll';
     });
 
     context.set('shouldBoldDice', (eventData: TestEventDetails) => {
       return eventData.majorSuccess;
+    });
+
+    context.set('getDamageModifications', (eventData: TestEventDetails) => {
+      if (eventData.majorSuccess) {
+        return ' (major success)';
+      }
+      return '';
     });
   }
 });

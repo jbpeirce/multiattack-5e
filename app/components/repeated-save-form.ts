@@ -149,6 +149,17 @@ export default class RepeatedSaveFormComponent extends Component {
     return save.pass;
   };
 
+  getDamageModifications = (save: SaveDetails) => {
+    // If this method is called at all, it is because damage was inflicted by
+    // this save. Only save-for-half and save-for-no-damage are currently
+    // supported, so if damage is inflicted on a pass it must be half damage.
+    if (save.pass) {
+      return ' (halved)';
+    } else {
+      return '';
+    }
+  };
+
   simulateRepeatedSaves = () => {
     if (!this.randomness) {
       throw new Error(
