@@ -19,7 +19,10 @@ module('Acceptance | main page', function (hooks) {
     // Check for the expected header
     assert
       .dom('h1')
-      .hasText('Repeated Attack Simulator', 'page title should be displayed');
+      .hasText(
+        'Repeated Attack and Save Simulator',
+        'page title should be displayed',
+      );
   });
 
   test('switching between tabs', async function (assert) {
