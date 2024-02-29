@@ -137,6 +137,17 @@ export default class RepeatedSave {
 
     // Roll all saves
     for (let i = 0; i < this.numberOfSaves; i++) {
+      // Get the damage that might be inflicted by this save
+      let damageDetails = [];
+      if (this.rollDamageEverySave) {
+        for (const damage of this.damageTypes) {
+          damageDetails.push(damage.roll(false));
+        }
+      } else {
+        damageDetails = cachedDamageDetails;
+      }
+
+      // Roll the d20 for the saving throw
       const saveRoll = this.die.roll();
 
       const saveDetail: SaveDetails = {
@@ -149,6 +160,7 @@ export default class RepeatedSave {
         damageDetails: [],
       };
 
+      // Handle pass or failure of the save
       if (saveRoll.total >= this.saveDC) {
         saveDetail.pass = true;
         totalNumberOfPasses += 1;
@@ -156,7 +168,7 @@ export default class RepeatedSave {
         // Some saving throws inflict half damage when a save is passed
         if (this.saveForHalf) {
           const totalInflictedBySave = this.getTotalInflictedDamage(
-            cachedDamageDetails,
+            damageDetails,
             saveDetail.damageDetails,
             0.5,
           );
@@ -167,7 +179,7 @@ export default class RepeatedSave {
       } else {
         // When a save is failed, inflict full damage (if applicable)
         const totalInflictedBySave = this.getTotalInflictedDamage(
-          cachedDamageDetails,
+          damageDetails,
           saveDetail.damageDetails,
         );
 
