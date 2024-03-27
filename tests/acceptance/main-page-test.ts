@@ -160,7 +160,7 @@ module('Acceptance | main page', function (hooks) {
 
   function delay() {
     return new Promise((resolve) => {
-      setTimeout(resolve, 500);
+      setTimeout(resolve, 750);
     });
   }
 });
