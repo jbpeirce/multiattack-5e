@@ -19,8 +19,8 @@ import DamageType from './damage-type-enum';
 export default class RepeatedAttackFormComponent extends Component {
   @service('randomness') randomness: RandomnessService | undefined;
 
-  @tracked numberOfAttacks = 5;
-  @tracked targetAC = 15;
+  @tracked numberOfAttacks: number | null = 5;
+  @tracked targetAC: number | null = 15;
 
   @tracked toHit = '5 + 1d4';
 
@@ -46,17 +46,6 @@ export default class RepeatedAttackFormComponent extends Component {
     this.attackResultLog = [];
   }
 
-  /**
-   * This function is used to stop the repeated-attack-form handlebars from
-   * refreshing the page whenever the form is submitted. Without this, the tests
-   * which use form submission enter an infinite loop.
-   * @returns false
-   */
-  @action
-  suppressPageRefresh() {
-    return false;
-  }
-
   @action
   setAdvantageState(newState: AdvantageState) {
     assert(
@@ -64,6 +53,43 @@ export default class RepeatedAttackFormComponent extends Component {
       newState instanceof AdvantageState,
     );
     this.advantageState = newState;
+  }
+
+  @action
+  setNumberOfAttacks(event: Event) {
+    assert(
+      'number of attacks setter must be called from input form',
+      event.target instanceof HTMLInputElement,
+    );
+    const { value } = event.target!;
+    if (value === '') {
+      this.numberOfAttacks = null;
+    } else {
+      this.numberOfAttacks = Number(value);
+    }
+  }
+
+  @action
+  setTargetAC(event: Event) {
+    assert(
+      'target-AC setter must be called from input form',
+      event.target instanceof HTMLInputElement,
+    );
+    const { value } = event.target!;
+    if (value === '') {
+      this.targetAC = null;
+    } else {
+      this.targetAC = Number(value);
+    }
+  }
+
+  @action
+  setToHit(event: Event) {
+    assert(
+      'to-hit setter must be called from input form',
+      event.target instanceof HTMLInputElement,
+    );
+    this.toHit = event.target!.value;
   }
 
   @action
@@ -161,6 +187,14 @@ export default class RepeatedAttackFormComponent extends Component {
       );
     }
 
+    // double-equals comparison to null checks whether fields are null or
+    // undefined.
+    if (this.numberOfAttacks == null || this.targetAC == null) {
+      throw new Error(
+        `number of attacks and target AC must both be set; received numberOfAttacks=${this.numberOfAttacks} and targetAC=${this.targetAC}`,
+      );
+    }
+
     const nextRepeatedAttack = new RepeatedAttack(
       this.numberOfAttacks,
       this.targetAC,
@@ -177,5 +211,9 @@ export default class RepeatedAttackFormComponent extends Component {
     ];
 
     // TODO: Attempt to store the updated attack log
+
+    // Return false to prevent this function from refreshing the page. Without
+    // this, the tests which use form submission enter an infinite loop.
+    return false;
   };
 }

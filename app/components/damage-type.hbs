@@ -30,7 +30,7 @@
     >
       {{#each this.damageTypes as |damageType|}}
         <option
-          selected={{(eq @initialDamageType damageType.name)}}
+          selected={{eq @initialDamageType damageType.name}}
         >{{damageType.name}}</option>
       {{/each}}
     </select>
