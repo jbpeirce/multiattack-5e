@@ -93,16 +93,13 @@ export default class RepeatedSave {
       }
     }
 
-    // double-equals comparison to null should check whether fields are null or
-    // undefined; the cast to string detects the case where the number has been
-    // manually deleted and submitted as an empty string.
+    // double-equals comparison to null checks whether fields are null or
+    // undefined
     return (
       this.numberOfSaves != null &&
       this.numberOfSaves >= 0 &&
-      this.numberOfSaves.toString().length > 0 &&
       this.saveDC != null &&
-      this.saveDC >= 0 &&
-      this.saveDC.toString().length > 0
+      this.saveDC >= 0
     );
   }
 

@@ -55,16 +55,13 @@ export default class RepeatedAttack {
       }
     }
 
-    // double-equals comparison to null should check whether fields are null or
-    // undefined; the cast to string detects the case where the number has been
-    // manually deleted and submitted as an empty string.
+    // double-equals comparison to null checks whether fields are null or
+    // undefined.
     return (
       this.numberOfAttacks != null &&
       this.numberOfAttacks >= 0 &&
-      this.numberOfAttacks.toString().length > 0 &&
       this.targetAC != null &&
       this.targetAC >= 0 &&
-      this.targetAC.toString().length > 0 &&
       this.toHit != null
     );
   }

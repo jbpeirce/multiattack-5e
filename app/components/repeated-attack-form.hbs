@@ -1,6 +1,6 @@
 <div class='row align-items-top justify-content-between'>
   <div class='col-md-4'>
-    <form class='needs-validation' onsubmit={{this.suppressPageRefresh}}>
+    <form class='needs-validation' onsubmit={{this.simulateRepeatedAttacks}}>
       <h2>Set Up Attacks</h2>
       <div class='row align-items-center py-2'>
         <label
@@ -9,16 +9,17 @@
           class='col-6 col-form-label'
         >Number of Attacks</label>
         <div class='col-6'>
-          <Input
+          <input
             data-test-input-numberOfAttacks
             class='form-control'
             id='numberOfAttacks'
             name='numberOfAttacks'
-            @type='number'
-            @value={{this.numberOfAttacks}}
+            type='number'
+            value={{this.numberOfAttacks}}
             min='0'
             title='Number of attacks cannot be negative'
             required='required'
+            {{on 'change' this.setNumberOfAttacks}}
           />
         </div>
       </div>
@@ -26,14 +27,17 @@
       <div class='row align-items-center py-2'>
         <label for='targetAC' class='col-6 col-form-label'>Target AC</label>
         <div class='col-6'>
-          <Input
+          <input
             data-test-input-targetAC
             class='form-control'
             id='targetAC'
             name='targetAC'
-            @type='number'
-            @value={{this.targetAC}}
+            type='number'
+            value={{this.targetAC}}
+            min='0'
+            title='Target AC cannot be negative'
             required='required'
+            {{on 'change' this.setTargetAC}}
           />
         </div>
       </div>
@@ -43,14 +47,15 @@
         <div class='col-6'>
           <div class='input-group'>
             <div class='input-group-text'>1d20 +</div>
-            <Input
+            <input
               data-test-input-toHit
               class='form-control'
-              @type='text'
+              type='text'
               id='toHit'
               name='toHit'
-              @value={{this.toHit}}
+              value={{this.toHit}}
               required='required'
+              {{on 'change' this.setToHit}}
               pattern={{this.diceGroupsRegex}}
               title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'"
             />
@@ -79,7 +84,6 @@
           class='btn btn-primary btn-lg w-70 d-block'
           type='submit'
           id='attackBtn'
-          {{on 'click' this.simulateRepeatedAttacks}}
         >Attack!</button>
       </div>
     </form>

@@ -1,6 +1,6 @@
 <div class='row align-items-top justify-content-between'>
   <div class='col-md-4'>
-    <form class='needs-validation' onsubmit={{this.suppressPageRefresh}}>
+    <form class='needs-validation' onsubmit={{this.simulateRepeatedSaves}}>
       <h2>Set Up Saves</h2>
       <div class='row align-items-center py-2'>
         <label
@@ -9,16 +9,17 @@
           class='col-6 col-form-label'
         >Number of Saves</label>
         <div class='col-6'>
-          <Input
+          <input
             data-test-input-numberOfSaves
             class='form-control'
             id='numberOfSaves'
             name='numberOfSaves'
-            @type='number'
-            @value={{this.numberOfSaves}}
+            type='number'
+            value={{this.numberOfSaves}}
             min='0'
             title='Number of saves cannot be negative'
             required='required'
+            {{on 'change' this.setNumberOfSaves}}
           />
         </div>
       </div>
@@ -26,14 +27,17 @@
       <div class='row align-items-center py-2'>
         <label for='saveDC' class='col-6 col-form-label'>Save DC</label>
         <div class='col-6'>
-          <Input
+          <input
             data-test-input-saveDC
             class='form-control'
             id='saveDC'
             name='saveDC'
-            @type='number'
-            @value={{this.saveDC}}
+            type='number'
+            value={{this.saveDC}}
+            min='0'
+            title='save DC cannot be negative'
             required='required'
+            {{on 'change' this.setSaveDC}}
           />
         </div>
       </div>
@@ -43,16 +47,17 @@
         <div class='col-6'>
           <div class='input-group'>
             <div class='input-group-text'>1d20 +</div>
-            <Input
+            <input
               data-test-input-saveMod
               class='form-control'
-              @type='text'
+              type='text'
               id='saveMod'
               name='saveMod'
-              @value={{this.saveMod}}
+              value={{this.saveMod}}
               required='required'
               pattern={{this.diceGroupsRegex}}
               title="Modifier must be dice groups and/or numbers added and subtracted, like '-5 + 1d4' or '7' or '1d4 - 1d6 + 2'"
+              {{on 'change' this.setSaveMod}}
             />
           </div>
         </div>
@@ -68,26 +73,28 @@
       <hr />
 
       <div class='form-check'>
-        <Input
+        <input
           data-test-input-half-damage
           class='form-check-input'
-          @type='checkbox'
+          type='checkbox'
           id='saveForHalfDamage'
           name='saveForHalfDamage'
-          @checked={{this.saveForHalfDamage}}
+          checked={{this.saveForHalfDamage}}
+          {{on 'change' this.setSaveForHalfDamage}}
         />
         <label class='form-check-label' for='saveForHalfDamage'>
           Save for half damage
         </label>
       </div>
       <div class='form-check'>
-        <Input
+        <input
           data-test-input-roll-dmg-every-save
           class='form-check-input'
-          @type='checkbox'
+          type='checkbox'
           id='rollDamageEverySave'
           name='rollDamageEverySave'
-          @checked={{this.rollDamageEverySave}}
+          checked={{this.rollDamageEverySave}}
+          {{on 'change' this.setRollDamageEverySave}}
         />
         <label class='form-check-label' for='rollDamageEverySave'>
           Roll new damage for every save
@@ -108,7 +115,6 @@
           class='btn btn-primary btn-lg w-70 d-block'
           type='submit'
           id='saveBtn'
-          {{on 'click' this.simulateRepeatedSaves}}
         >Roll Saves!</button>
       </div>
     </form>
