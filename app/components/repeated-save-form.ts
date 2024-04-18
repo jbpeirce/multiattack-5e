@@ -21,8 +21,8 @@ import DamageType from './damage-type-enum';
 export default class RepeatedSaveFormComponent extends Component {
   @service('randomness') randomness: RandomnessService | undefined;
 
-  @tracked numberOfSaves = 5;
-  @tracked saveDC = 15;
+  @tracked numberOfSaves: number | null = 5;
+  @tracked saveDC: number | null = 15;
 
   @tracked saveMod = '5 + 1d4';
 
@@ -50,17 +50,6 @@ export default class RepeatedSaveFormComponent extends Component {
     this.saveResultLog = [];
   }
 
-  /**
-   * This function is used to stop the repeated-save-form handlebars from
-   * refreshing the page whenever the form is submitted. Without this, the tests
-   * which use form submission enter an infinite loop.
-   * @returns false
-   */
-  @action
-  suppressPageRefresh() {
-    return false;
-  }
-
   @action
   setAdvantageState(newState: AdvantageState) {
     assert(
@@ -68,6 +57,61 @@ export default class RepeatedSaveFormComponent extends Component {
       newState instanceof AdvantageState,
     );
     this.advantageState = newState;
+  }
+
+  @action
+  setNumberOfSaves(event: Event) {
+    assert(
+      'number of saves setter must be called from input form',
+      event.target instanceof HTMLInputElement,
+    );
+    const { value } = event.target!;
+    if (value === '') {
+      this.numberOfSaves = null;
+    } else {
+      this.numberOfSaves = Number(value);
+    }
+  }
+
+  @action
+  setSaveDC(event: Event) {
+    assert(
+      'save-DC setter must be called from input form',
+      event.target instanceof HTMLInputElement,
+    );
+    const { value } = event.target!;
+    if (value === '') {
+      this.saveDC = null;
+    } else {
+      this.saveDC = Number(value);
+    }
+  }
+
+  @action
+  setSaveMod(event: Event) {
+    assert(
+      'save-mod setter must be called from input form',
+      event.target instanceof HTMLInputElement,
+    );
+    this.saveMod = event.target!.value;
+  }
+
+  @action
+  setSaveForHalfDamage(newSaveForHalf: InputEvent) {
+    assert(
+      'save-for-half handler must receive an event with a target that is an HTMLInputElement',
+      newSaveForHalf.target instanceof HTMLInputElement,
+    );
+    this.saveForHalfDamage = newSaveForHalf.target.checked || false;
+  }
+
+  @action
+  setRollDamageEverySave(newRollDamageEverySave: InputEvent) {
+    assert(
+      'roll-damage-every-save handler must receive an event with a target that is an HTMLInputElement',
+      newRollDamageEverySave.target instanceof HTMLInputElement,
+    );
+    this.rollDamageEverySave = newRollDamageEverySave.target.checked || false;
   }
 
   @action
@@ -167,6 +211,12 @@ export default class RepeatedSaveFormComponent extends Component {
       );
     }
 
+    if (this.numberOfSaves == null || this.saveDC == null) {
+      throw new Error(
+        `number of saves and save DC must both be set; received numberOfSaves=${this.numberOfSaves} and saveDC=${this.saveDC}`,
+      );
+    }
+
     const nextRepeatedSave = new RepeatedSave(
       this.numberOfSaves,
       this.saveDC,
@@ -185,5 +235,9 @@ export default class RepeatedSaveFormComponent extends Component {
     ];
 
     // TODO: Attempt to store the updated save log
+
+    // Return false to prevent this function from refreshing the page. Without
+    // this, the tests which use form submission enter an infinite loop.
+    return false;
   };
 }
