@@ -13,6 +13,42 @@ import { DamageDetails } from 'multiattack-5e/utils/damage-details';
 module('Unit | Utils | attack', function (hooks) {
   setupTest(hooks);
 
+  test('it displays advantage correctly', async function (assert) {
+    const attack = new Attack(
+      '4',
+      AdvantageState.ADVANTAGE,
+      [],
+      new RandomnessService(),
+    );
+    attack.attackDie.die.roll = stubReturning(3, 8);
+
+    // This attack rolls 8 + 4 = 12
+    const attackData = attack.makeAttack(10);
+    assert.deepEqual(
+      attackData.roll,
+      { total: 12, rolls: [{ name: '1d20', rolls: [3, 8] }] },
+      'attack should have rolled a 12',
+    );
+  });
+
+  test('it displays disadvantage correctly', async function (assert) {
+    const attack = new Attack(
+      '4',
+      AdvantageState.DISADVANTAGE,
+      [],
+      new RandomnessService(),
+    );
+    attack.attackDie.die.roll = stubReturning(3, 8);
+
+    // This attack rolls 3 + 4 = 7
+    const attackData = attack.makeAttack(10);
+    assert.deepEqual(
+      attackData.roll,
+      { total: 7, rolls: [{ name: '1d20', rolls: [3, 8] }] },
+      'attack should have rolled a 7',
+    );
+  });
+
   test('it handles an AC-based miss correctly', async function (assert) {
     const attack = new Attack(
       '4',
@@ -20,7 +56,7 @@ module('Unit | Utils | attack', function (hooks) {
       [],
       new RandomnessService(),
     );
-    attack.attackDie.getD20Roll = stubReturning(3);
+    attack.attackDie.die.roll = stubReturning(3, 8);
 
     // This attack rolls 3 + 4 = 7, so it should miss
     const attackData = attack.makeAttack(10);
@@ -46,7 +82,7 @@ module('Unit | Utils | attack', function (hooks) {
       [],
       new RandomnessService(),
     );
-    attack.attackDie.getD20Roll = stubReturning(1);
+    attack.attackDie.die.roll = stubReturning(1, 8);
 
     // This attack rolls a nat 1, so it should miss even though 1 + 20 > 10
     const attackData = attack.makeAttack(10);
@@ -81,7 +117,7 @@ module('Unit | Utils | attack', function (hooks) {
     );
 
     // Fake the results of the attack-roll dice
-    attack.attackDie.getD20Roll = stubReturning(13);
+    attack.attackDie.die.roll = stubReturning(13, 8);
     attack.attackDie.modifier.diceGroups[0]!.roll = stubReturning({
       total: 6,
       rolls: [6],
@@ -126,7 +162,7 @@ module('Unit | Utils | attack', function (hooks) {
     );
 
     // Fake the results of the d20 attack roll
-    attack.attackDie.getD20Roll = stubReturning(13);
+    attack.attackDie.die.roll = stubReturning(13, 8);
 
     // Fake the results of the damage dice
     const fakePiercingDamageDetails = new DamageDetails(
@@ -215,7 +251,7 @@ module('Unit | Utils | attack', function (hooks) {
     );
 
     // Fake the results of the d20 attack roll
-    attack.attackDie.getD20Roll = stubReturning(20);
+    attack.attackDie.die.roll = stubReturning(20, 8);
 
     // Fake the results of the damage dice
     const fakePiercingDamageDetails = new DamageDetails(

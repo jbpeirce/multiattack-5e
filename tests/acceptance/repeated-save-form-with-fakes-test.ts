@@ -361,6 +361,201 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
       );
   });
 
+  test('it handles advantage', async function (this: ElementContext, assert) {
+    // Mock randomness so that dice switch from maximum to minimum values
+    const fakeRandom = stubReturning(
+      0.99999999999999, // first uncached damage roll, used
+      0, // first d20 roll, roll 1, ignored
+      0.99999999999999, // first d20 roll, roll 2, used
+      0.5, // second uncached damage roll, used
+      0.1, // second d20 roll, roll 1, used
+      0, // second d20 roll, roll 2, ignored
+    );
+    const random = this.owner.lookup('service:randomness') as RandomnessService;
+    random.random = fakeRandom;
+
+    await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
+
+    // Fill in some details for the saves
+    await fillIn('#nav-saves [data-test-input-numberOfSaves]', '2');
+    await fillIn('#nav-saves [data-test-input-saveDC]', '14');
+    await fillIn('#nav-saves [data-test-input-saveMod]', '-2');
+    await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8');
+    await click('#nav-saves [data-test-input-half-damage]');
+    await click('#nav-saves [data-test-input-roll-dmg-every-save]');
+    await click('#nav-saves [data-test-value="advantage"]');
+
+    // Roll the saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    assert
+      .dom('#nav-saves [data-test-data-list="0"]')
+      .hasText(
+        'Number of saves: 2\nSave DC: 14\nSaving throw: 1d20 - 2 (advantage)\n',
+        'the details for the set of saves should be displayed',
+      );
+
+    // Since save-for-half was checked, both saves inflicted damage
+    assert
+      .dom('#nav-saves [data-test-total-damage-header="0"]')
+      .hasText(
+        'Total Damage: 9 (1 pass)',
+        '4 + 5 damage should have been inflicted',
+      );
+
+    const detailsList = this.element.querySelector(
+      '[data-test-detail-list="0"]',
+    )!.children;
+
+    // Examine the first saving throw details
+    assert.strictEqual(
+      detailsList[0]?.className,
+      'li-success',
+      'saving throw should have bullet point formatted as a success',
+    );
+
+    // Check the saving throw text
+    assert
+      .dom(`#nav-saves [data-test-roll-detail="0-0"]`)
+      .hasAttribute('title', '1d20: 1, 20')
+      .hasText(
+        '18 to save',
+        'the larger roll should have been chosen for a roll with advantage',
+      );
+
+    // Examine the damage section
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-0-0"]`)
+      .hasAttribute('title', '1d8: 8')
+      .hasText(
+        '4 fire damage (1d8) (halved)',
+        'newly-rolled maximized damage should have been halved by a passed save',
+      );
+
+    // Examine the second saving throw details
+    assert.strictEqual(
+      detailsList[1]?.className,
+      'li-fail',
+      'saving throw should have bullet point formatted as a failure',
+    );
+
+    // Check the saving throw text
+    assert
+      .dom(`#nav-saves [data-test-roll-detail="0-1"]`)
+      .hasAttribute('title', '1d20: 3, 1')
+      .hasText('1 to save', 'the larger roll should have been chosen');
+
+    // Examine the damage section
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-1-0"]`)
+      .hasAttribute('title', '1d8: 5')
+      .hasText(
+        '5 fire damage (1d8)',
+        'new-rolled half+ damage should have been inflicted on the failed save',
+      );
+  });
+
+  test('it handles disadvantage', async function (this: ElementContext, assert) {
+    // Mock randomness so that dice switch from maximum to minimum values
+    const fakeRandom = stubReturning(
+      0.99999999999999, // first uncached damage roll, ignored
+      0.8, // first d20 roll, roll 1, used
+      0.99999999999999, // first d20 roll, roll 2, used
+      0.5, // second uncached damage roll, used
+      0.99999999999999, // second d20 roll, roll 1, ignored
+      0, // second d20 roll, roll 2, used
+    );
+    const random = this.owner.lookup('service:randomness') as RandomnessService;
+    random.random = fakeRandom;
+
+    await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
+
+    // Fill in some details for the saves
+    await fillIn('#nav-saves [data-test-input-numberOfSaves]', '2');
+    await fillIn('#nav-saves [data-test-input-saveDC]', '14');
+    await fillIn('#nav-saves [data-test-input-saveMod]', '-2');
+    await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8');
+    await click('#nav-saves [data-test-input-half-damage]');
+    await click('#nav-saves [data-test-input-roll-dmg-every-save]');
+    await click('#nav-saves [data-test-value="disadvantage"]');
+
+    // Roll the saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    assert
+      .dom('#nav-saves [data-test-data-list="0"]')
+      .hasText(
+        'Number of saves: 2\nSave DC: 14\nSaving throw: 1d20 - 2 (disadvantage)\n',
+        'the details for the set of saves should be displayed',
+      );
+
+    // Since save-for-half was checked, both saves inflicted damage
+    assert
+      .dom('#nav-saves [data-test-total-damage-header="0"]')
+      .hasText(
+        'Total Damage: 9 (1 pass)',
+        '4 + 5 damage should have been inflicted',
+      );
+
+    const detailsList = this.element.querySelector(
+      '[data-test-detail-list="0"]',
+    )!.children;
+
+    // Examine the first saving throw details
+    assert.strictEqual(
+      detailsList[0]?.className,
+      'li-success',
+      'saving throw should have bullet point formatted as a failure',
+    );
+
+    // Check the saving throw text
+    assert
+      .dom(`#nav-saves [data-test-roll-detail="0-0"]`)
+      .hasAttribute('title', '1d20: 17, 20')
+      .hasText(
+        '15 to save',
+        'the smaller roll should have been chosen for a roll with disadvantage',
+      );
+
+    // Examine the damage section
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-0-0"]`)
+      .hasAttribute('title', '1d8: 8')
+      .hasText(
+        '4 fire damage (1d8) (halved)',
+        'newly-rolled maximized damage should have been halved by a passed save',
+      );
+
+    // Examine the second saving throw details
+    assert.strictEqual(
+      detailsList[1]?.className,
+      'li-fail',
+      'saving throw should have bullet point formatted as a failure',
+    );
+
+    // Check the saving throw text
+    assert
+      .dom(`#nav-saves [data-test-roll-detail="0-1"]`)
+      .hasAttribute('title', '1d20: 20, 1')
+      .hasText(
+        '-1 to save',
+        'the smaller roll should have been chosen for a save with disadvantage',
+      );
+
+    // Examine the damage section
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-1-0"]`)
+      .hasAttribute('title', '1d8: 5')
+      .hasText(
+        '5 fire damage (1d8)',
+        'new-rolled half+ damage should have been inflicted on the failed save',
+      );
+  });
+
   function delay() {
     return new Promise((resolve) => {
       setTimeout(resolve, 500);

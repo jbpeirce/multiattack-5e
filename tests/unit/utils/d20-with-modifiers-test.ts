@@ -12,25 +12,47 @@ module('Unit | Utils | d20-with-mods', function (hooks) {
   test('it rolls with advantage', async function (assert) {
     const d20 = new D20WithModifiers(
       AdvantageState.ADVANTAGE,
-      '4',
+      '0',
       new RandomnessService(),
     );
     d20.die.roll = stubReturning(3, 7);
 
-    assert.strictEqual(d20.getD20Roll(), 7, 'die should roll with advantage');
+    assert.deepEqual(
+      d20.roll(),
+      {
+        total: 7,
+        baseD20Roll: 7,
+        rolls: [
+          {
+            name: '1d20',
+            rolls: [3, 7],
+          },
+        ],
+      },
+      'die should roll with advantage',
+    );
   });
 
   test('it rolls with disadvantage', async function (assert) {
     const d20 = new D20WithModifiers(
       AdvantageState.DISADVANTAGE,
-      '1',
+      '0',
       new RandomnessService(),
     );
     d20.die.roll = stubReturning(3, 7);
 
-    assert.strictEqual(
-      d20.getD20Roll(),
-      3,
+    assert.deepEqual(
+      d20.roll(),
+      {
+        total: 3,
+        baseD20Roll: 3,
+        rolls: [
+          {
+            name: '1d20',
+            rolls: [3, 7],
+          },
+        ],
+      },
       'die should roll with disadvantage',
     );
   });
@@ -38,20 +60,38 @@ module('Unit | Utils | d20-with-mods', function (hooks) {
   test('it rolls a straight roll', async function (assert) {
     const d20 = new D20WithModifiers(
       AdvantageState.STRAIGHT,
-      '1d6',
+      '0',
       new RandomnessService(),
     );
     d20.die.roll = stubReturning(3, 7, 6, 1);
 
-    assert.strictEqual(
-      d20.getD20Roll(),
-      3,
-      'die should use the first roll when making the first straight roll',
+    assert.deepEqual(
+      d20.roll(),
+      {
+        total: 3,
+        baseD20Roll: 3,
+        rolls: [
+          {
+            name: '1d20',
+            rolls: [3],
+          },
+        ],
+      },
+      'die should use the first roll when making the first straight roll (ignoring the second roll entirely)',
     );
 
-    assert.strictEqual(
-      d20.getD20Roll(),
-      6,
+    assert.deepEqual(
+      d20.roll(),
+      {
+        total: 6,
+        baseD20Roll: 6,
+        rolls: [
+          {
+            name: '1d20',
+            rolls: [6],
+          },
+        ],
+      },
       'die should use the first roll again when making a second straight roll',
     );
   });
@@ -96,7 +136,7 @@ module('Unit | Utils | d20-with-mods', function (hooks) {
         rolls: [
           {
             name: '1d20',
-            rolls: [3],
+            rolls: [7, 3],
           },
         ],
       },
