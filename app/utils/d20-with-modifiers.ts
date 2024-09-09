@@ -44,37 +44,50 @@ export default class D20WithModifiers {
     };
 
     // Roll the d20, with advantage or disadvantage as indicated
-    const d20Roll = this.getD20Roll();
-    rollDetails.total = d20Roll;
-    rollDetails.baseD20Roll = d20Roll;
-    rollDetails.rolls.push({
-      name: '1d20',
-      rolls: [d20Roll],
-    });
-
-    // Roll modifiers
-    const modifierRollDetails = this.modifier.roll(false);
-    rollDetails.total += modifierRollDetails.total;
-    rollDetails.rolls.push(...modifierRollDetails.rolls);
-    return rollDetails;
-  }
-
-  getD20Roll(): number {
     const roll1 = this.die.roll();
     const roll2 = this.die.roll();
 
     switch (this.advantageState) {
       case AdvantageState.STRAIGHT:
-        return roll1;
+        // Choose roll1 arbitrarily for a straight roll, and ignore roll2 since
+        // technically the d20 should only have been rolled once
+        rollDetails.total = roll1;
+        rollDetails.baseD20Roll = roll1;
+        rollDetails.rolls.push({
+          name: '1d20',
+          rolls: [roll1],
+        });
+        break;
       case AdvantageState.ADVANTAGE:
-        return Math.max(roll1, roll2);
+        // Record both rolls and choose the higher as the output roll
+        rollDetails.total = Math.max(roll1, roll2);
+        rollDetails.baseD20Roll = Math.max(roll1, roll2);
+        rollDetails.rolls.push({
+          name: '1d20',
+          rolls: [roll1, roll2],
+        });
+        break;
       case AdvantageState.DISADVANTAGE:
-        return Math.min(roll1, roll2);
+        // Record both rolls and choose the lower as the output roll
+        rollDetails.total = Math.min(roll1, roll2);
+        rollDetails.baseD20Roll = Math.min(roll1, roll2);
+        rollDetails.rolls.push({
+          name: '1d20',
+          rolls: [roll1, roll2],
+        });
+        break;
       default:
         // This should not be reachable.
         throw new Error(
           `Unexpected error when rolling d20; app logic does not handle advantage state ${this.advantageState}. Please file an issue in Github.`,
         );
     }
+
+    // Roll modifiers (only once, since advantage/disadvantage only affects the
+    // d20 roll)
+    const modifierRollDetails = this.modifier.roll(false);
+    rollDetails.total += modifierRollDetails.total;
+    rollDetails.rolls.push(...modifierRollDetails.rolls);
+    return rollDetails;
   }
 }

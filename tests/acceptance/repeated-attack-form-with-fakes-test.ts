@@ -228,7 +228,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
     // The attack roll should not be marked as a crit or as a natural one
     assert
       .dom(`#nav-attacks [data-test-roll-detail="0-0"]`)
-      .hasAttribute('title', '1d20: 17')
+      .hasAttribute('title', '1d20: 17, 17')
       .hasText('20 to hit');
 
     // Examine the damage section
@@ -367,7 +367,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
       // Examine the attack roll section
       assert
         .dom(`#nav-attacks [data-test-roll-detail="1-${i}"]`)
-        .hasAttribute('title', '1d20: 15')
+        .hasAttribute('title', '1d20: 15, 15')
         .hasText('17 to hit');
 
       // Test the collapsible attack-roll details
@@ -377,7 +377,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
         .hasText('17');
       assert
         .dom(`#nav-attacks [data-test-roll-collapse-pane="1-${i}"]`)
-        .hasText('1d20: 15')
+        .hasText('1d20: 15, 15')
         .doesNotHaveClass(
           'show',
           'attack roll detail pane should start collapsed',

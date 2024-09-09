@@ -36,7 +36,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
         {
           roll: {
             total: 10, // meeting the DC passes the save
-            rolls: [{ name: '1d20', rolls: [7] }],
+            rolls: [{ name: '1d20', rolls: [3, 7] }],
           },
           pass: true,
           damage: 0,
@@ -71,7 +71,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
         {
           roll: {
             total: 6,
-            rolls: [{ name: '1d20', rolls: [3] }],
+            rolls: [{ name: '1d20', rolls: [3, 15] }],
           },
           pass: false,
           damage: 0,
@@ -147,7 +147,8 @@ module('Unit | Utils | repeated-save', function (hooks) {
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 
-    repeatedSave.die.getD20Roll = stubReturning(3, 15);
+    // the 2's are all ignored, since this is configured to use a straight roll
+    repeatedSave.die.die.roll = stubReturning(3, 2, 15, 2);
     repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
       4,
       5,
@@ -252,7 +253,8 @@ module('Unit | Utils | repeated-save', function (hooks) {
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 
-    repeatedSave.die.getD20Roll = stubReturning(3, 15);
+    // the 2's are all ignored, since this is configured to use a straight roll
+    repeatedSave.die.die.roll = stubReturning(3, 2, 15, 2);
     repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
       4,
       5,
@@ -350,7 +352,8 @@ module('Unit | Utils | repeated-save', function (hooks) {
       ],
     );
 
-    repeatedSave.die.getD20Roll = stubReturning(3, 15);
+    // the 2's are all ignored, since this is configured to use a straight roll
+    repeatedSave.die.die.roll = stubReturning(3, 2, 15, 2);
     repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
       4,
       5,
@@ -483,7 +486,8 @@ module('Unit | Utils | repeated-save', function (hooks) {
     );
 
     // Both saves should fail
-    repeatedSave.die.getD20Roll = stubReturning(3, 4);
+    // the 2's are all ignored, since this is configured to use a straight roll
+    repeatedSave.die.die.roll = stubReturning(3, 2, 4, 2);
     repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
       4,
       5,
