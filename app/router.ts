@@ -8,5 +8,4 @@ export default class Router extends EmberRouter {
 }
 
 // Temporarily disable this check until this file is actually filled out
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 Router.map(function () {});
