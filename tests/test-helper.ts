@@ -8,7 +8,6 @@ import config from 'multiattack-5e/config/environment';
 
 setApplication(Application.create(config.APP));
 
-// eslint-disable-next-line import/namespace
 setup(QUnit.assert);
 
 start();

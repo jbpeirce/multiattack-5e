@@ -1,6 +1,6 @@
 import { setupTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
+import { fake } from 'sinon';
 
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
@@ -184,7 +184,7 @@ module('Unit | Utils | attack', function (hooks) {
       false,
       false,
     );
-    const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
+    const fakePiercing = fake.returns(fakePiercingDamageDetails);
 
     const fakeRadiantDamageDetails = new DamageDetails(
       DamageType.RADIANT.name,
@@ -201,7 +201,7 @@ module('Unit | Utils | attack', function (hooks) {
       false,
       false,
     );
-    const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
+    const fakeRadiant = fake.returns(fakeRadiantDamageDetails);
 
     attack.damageTypes[0]!.roll = fakePiercing;
     attack.damageTypes[1]!.roll = fakeRadiant;
@@ -273,7 +273,7 @@ module('Unit | Utils | attack', function (hooks) {
       false,
       false,
     );
-    const fakePiercing = sinon.fake.returns(fakePiercingDamageDetails);
+    const fakePiercing = fake.returns(fakePiercingDamageDetails);
 
     const fakeRadiantDamageDetails = new DamageDetails(
       DamageType.PIERCING.name,
@@ -290,7 +290,7 @@ module('Unit | Utils | attack', function (hooks) {
       false,
       false,
     );
-    const fakeRadiant = sinon.fake.returns(fakeRadiantDamageDetails);
+    const fakeRadiant = fake.returns(fakeRadiantDamageDetails);
 
     attack.damageTypes[0]!.roll = fakePiercing;
     attack.damageTypes[1]!.roll = fakeRadiant;

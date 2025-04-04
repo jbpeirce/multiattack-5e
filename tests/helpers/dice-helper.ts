@@ -1,4 +1,4 @@
-import sinon, { type SinonStub } from 'sinon';
+import { type SinonStub, stub } from 'sinon';
 
 /**
  * Get a stub which returns the values passed in as parameters, in order. The
@@ -9,7 +9,7 @@ import sinon, { type SinonStub } from 'sinon';
 export function stubReturning<Type>(
   ...returns: Type[]
 ): SinonStub<unknown[], Type> {
-  const fake = sinon.stub<unknown[], Type>();
+  const fake = stub<unknown[], Type>();
   for (let i = 0; i < returns.length; i++) {
     fake.onCall(i).returns(returns[i]!);
   }

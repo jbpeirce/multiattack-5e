@@ -1,7 +1,7 @@
 import { click, fillIn, select, visit } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
+import { fake } from 'sinon';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import type RandomnessService from 'multiattack-5e/services/randomness';
@@ -14,7 +14,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
 
   test('it displays a passed save with maximized dice', async function (this: ElementContext, assert) {
     // Mock randomness so that all dice roll their maximum value
-    const fakeRandom = sinon.fake.returns(0.99999999999999);
+    const fakeRandom = fake.returns(0.99999999999999);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -98,7 +98,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
 
   test('it displays a set of failed saves with minimized dice', async function (this: ElementContext, assert) {
     // Mock randomness so that all dice roll their minimum value
-    const fakeRandom = sinon.fake.returns(0);
+    const fakeRandom = fake.returns(0);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -289,7 +289,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
 
   test('it handles resistance and vulnerability', async function (this: ElementContext, assert) {
     // Mock randomness so that dice roll minimum values
-    let fakeRandom = sinon.fake.returns(0);
+    let fakeRandom = fake.returns(0);
     let random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -314,7 +314,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     await click('#nav-saves [data-test-button-rollSaves]');
 
     // Change the randomness to roll maximum on all dice
-    fakeRandom = sinon.fake.returns(0.99999999999);
+    fakeRandom = fake.returns(0.99999999999);
     random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 

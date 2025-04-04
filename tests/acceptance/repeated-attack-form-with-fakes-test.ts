@@ -1,7 +1,7 @@
 import { click, fillIn, select, visit } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { module, test } from 'qunit';
-import sinon from 'sinon';
+import { fake } from 'sinon';
 
 import DamageType from 'multiattack-5e/components/damage-type-enum';
 import type RandomnessService from 'multiattack-5e/services/randomness';
@@ -13,7 +13,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
 
   test('it displays an attack set with maximized dice', async function (this: ElementContext, assert) {
     // Mock randomness so that all dice roll their maximum value
-    const fakeRandom = sinon.fake.returns(0.99999999999999);
+    const fakeRandom = fake.returns(0.99999999999999);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -141,7 +141,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
 
   test('it displays a single attack set with minimized dice', async function (this: ElementContext, assert) {
     // Mock randomness so that all dice roll their minimum value
-    const fakeRandom = sinon.fake.returns(0);
+    const fakeRandom = fake.returns(0);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -192,7 +192,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
 
   test('it displays a set with a single attack with constant damage', async function (this: ElementContext, assert) {
     // Mock randomness so that this attack will hit, but not be a critical hit
-    const fakeRandom = sinon.fake.returns(0.8);
+    const fakeRandom = fake.returns(0.8);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -247,7 +247,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
 
   test('it displays multiple sets of repeated attacks', async function (this: ElementContext, assert) {
     // Mock randomness so that the first attack is a hit and the second misses
-    const fakeRandom = sinon.fake.returns(0.7);
+    const fakeRandom = fake.returns(0.7);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
@@ -495,7 +495,7 @@ module('Acceptance | repeated attack form with fake dice', function (hooks) {
 
   test('it handles resistance and vulnerability', async function (this: ElementContext, assert) {
     // Mock randomness so that dice roll maximum values
-    const fakeRandom = sinon.fake.returns(0.9999999999999);
+    const fakeRandom = fake.returns(0.9999999999999);
     const random = this.owner.lookup('service:randomness') as RandomnessService;
     random.random = fakeRandom;
 
