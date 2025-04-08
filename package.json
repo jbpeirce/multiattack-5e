@@ -114,7 +114,7 @@
     "tracked-built-ins": "^4.0.0",
     "typescript": "^5.8.2",
     "util": "0.10.4",
-    "webpack": "^5.98.0"
+    "webpack": "^5.99.1"
   },
   "engines": {
     "node": ">= 18"
