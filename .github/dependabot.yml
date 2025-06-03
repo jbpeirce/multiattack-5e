@@ -11,5 +11,3 @@ updates:
       interval: "daily" # temporarily increase rate of PR filing from "weekly"
     # temporarily increase the number of open PRs allowed from the default of 5
     open-pull-requests-limit: 15
-    reviewers:
-      - jbpeirce
