@@ -70,22 +70,40 @@
         </div>
       </div>
 
-      <hr />
+      <div class='row align-items-center py-2'>
+        <label class='col-6 col-form-label'>On Passed Save</label>
+        <div class='col-6'>
+          <div class='form-check'>
+            <input 
+              data-test-input-passedSave-noDamage
+              class='form-check-input'
+              type='radio'
+              name='passedSaveRadio'
+              id='noDamage'
+              {{on 'click' this.setNoDamageOnPassedSave}}
+            />
+            <label class='form-check-label' for='noDamage'>
+              No Damage
+            </label>
+          </div>
 
-      <div class='form-check'>
-        <input
-          data-test-input-half-damage
-          class='form-check-input'
-          type='checkbox'
-          id='saveForHalfDamage'
-          name='saveForHalfDamage'
-          checked={{this.saveForHalfDamage}}
-          {{on 'change' this.setSaveForHalfDamage}}
-        />
-        <label class='form-check-label' for='saveForHalfDamage'>
-          Save for half damage
-        </label>
+          <div class='form-check'>
+            <input
+              data-test-input-passedSave-halfDamage
+              class='form-check-input'
+              type='radio'
+              name='passedSaveRadio'
+              id='halfDamage'
+              checked
+              {{on 'click' this.setHalfDamageOnPassedSave}}
+            />
+            <label class='form-check-label' for='halfDamage'>
+              Half Damage
+            </label>
+          </div>
+        </div>
       </div>
+
       <div class='form-check'>
         <input
           data-test-input-roll-dmg-every-save

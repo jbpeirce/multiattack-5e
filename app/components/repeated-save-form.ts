@@ -27,7 +27,7 @@ export default class RepeatedSaveFormComponent extends Component {
   @tracked saveMod = '5 + 1d4';
 
   @tracked rollDamageEverySave = false;
-  @tracked saveForHalfDamage = false;
+  @tracked saveForHalfDamage = true;
   @tracked damageList: Damage[] = A([this.getDefaultDamage()]);
 
   @tracked advantageState = AdvantageState.STRAIGHT;
@@ -41,7 +41,7 @@ export default class RepeatedSaveFormComponent extends Component {
   diceGroupsRegex = DiceStringParser.diceStringRegexAsString;
 
   /**
-   * Set up an save with default values and load the save result log if
+   * Set up a save with default values and load the save result log if
    * available
    */
   constructor(owner: unknown, args: EmptyObject) {
@@ -97,12 +97,13 @@ export default class RepeatedSaveFormComponent extends Component {
   }
 
   @action
-  setSaveForHalfDamage(newSaveForHalf: InputEvent) {
-    assert(
-      'save-for-half handler must receive an event with a target that is an HTMLInputElement',
-      newSaveForHalf.target instanceof HTMLInputElement,
-    );
-    this.saveForHalfDamage = newSaveForHalf.target.checked || false;
+  setNoDamageOnPassedSave() {
+    this.saveForHalfDamage = false;
+  }
+
+  @action
+  setHalfDamageOnPassedSave() {
+    this.saveForHalfDamage = true;
   }
 
   @action

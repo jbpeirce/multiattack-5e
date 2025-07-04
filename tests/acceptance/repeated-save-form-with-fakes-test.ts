@@ -27,6 +27,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     await fillIn('#nav-saves [data-test-input-saveDC]', '14');
     await fillIn('#nav-saves [data-test-input-saveMod]', '-1D4');
     await fillIn('#nav-saves [data-test-input-damage="0"]', '2d6');
+    await click('#nav-saves [data-test-input-passedSave-noDamage]');
 
     // Roll the saves
     await click('#nav-saves [data-test-button-rollSaves]');
@@ -115,6 +116,7 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
       '#nav-saves [data-test-damage-dropdown="0"]',
       DamageType.COLD.name,
     );
+    await click('#nav-saves [data-test-input-passedSave-noDamage]');
 
     // Roll the saves
     await click('#nav-saves [data-test-button-rollSaves]');
@@ -217,8 +219,11 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     await fillIn('#nav-saves [data-test-input-saveDC]', '14');
     await fillIn('#nav-saves [data-test-input-saveMod]', '-2');
     await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8');
-    await click('#nav-saves [data-test-input-half-damage]');
     await click('#nav-saves [data-test-input-roll-dmg-every-save]');
+
+    // Switch away from the default half-damage passed-save behavior, then back to it
+    await click('#nav-saves [data-test-input-passedSave-noDamage]');
+    await click('#nav-saves [data-test-input-passedSave-halfDamage]');
 
     // Roll the saves
     await click('#nav-saves [data-test-button-rollSaves]');
@@ -321,9 +326,6 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     // Add vulnerability
     await click('#nav-saves [data-test-input-vulnerable="0"]');
 
-    // Add half damage on passes since all saves will pass
-    await click('#nav-saves [data-test-input-half-damage]');
-
     // Roll a second set of saves
     await click('#nav-saves [data-test-button-rollSaves]');
 
@@ -383,7 +385,6 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     await fillIn('#nav-saves [data-test-input-saveDC]', '14');
     await fillIn('#nav-saves [data-test-input-saveMod]', '-2');
     await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8');
-    await click('#nav-saves [data-test-input-half-damage]');
     await click('#nav-saves [data-test-input-roll-dmg-every-save]');
     await click('#nav-saves [data-test-value="advantage"]');
 
@@ -479,7 +480,6 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
     await fillIn('#nav-saves [data-test-input-saveDC]', '14');
     await fillIn('#nav-saves [data-test-input-saveMod]', '-2');
     await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8');
-    await click('#nav-saves [data-test-input-half-damage]');
     await click('#nav-saves [data-test-input-roll-dmg-every-save]');
     await click('#nav-saves [data-test-value="disadvantage"]');
 
