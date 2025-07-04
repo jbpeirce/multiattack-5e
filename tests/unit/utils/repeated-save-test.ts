@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 
 import AdvantageState from 'multiattack-5e/components/advantage-state-enum';
 import DamageType from 'multiattack-5e/components/damage-type-enum';
+import SaveDamageHandlingState from 'multiattack-5e/components/save-damage-handling-state-enum';
 import RandomnessService from 'multiattack-5e/services/randomness';
 import { stubReturning } from 'multiattack-5e/tests/helpers/dice-helper';
 import Damage from 'multiattack-5e/utils/damage';
@@ -39,6 +40,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
             rolls: [{ name: '1d20', rolls: [3, 7] }],
           },
           pass: true,
+          damageHandling: SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
           damage: 0,
           damageDetails: [],
         },
@@ -74,6 +76,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
             rolls: [{ name: '1d20', rolls: [3, 15] }],
           },
           pass: false,
+          damageHandling: SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
           damage: 0,
           damageDetails: [],
         },
@@ -110,6 +113,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
             rolls: [{ name: '1d20', rolls: [3] }],
           },
           pass: false,
+          damageHandling: SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
           damage: 0,
           damageDetails: [],
         },
@@ -119,6 +123,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
             rolls: [{ name: '1d20', rolls: [15] }],
           },
           pass: true,
+          damageHandling: SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
           damage: 0,
           damageDetails: [],
         },
@@ -128,6 +133,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
             rolls: [{ name: '1d20', rolls: [7] }],
           },
           pass: true,
+          damageHandling: SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
           damage: 0,
           damageDetails: [],
         },
@@ -135,7 +141,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
     });
   });
 
-  test('it handles damage correctly when save-for-half is true', async function (assert) {
+  test('it handles damage correctly when  passed saves deal half damage', async function (assert) {
     const repeatedSave = new RepeatedSave(
       2,
       10,
@@ -143,7 +149,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
       AdvantageState.STRAIGHT,
       new RandomnessService(),
       false,
-      true,
+      SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 
@@ -241,7 +247,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
     );
   });
 
-  test('it handles damage correctly when save-for-half is false', async function (assert) {
+  test('it handles damage correctly when passed saves deal no damage', async function (assert) {
     const repeatedSave = new RepeatedSave(
       2,
       10,
@@ -249,7 +255,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
       AdvantageState.STRAIGHT,
       new RandomnessService(),
       false,
-      false,
+      SaveDamageHandlingState.NO_DAMAGE_ON_PASS,
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 
@@ -326,6 +332,91 @@ module('Unit | Utils | repeated-save', function (hooks) {
     );
   });
 
+  test('it handles damage correctly when the target has evasion', async function (assert) {
+    const repeatedSave = new RepeatedSave(
+      2,
+      10,
+      '3',
+      AdvantageState.STRAIGHT,
+      new RandomnessService(),
+      false,
+      SaveDamageHandlingState.EVASION,
+      [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
+    );
+
+    // the 2's are all ignored, since this is configured to use a straight roll
+    repeatedSave.die.die.roll = stubReturning(3, 2, 15, 2);
+    repeatedSave.damageTypes[0]!.damage.diceGroups[0]!.die.roll = stubReturning(
+      4,
+      5,
+    );
+
+    const result = repeatedSave.simulateRepeatedSaves();
+
+    // Other tests check the overall structure of the result; focus on the
+    // damage
+    assert.strictEqual(
+      result.totalDmg,
+      4,
+      'only the failed save should have inflicted damage, which should have been halved for a total of 9 / 2 = 4 damage',
+    );
+
+    // Inspect the failed save
+    const failedSaveDetails = result.detailsList[0];
+    assert.false(
+      failedSaveDetails?.pass,
+      'the failed save should be listed first',
+    );
+    assert.strictEqual(
+      failedSaveDetails?.damage,
+      4,
+      'failed save with evasion should inflict 4 damage',
+    );
+
+    assert.strictEqual(
+      failedSaveDetails?.damageDetails.length,
+      1,
+      'failed save should have one damage detail',
+    );
+    assert.strictEqual(
+      failedSaveDetails?.damageDetails[0]!.inflicted,
+      4,
+      "failed save's damage should have inflicted 4 total damage",
+    );
+    assert.strictEqual(
+      failedSaveDetails?.damageDetails[0]!.details.roll.total,
+      9,
+      "failed save's damage should have rolled 9 total damage",
+    );
+    assert.deepEqual(
+      failedSaveDetails?.damageDetails[0]!.details.roll.rolls,
+      [
+        {
+          name: '2d8',
+          rolls: [4, 5],
+        },
+      ],
+      "failed save's damage should reflect mocked die rolls",
+    );
+
+    // Inspect the passed save
+    const passedSaveDetails = result.detailsList[1];
+    assert.true(
+      passedSaveDetails?.pass,
+      'the passed save should be listed second',
+    );
+    assert.strictEqual(
+      passedSaveDetails?.damage,
+      0,
+      'passed save should inflict no damage',
+    );
+    assert.deepEqual(
+      passedSaveDetails?.damageDetails,
+      [],
+      'passed save should have no damage details',
+    );
+  });
+
   test('it handles resistance and vulnerability', async function (assert) {
     const repeatedSave = new RepeatedSave(
       2,
@@ -334,7 +425,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
       AdvantageState.STRAIGHT,
       new RandomnessService(),
       false,
-      true,
+      SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
       [
         new Damage(
           '2d8',
@@ -481,7 +572,7 @@ module('Unit | Utils | repeated-save', function (hooks) {
       AdvantageState.STRAIGHT,
       new RandomnessService(),
       true,
-      true,
+      SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
       [new Damage('2d8', DamageType.RADIANT.name, new RandomnessService())],
     );
 

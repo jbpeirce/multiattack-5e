@@ -292,6 +292,97 @@ module('Acceptance | repeated save form with fake dice', function (hooks) {
       );
   });
 
+  test('it handles evasion', async function (this: ElementContext, assert) {
+    // Mock randomness so that dice switch from maximum to minimum values
+    const fakeRandom = stubReturning(
+      0.99999999999999, // first uncached damage roll, used
+      0.99999999999999, // first d20 roll, roll 1, used
+      0.99999999999999, // first d20 roll, roll 2, ignored
+      0.5, // second uncached damage roll, used
+      0, // second d20 roll, roll 1, used
+      0, // second d20 roll, roll 2, ignored
+    );
+    const random = this.owner.lookup('service:randomness') as RandomnessService;
+    random.random = fakeRandom;
+
+    await visit('/');
+    await click('[data-test-button-saveTab]');
+    await delay();
+
+    // Fill in some details for the saves
+    await fillIn('#nav-saves [data-test-input-numberOfSaves]', '2');
+    await fillIn('#nav-saves [data-test-input-saveDC]', '14');
+    await fillIn('#nav-saves [data-test-input-saveMod]', '-2');
+    await fillIn('#nav-saves [data-test-input-damage="0"]', '1d8');
+    await click('#nav-saves [data-test-input-roll-dmg-every-save]');
+
+    // Set evasion
+    await click('#nav-saves [data-test-input-target-has-evasion]');
+
+    // Roll the saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    assert
+      .dom('#nav-saves [data-test-data-list="0"]')
+      .hasText(
+        'Number of saves: 2\nSave DC: 14\nSaving throw: 1d20 - 2\n',
+        'the details for the set of saves should be displayed',
+      );
+
+    // Since evasion was checked, only the failed save inflicted damage, and it
+    // inflicted only half damage
+    assert
+      .dom('#nav-saves [data-test-total-damage-header="0"]')
+      .hasText(
+        'Total Damage: 2 (1 pass)',
+        '0 + (5 / 2) damage should have been inflicted',
+      );
+
+    const detailsList = this.element.querySelector(
+      '[data-test-detail-list="0"]',
+    )!.children;
+
+    // Examine the first saving throw details
+    assert.strictEqual(
+      detailsList[0]?.className,
+      'li-success',
+      'saving throw should have bullet point formatted as a success',
+    );
+
+    // Check the saving throw text
+    assert
+      .dom(`#nav-saves [data-test-roll-detail="0-0"]`)
+      .hasAttribute('title', '1d20: 20')
+      .hasText('18 to save');
+
+    // The passed save should have no damage section
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-0-0"]`)
+      .doesNotExist();
+
+    // Examine the second saving throw details
+    assert.strictEqual(
+      detailsList[1]?.className,
+      'li-fail',
+      'saving throw should have bullet point formatted as a failure',
+    );
+
+    // Check the saving throw text
+    assert
+      .dom(`#nav-saves [data-test-roll-detail="0-1"]`)
+      .hasAttribute('title', '1d20: 1')
+      .hasText('-1 to save');
+
+    // Examine the damage section
+    assert
+      .dom(`#nav-saves [data-test-damage-roll-detail="0-1-0"]`)
+      .hasAttribute('title', '1d8: 5')
+      .hasText(
+        '2 fire damage (1d8) (evasion)',
+        'damage from the failed save should have been halved by evasion',
+      );
+  });
+
   test('it handles resistance and vulnerability', async function (this: ElementContext, assert) {
     // Mock randomness so that dice roll minimum values
     let fakeRandom = fake.returns(0);

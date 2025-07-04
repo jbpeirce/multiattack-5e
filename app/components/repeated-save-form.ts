@@ -17,6 +17,7 @@ import RepeatedSave from 'multiattack-5e/utils/repeated-save';
 
 import AdvantageState from './advantage-state-enum';
 import DamageType from './damage-type-enum';
+import SaveDamageHandlingState from './save-damage-handling-state-enum';
 
 export default class RepeatedSaveFormComponent extends Component {
   @service('randomness') randomness: RandomnessService | undefined;
@@ -27,7 +28,8 @@ export default class RepeatedSaveFormComponent extends Component {
   @tracked saveMod = '5 + 1d4';
 
   @tracked rollDamageEverySave = false;
-  @tracked saveForHalfDamage = true;
+  @tracked halfDamageOnPass = true;
+  @tracked targetHasEvasion = false;
   @tracked damageList: Damage[] = A([this.getDefaultDamage()]);
 
   @tracked advantageState = AdvantageState.STRAIGHT;
@@ -98,12 +100,15 @@ export default class RepeatedSaveFormComponent extends Component {
 
   @action
   setNoDamageOnPassedSave() {
-    this.saveForHalfDamage = false;
+    this.halfDamageOnPass = false;
+
+    // Evasion cannot apply to spells which do no damage on a passed save
+    this.targetHasEvasion = false;
   }
 
   @action
   setHalfDamageOnPassedSave() {
-    this.saveForHalfDamage = true;
+    this.halfDamageOnPass = true;
   }
 
   @action
@@ -113,6 +118,15 @@ export default class RepeatedSaveFormComponent extends Component {
       newRollDamageEverySave.target instanceof HTMLInputElement,
     );
     this.rollDamageEverySave = newRollDamageEverySave.target.checked || false;
+  }
+
+  @action
+  setTargetHasEvasion(newTargetHasEvasion: InputEvent) {
+    assert(
+      'target-has-evasion handler must receive an event with a target that is an HTMLInputElement',
+      newTargetHasEvasion.target instanceof HTMLInputElement,
+    );
+    this.targetHasEvasion = newTargetHasEvasion.target.checked || false;
   }
 
   @action
@@ -196,12 +210,21 @@ export default class RepeatedSaveFormComponent extends Component {
 
   getDamageModifications = (save: SaveDetails) => {
     // If this method is called at all, it is because damage was inflicted by
-    // this save. Only save-for-half and save-for-no-damage are currently
-    // supported, so if damage is inflicted on a pass it must be half damage.
-    if (save.pass) {
-      return ' (halved)';
-    } else {
-      return '';
+    // this save. This annotates potentially unexpected damage values.
+    switch (save.damageHandling) {
+      case SaveDamageHandlingState.EVASION:
+        // Evasion will halve any inflicted damage
+        return ' (evasion)';
+      case SaveDamageHandlingState.HALF_DAMAGE_ON_PASS:
+        if (save.pass) {
+          // Half-damage-on-pass changes how passed saves are handled
+          return ' (halved)';
+        } else {
+          // Half-damage-on-pass does not change how failed saves are handled
+          return '';
+        }
+      case SaveDamageHandlingState.NO_DAMAGE_ON_PASS:
+        return '';
     }
   };
 
@@ -218,6 +241,27 @@ export default class RepeatedSaveFormComponent extends Component {
       );
     }
 
+    // Evasion can only be applied to saves which deal half damage on
+    // a passed save. (It also can only be applied to dexterity saves,
+    // but this is beyond our power to enforce.)
+    if (this.targetHasEvasion && !this.halfDamageOnPass) {
+      // TODO: Surface this error more visibly
+      throw new Error(
+        `evasion can only be applied to spells which deal half damage on a passed save`,
+      );
+    }
+
+    // Given the check above, evasion overrides the spell's usual
+    // damage handling behavior
+    let damageHandlingState: SaveDamageHandlingState;
+    if (this.targetHasEvasion) {
+      damageHandlingState = SaveDamageHandlingState.EVASION;
+    } else if (this.halfDamageOnPass) {
+      damageHandlingState = SaveDamageHandlingState.HALF_DAMAGE_ON_PASS;
+    } else {
+      damageHandlingState = SaveDamageHandlingState.NO_DAMAGE_ON_PASS;
+    }
+
     const nextRepeatedSave = new RepeatedSave(
       this.numberOfSaves,
       this.saveDC,
@@ -225,7 +269,7 @@ export default class RepeatedSaveFormComponent extends Component {
       this.advantageState,
       this.randomness,
       this.rollDamageEverySave,
-      this.saveForHalfDamage,
+      damageHandlingState,
       this.damageList,
     );
 
