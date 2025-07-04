@@ -284,6 +284,72 @@ module('Acceptance | repeated save form', function (hooks) {
     await click('#nav-saves [data-test-button-clear-log]');
   });
 
+  test('enabling and disabling evasion', async function (this: ElementContext, assert) {
+    await visit('/');
+    await click('[data-test-button-saveTab]');
+
+    // Use mostly default values for the saves
+    await fillIn('#nav-saves [data-test-input-numberOfSaves]', '8');
+    await fillIn('#nav-saves [data-test-input-saveDC]', '15');
+    await fillIn('#nav-saves [data-test-input-saveMod]', '3');
+
+    // Check that the expected default damage behavior is selected
+    assert
+      .dom('#nav-saves [data-test-input-passedSave-halfDamage]')
+      .isChecked();
+
+    // Set evasion and verify that it is checked
+    assert.dom('#nav-saves [data-test-input-target-has-evasion]').isEnabled();
+
+    await click('#nav-saves [data-test-input-target-has-evasion]');
+
+    assert
+      .dom('#nav-saves [data-test-input-target-has-evasion]')
+      .isEnabled()
+      .isChecked();
+
+    // Set no damage on passed saves
+    await click('#nav-saves [data-test-input-passedSave-noDamage]');
+    assert.dom('#nav-saves [data-test-input-passedSave-noDamage]').isChecked();
+    assert
+      .dom('#nav-saves [data-test-input-passedSave-halfDamage]')
+      .isNotChecked();
+
+    // Verify that evasion is un-checked and is disabled
+    assert
+      .dom('#nav-saves [data-test-input-target-has-evasion]')
+      .isDisabled()
+      .isNotChecked();
+
+    // Set half damage on passed saves and check that evasion is reenabled (but not checked)
+    await click('#nav-saves [data-test-input-passedSave-halfDamage]');
+    assert
+      .dom('#nav-saves [data-test-input-target-has-evasion]')
+      .isEnabled()
+      .isNotChecked();
+
+    // Execute the group of saves
+    await click('#nav-saves [data-test-button-rollSaves]');
+
+    assert
+      .dom('#nav-saves [data-test-data-list="0"]')
+      .hasText(
+        'Number of saves: 8\n' + 'Save DC: 15\n' + 'Saving throw: 1d20 + 3\n',
+        'the details for the set of saves should be displayed',
+      );
+
+    assert
+      .dom('#nav-saves [data-test-detail-list="0"]')
+      .isVisible('individual save details should be displayed');
+
+    assert.strictEqual(
+      this.element.querySelector('#nav-saves [data-test-detail-list="0"]')!
+        .children.length,
+      8,
+      '8 saves should have been displayed',
+    );
+  });
+
   test('invalidating malformatted fields', async function (this: ElementContext, assert) {
     await visit('/');
     await click('[data-test-button-saveTab]');

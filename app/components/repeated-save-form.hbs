@@ -119,6 +119,22 @@
         </label>
       </div>
 
+      <div class='form-check'>
+        <input
+          data-test-input-target-has-evasion
+          class='form-check-input'
+          type='checkbox'
+          id='targetHasEvasion'
+          name='targetHasEvasion'
+          disabled={{not this.halfDamageOnPass}}
+          checked={{this.targetHasEvasion}}
+          {{on 'change' this.setTargetHasEvasion}}
+        />
+        <label class='form-check-label' for='targetHasEvasion'>
+          Target is applying evasion
+        </label>
+      </div>
+
       <hr />
 
       <DamagePane

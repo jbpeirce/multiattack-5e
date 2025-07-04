@@ -1,4 +1,5 @@
 import type AdvantageState from 'multiattack-5e/components/advantage-state-enum';
+import SaveDamageHandlingState from 'multiattack-5e/components/save-damage-handling-state-enum';
 import type RandomnessService from 'multiattack-5e/services/randomness';
 
 import D20WithModifiers from './d20-with-modifiers';
@@ -26,6 +27,7 @@ export interface RepeatedSaveResult {
 export interface SaveDetails {
   roll: GroupRollDetails;
   pass: boolean;
+  damageHandling: SaveDamageHandlingState;
   damage: number;
   damageDetails: InflictedDamageDetails[];
 }
@@ -37,7 +39,7 @@ export default class RepeatedSave {
   // Some saves inflict damage if the save is failed; others do not, indicated
   // by an empty damage list
   rollDamageEverySave: boolean;
-  saveForHalf: boolean;
+  damageHandlingState: SaveDamageHandlingState;
   damageTypes: Damage[];
 
   die: D20WithModifiers;
@@ -56,9 +58,11 @@ export default class RepeatedSave {
    * present to enable testing with guaranteed behavior from the dice.
    * @param rollDamageEverySave whether to roll new damage corresponding to
    * every saving throw. Will be ignored if no damage types are provided.
-   * @param saveForHalf if true, passing the save results in half damage being
-   * inflicted. If false, passing the save results in no damage being
-   * inflicted. Will be ignored if no damage types are provided.
+   * @param damageHandlingState how to inflict damage on a passed or failed
+   * save. If 'NO_DAMAGE_ON_PASS,' a failed save inflicts full damage and a
+   * passed save inflicts no damage. If 'HALF_DAMAGE_ON_PASS,' a failed save
+   * inflicts full damage and a passed save inflicts half damage. If 'EVASION,'
+   * a failed save inflicts half damage and a passed save inflicts no damage.
    * @param damageTypes a list of the damage types inflicted by this attack,
    * with details for each. Leave empty if what triggers the saving throw
    * inflicts no damage.
@@ -70,7 +74,7 @@ export default class RepeatedSave {
     advantageState: AdvantageState,
     randomness: RandomnessService,
     rollDamageEverySave: boolean = false,
-    saveForHalf: boolean = false,
+    damageHandlingState: SaveDamageHandlingState = SaveDamageHandlingState.HALF_DAMAGE_ON_PASS,
     damageTypes: Damage[] = [],
   ) {
     this.die = new D20WithModifiers(advantageState, rollModifier, randomness);
@@ -78,7 +82,7 @@ export default class RepeatedSave {
     this.saveDC = saveDC;
 
     this.rollDamageEverySave = rollDamageEverySave;
-    this.saveForHalf = saveForHalf;
+    this.damageHandlingState = damageHandlingState;
     this.damageTypes = damageTypes;
   }
 
@@ -155,34 +159,57 @@ export default class RepeatedSave {
         pass: false,
         damage: 0,
         damageDetails: [],
+        damageHandling: this.damageHandlingState,
       };
 
       // Handle pass or failure of the save
-      if (saveRoll.total >= this.saveDC) {
+      const passed = saveRoll.total >= this.saveDC;
+      if (passed) {
         saveDetail.pass = true;
         totalNumberOfPasses += 1;
-
-        // Some saving throws inflict half damage when a save is passed
-        if (this.saveForHalf) {
-          const totalInflictedBySave = this.getTotalInflictedDamage(
-            damageDetails,
-            saveDetail.damageDetails,
-            0.5,
-          );
-
-          totalDamage += totalInflictedBySave;
-          saveDetail.damage = totalInflictedBySave;
-        }
-      } else {
-        // When a save is failed, inflict full damage (if applicable)
-        const totalInflictedBySave = this.getTotalInflictedDamage(
-          damageDetails,
-          saveDetail.damageDetails,
-        );
-
-        totalDamage += totalInflictedBySave;
-        saveDetail.damage = totalInflictedBySave;
       }
+
+      let totalInflictedBySave = 0;
+
+      switch (this.damageHandlingState) {
+        case SaveDamageHandlingState.NO_DAMAGE_ON_PASS:
+          // Inflict no damage on pass and full damage on failure
+          if (!passed) {
+            totalInflictedBySave = this.getTotalInflictedDamage(
+              damageDetails,
+              saveDetail.damageDetails,
+            );
+          }
+          break;
+        case SaveDamageHandlingState.HALF_DAMAGE_ON_PASS:
+          // Inflict half damage on pass and full damage on failure
+          if (passed) {
+            totalInflictedBySave = this.getTotalInflictedDamage(
+              damageDetails,
+              saveDetail.damageDetails,
+              0.5,
+            );
+          } else {
+            totalInflictedBySave = this.getTotalInflictedDamage(
+              damageDetails,
+              saveDetail.damageDetails,
+            );
+          }
+          break;
+        case SaveDamageHandlingState.EVASION:
+          // Inflict no damage on pass and half damage on failure
+          if (!passed) {
+            totalInflictedBySave = this.getTotalInflictedDamage(
+              damageDetails,
+              saveDetail.damageDetails,
+              0.5,
+            );
+          }
+          break;
+      }
+
+      totalDamage += totalInflictedBySave;
+      saveDetail.damage = totalInflictedBySave;
 
       saveDetailsList.push(saveDetail);
     }
