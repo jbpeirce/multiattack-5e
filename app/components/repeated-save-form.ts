@@ -27,7 +27,7 @@ export default class RepeatedSaveFormComponent extends Component {
   @tracked saveMod = '5 + 1d4';
 
   @tracked rollDamageEverySave = false;
-  @tracked saveForHalfDamage = false;
+  @tracked saveForHalfDamage = true;
   @tracked damageList: Damage[] = A([this.getDefaultDamage()]);
 
   @tracked advantageState = AdvantageState.STRAIGHT;
