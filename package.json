@@ -63,7 +63,7 @@
     "@types/ember-data__store": "^4.0.7",
     "@types/ember-qunit": "^6.1.1",
     "@types/ember-resolver": "^9.0.2",
-    "@types/qunit": "^2.19.12",
+    "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
     "@types/sinon": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
