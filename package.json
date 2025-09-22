@@ -66,7 +66,7 @@
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
     "@types/sinon": "^17.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.41.0",
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^9.2.1",
