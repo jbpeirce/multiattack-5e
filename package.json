@@ -112,7 +112,7 @@
     "stylelint-prettier": "^5.0.3",
     "timers-browserify": "^2.0.12",
     "tracked-built-ins": "^4.0.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "util": "0.10.4",
     "webpack": "^5.101.3"
   },
