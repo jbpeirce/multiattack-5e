@@ -91,7 +91,7 @@
     "ember-template-lint": "^7.9.3",
     "ember-test-selectors": "^7.1.0",
     "ember-truth-helpers": "^5.0.0",
-    "ember-welcome-page": "^7.0.2",
+    "ember-welcome-page": "^8.0.3",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.3.7",
