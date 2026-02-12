@@ -92,7 +92,7 @@
     "ember-test-selectors": "^7.1.0",
     "ember-truth-helpers": "^5.0.0",
     "ember-welcome-page": "^8.0.5",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.3.7",
     "eslint-import-resolver-typescript": "^4.4.4",
