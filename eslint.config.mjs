@@ -1,125 +1,123 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+/**
+ * Debugging:
+ *   https://eslint.org/docs/latest/use/configure/debug
+ *  ----------------------------------------------------
+ *
+ *   Print a file's calculated configuration
+ *
+ *     npx eslint --print-config path/to/file.js
+ *
+ *   Inspecting the config
+ *
+ *     npx eslint --inspect-config
+ *
+ */
+import globals from 'globals';
+import js from '@eslint/js';
 
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-// eslint-disable-next-line import/default
-import tsParser from "@typescript-eslint/parser";
-import { defineConfig } from "eslint/config";
-import ember from "eslint-plugin-ember";
-import globals from "globals";
+import ember from 'eslint-plugin-ember/recommended';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import qunit from 'eslint-plugin-qunit';
+import n from 'eslint-plugin-n';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+import babelParser from '@babel/eslint-parser';
 
-export default defineConfig([
-  {
-    ignores: [
-      "**/blueprints/*/files/",
-      "**/dist/",
-      "**/coverage/",
-      "!.*",
-      ".*/",
-      "**/.node_modules.ember-try/",
-      "**/.*",
+const esmParserOptions = {
+  ecmaFeatures: { modules: true },
+  ecmaVersion: 'latest',
+  requireConfigFile: false,
+  babelOptions: {
+    plugins: [
+      ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
     ],
   },
+};
 
+export default [
+  js.configs.recommended,
+  eslintConfigPrettier,
+  ember.configs.base,
+  ember.configs.gjs,
+  /**
+   * Ignores must be in their own object
+   * https://eslint.org/docs/latest/use/configure/ignore
+   */
   {
-    extends: fixupConfigRules(
-      compat.extends(
-        "eslint:recommended",
-        "plugin:ember/recommended",
-        "plugin:prettier/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/recommended",
-        "plugin:import/typescript",
-      ),
-    ),
-
+    ignores: ['dist/', 'node_modules/', 'coverage/', '!**/.*'],
+  },
+  /**
+   * https://eslint.org/docs/latest/use/configure/configuration-files#configuring-linter-options
+   */
+  {
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
+  },
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      parser: babelParser,
+    },
+  },
+  {
+    files: ['**/*.{js,gjs}'],
+    languageOptions: {
+      parserOptions: esmParserOptions,
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
+  {
+    files: ['tests/**/*-test.{js,gjs}'],
     plugins: {
-      ember: fixupPluginRules(ember),
-      "@typescript-eslint": fixupPluginRules(typescriptEslint),
+      qunit,
+    },
+  },
+  /**
+   * CJS node files
+   */
+  {
+    files: [
+      '**/*.cjs',
+      'config/**/*.js',
+      'tests/dummy/config/**/*.js',
+      'testem.js',
+      'testem*.js',
+      'index.js',
+      '.prettierrc.js',
+      '.stylelintrc.js',
+      '.template-lintrc.js',
+      'ember-cli-build.js',
+    ],
+    plugins: {
+      n,
     },
 
     languageOptions: {
+      sourceType: 'script',
+      ecmaVersion: 'latest',
       globals: {
-        ...globals.browser,
         ...globals.node,
       },
-
-      parser: tsParser,
-      ecmaVersion: 2017,
-      sourceType: "module",
-    },
-
-    settings: {
-      "import/resolver": {
-        typescript: true,
-
-        node: {
-          extensions: [".js", ".jsx", ".ts", ".tsx"],
-        },
-      },
-    },
-
-    rules: {
-      "@typescript-eslint/no-var-requires": 0,
-      semi: [2, "always"],
-
-      "prettier/prettier": [
-        "error",
-        {
-          endOfLine: "auto",
-        },
-      ],
-
-      "sort-imports": [
-        "error",
-        {
-          ignoreCase: false,
-          ignoreDeclarationSort: true,
-          ignoreMemberSort: false,
-          memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
-          allowSeparatedGroups: true,
-        },
-      ],
-
-      "import/no-unresolved": [
-        2,
-        {
-          ignore: ["^@ember"],
-        },
-      ],
-
-      "import/order": [
-        "error",
-        {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["sibling", "parent"],
-            "index",
-            "unknown",
-          ],
-
-          "newlines-between": "always",
-
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-        },
-      ],
     },
   },
-]);
+  /**
+   * ESM node files
+   */
+  {
+    files: ['**/*.mjs'],
+    plugins: {
+      n,
+    },
+
+    languageOptions: {
+      sourceType: 'module',
+      ecmaVersion: 'latest',
+      parserOptions: esmParserOptions,
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+];
