@@ -71,7 +71,7 @@
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^9.2.1",
     "ember-auto-import": "^2.13.1",
-    "ember-cli": "~6.9.1",
+    "ember-cli": "~7.1.0",
     "ember-cli-app-version": "^7.0.0",
     "ember-cli-babel": "^8.3.1",
     "ember-cli-clean-css": "^3.0.0",
@@ -117,7 +117,7 @@
     "webpack": "^5.109.2"
   },
   "engines": {
-    "node": ">= 24"
+    "node": ">= 26"
   },
   "ember": {
     "edition": "octane"
