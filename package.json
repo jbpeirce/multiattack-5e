@@ -34,7 +34,7 @@
     "@eslint/compat": "^2.1.0",
     "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^9.39.2",
-    "@glimmer/component": "^2.0.0",
+    "@glimmer/component": "^2.1.1",
     "@glimmer/tracking": "^1.1.2",
     "@tsconfig/ember": "^3.0.12",
     "@types/ember": "^4.0.11",
