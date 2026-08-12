@@ -1,7 +1,7 @@
 # multiattack-5e
 
 This site simulates repeated identical attacks against a
-single target in a system like D&D 5e. This is useful when 
+single target in a system like D&D 5e. This is useful when
 a group of enemies all attack a single target.
 
 ## Prerequisites
