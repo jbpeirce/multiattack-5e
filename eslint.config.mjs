@@ -7,7 +7,11 @@ import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import { defineConfig } from 'eslint/config';
-import ember from 'eslint-plugin-ember';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import ember from 'eslint-plugin-ember/recommended';
+import n from 'eslint-plugin-n';
+import qunit from 'eslint-plugin-qunit';
+import WarpDrive from 'eslint-plugin-warp-drive/recommended';
 import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,6 +23,16 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
+  js.configs.recommended,
+  eslintConfigPrettier,
+  ember.configs.base,
+  ember.configs.gjs,
+  ...WarpDrive,
+
+  /**
+   * Ignores must be in their own object
+   * https://eslint.org/docs/latest/use/configure/ignore
+   */
   {
     ignores: [
       '**/blueprints/*/files/',
@@ -35,7 +49,6 @@ export default defineConfig([
     extends: fixupConfigRules(
       compat.extends(
         'eslint:recommended',
-        'plugin:ember/recommended',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:import/recommended',
@@ -44,7 +57,6 @@ export default defineConfig([
     ),
 
     plugins: {
-      ember: fixupPluginRules(ember),
       '@typescript-eslint': fixupPluginRules(typescriptEslint),
     },
 
@@ -53,12 +65,63 @@ export default defineConfig([
         ...globals.browser,
         ...globals.node,
       },
+    },
+  },
 
+  {
+    ...qunit.configs.recommended,
+    files: ['tests/**/*-test.{js,gjs}'],
+    plugins: {
+      qunit,
+    },
+  },
+  /**
+   * CJS node files
+   */
+  {
+    ...n.configs['flat/recommended-script'],
+    files: [
+      '**/*.cjs',
+      'config/**/*.js',
+      'tests/dummy/config/**/*.js',
+      'testem.js',
+      'testem*.js',
+      'index.js',
+      '.prettierrc.js',
+      '.stylelintrc.js',
+      '.template-lintrc.js',
+      'ember-cli-build.js',
+    ],
+    plugins: {
+      n,
+    },
+
+    languageOptions: {
+      sourceType: 'script',
+      ecmaVersion: 'latest',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  /**
+   * ESM node files
+   */
+  {
+    ...n.configs['flat/recommended-module'],
+    files: ['**/*.mjs'],
+    plugins: {
+      n,
+    },
+
+    languageOptions: {
       parser: tsParser,
       ecmaVersion: 2017,
       sourceType: 'module',
     },
+  },
 
+  {
     settings: {
       'import/resolver': {
         typescript: true,
@@ -68,7 +131,9 @@ export default defineConfig([
         },
       },
     },
+  },
 
+  {
     rules: {
       '@typescript-eslint/no-var-requires': 0,
       semi: [2, 'always'],

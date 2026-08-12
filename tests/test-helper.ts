@@ -4,6 +4,7 @@ import { loadTests } from 'ember-qunit/test-loader';
 import * as QUnit from 'qunit';
 import { setup } from 'qunit-dom';
 
+import '@warp-drive/ember/install';
 import Application from 'multiattack-5e/app';
 import config from 'multiattack-5e/config/environment';
 
