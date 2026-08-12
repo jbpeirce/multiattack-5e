@@ -5,7 +5,6 @@ import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-// eslint-disable-next-line import/default
 import tsParser from "@typescript-eslint/parser";
 import { defineConfig } from "eslint/config";
 import ember from "eslint-plugin-ember";
@@ -37,7 +36,6 @@ export default defineConfig([
       compat.extends(
         "eslint:recommended",
         "plugin:ember/recommended",
-        "plugin:prettier/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
@@ -74,13 +72,6 @@ export default defineConfig([
     rules: {
       "@typescript-eslint/no-var-requires": 0,
       semi: [2, "always"],
-
-      "prettier/prettier": [
-        "error",
-        {
-          endOfLine: "auto",
-        },
-      ],
 
       "sort-imports": [
         "error",
