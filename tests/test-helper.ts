@@ -10,7 +10,6 @@ import config from 'multiattack-5e/config/environment';
 setApplication(Application.create(config.APP));
 
 setup(QUnit.assert);
-
 setupEmberOnerrorValidation();
 loadTests();
 start();
