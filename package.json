@@ -106,7 +106,7 @@
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-ember": "^13.5.0",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-n": "^18.2.2",
+    "eslint-plugin-n": "^18.3.0",
     "eslint-plugin-qunit": "^8.2.6",
     "eslint-plugin-warp-drive": "^5.8.2",
     "globals": "^17.9.0",
