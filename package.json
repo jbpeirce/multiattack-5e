@@ -109,7 +109,7 @@
     "eslint-plugin-n": "^18.3.0",
     "eslint-plugin-qunit": "^8.2.6",
     "eslint-plugin-warp-drive": "^5.8.2",
-    "globals": "^17.9.0",
+    "globals": "^17.11.0",
     "loader.js": "^4.7.0",
     "prettier": "^3.9.6",
     "prettier-plugin-ember-template-tag": "^2.1.6",
