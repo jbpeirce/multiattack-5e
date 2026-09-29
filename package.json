@@ -73,7 +73,7 @@
     "@typescript-eslint/parser": "^8.65.0",
     "@warp-drive/core": "~5.8.2",
     "@warp-drive/json-api": "~5.8.2",
-    "@warp-drive/legacy": "~5.8.2",
+    "@warp-drive/legacy": "~5.9.1",
     "@warp-drive/utilities": "~5.8.2",
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^10.0.5",
