@@ -71,7 +71,7 @@
     "@types/sinon": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
-    "@warp-drive/core": "~5.8.2",
+    "@warp-drive/core": "~5.9.1",
     "@warp-drive/json-api": "~5.8.2",
     "@warp-drive/legacy": "~5.8.2",
     "@warp-drive/utilities": "~5.8.2",
