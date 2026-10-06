@@ -104,7 +104,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.4.0",
     "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-ember": "^13.5.0",
+    "eslint-plugin-ember": "^13.6.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-n": "^18.4.0",
     "eslint-plugin-qunit": "^8.2.6",
